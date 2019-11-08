@@ -1,0 +1,118 @@
+version: '3'
+
+services:
+  proxy:
+    build:
+      context: ./proxy
+      args:
+        - environment=local
+    ports:
+      - "80:3128"
+      - "443:8443"
+    volumes:
+      - ../certs:/etc/certs:ro
+    container_name: proxy
+    networks:
+      - private_net
+
+  web_app:
+    build:
+      context: ./web_app
+      args:
+        - environment=local
+    volumes:
+      - ../code/app:/var/www/app
+      - ../code/common:/var/www/common
+      - ../code/vendor:/var/www/vendor
+    container_name: web_app
+    networks:
+      - private_net
+    environment:
+      XDEBUG_CONFIG: "remote_host=172.28.0.1"
+      PHP_IDE_CONFIG: "serverName=app"
+
+  web_mgr:
+    build:
+      context: ./web_mgr
+      args:
+        - environment=local
+    volumes:
+      - ../code/mgr:/var/www/mgr
+      - ../code/common:/var/www/common
+      - ../code/vendor:/var/www/vendor
+    container_name: web_mgr
+    networks:
+      - private_net
+    environment:
+      XDEBUG_CONFIG: "remote_host=172.28.0.1"
+      PHP_IDE_CONFIG: "serverName=mgr"
+
+  redis:
+    image: redis:5.0.5
+    container_name: redis
+    ports:
+      - "16379:6379"
+    networks:
+      - private_net
+    volumes:
+      - redis-data:/var/lib/redis
+    sysctls:
+      - net.core.somaxconn=1024
+
+  mysql:
+    build:
+      context: ./mysql
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "13306:3306"
+    container_name: mysql
+    networks:
+      - private_net
+
+  psql:
+    build:
+      context: ./psql
+    volumes:
+      - psql-data:/var/lib/postgresql
+    ports:
+      - "15432:5432"
+    container_name: psql
+    networks:
+      - private_net
+
+  dynamodb:
+    image: amazon/dynamodb-local
+    container_name: dynamodb
+    ports:
+      - "18000:8000"
+    networks:
+      - private_net
+
+  storage:
+    image: minio/minio
+    volumes:
+      - storage-data:/data
+    container_name: storage
+    ports:
+      - "19000:9000"
+    environment:
+      MINIO_ACCESS_KEY: s3accesskey
+      MINIO_SECRET_KEY: s3secretkey
+    command: server /data
+    networks:
+      - private_net
+
+volumes:
+  redis-data:
+  mysql-data:
+  psql-data:
+  storage-data:
+
+networks:
+  private_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/24
