@@ -5,9 +5,7 @@ use Aws\Credentials\CredentialsInterface;
 use GuzzleHttp\Psr7\Uri;
 
 /**
- * Encapsulates the logic for getting the data for an S3 object POST upload form
- *
- * @link http://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPOST.html
+ * @deprecated
  */
 class PostObject
 {
@@ -20,15 +18,17 @@ class PostObject
     /**
      * Constructs the PostObject.
      *
-     * @param S3Client     $client     Client used with the POST object
-     * @param string       $bucket     Bucket to use
-     * @param array        $formInputs Associative array of form input fields.
-     * @param string|array $jsonPolicy JSON encoded POST policy document. The
-     *                                 policy will be base64 encoded and applied
-     *                                 to the form on your behalf.
+     * @param S3ClientInterface $client     Client used with the POST object
+     * @param string            $bucket     Bucket to use
+     * @param array             $formInputs Associative array of form input
+     *                                      fields.
+     * @param string|array      $jsonPolicy JSON encoded POST policy document.
+     *                                      The policy will be base64 encoded
+     *                                      and applied to the form on your
+     *                                      behalf.
      */
     public function __construct(
-        S3Client $client,
+        S3ClientInterface $client,
         $bucket,
         array $formInputs,
         $jsonPolicy
@@ -55,7 +55,7 @@ class PostObject
     /**
      * Gets the S3 client.
      *
-     * @return S3Client
+     * @return S3ClientInterface
      */
     public function getClient()
     {
@@ -128,11 +128,12 @@ class PostObject
     {
         $uri = new Uri($this->client->getEndpoint());
 
-        if ($uri->getScheme() === 'https'
-            && strpos($this->bucket, '.') !== false
+        if ($this->client->getConfig('use_path_style_endpoint') === true
+            || ($uri->getScheme() === 'https'
+            && strpos($this->bucket, '.') !== false)
         ) {
             // Use path-style URLs
-            $uri = $uri->withPath($this->bucket);
+            $uri = $uri->withPath("/{$this->bucket}");
         } else {
             // Use virtual-style URLs
             $uri = $uri->withHost($this->bucket . '.' . $uri->getHost());

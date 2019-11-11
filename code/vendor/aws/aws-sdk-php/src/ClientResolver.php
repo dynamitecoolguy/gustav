@@ -4,12 +4,18 @@ namespace Aws;
 use Aws\Api\Validator;
 use Aws\Api\ApiProvider;
 use Aws\Api\Service;
+use Aws\ClientSideMonitoring\ApiCallAttemptMonitoringMiddleware;
+use Aws\ClientSideMonitoring\ApiCallMonitoringMiddleware;
+use Aws\ClientSideMonitoring\Configuration;
 use Aws\Credentials\Credentials;
 use Aws\Credentials\CredentialsInterface;
+use Aws\Endpoint\PartitionEndpointProvider;
+use Aws\EndpointDiscovery\ConfigurationInterface;
+use Aws\EndpointDiscovery\ConfigurationProvider;
+use Aws\EndpointDiscovery\EndpointDiscoveryMiddleware;
 use Aws\Signature\SignatureProvider;
 use Aws\Endpoint\EndpointProvider;
 use Aws\Credentials\CredentialProvider;
-use GuzzleHttp\Promise;
 use InvalidArgumentException as IAE;
 use Psr\Http\Message\RequestInterface;
 
@@ -53,6 +59,12 @@ class ClientResolver
             'default'  => 'https',
             'doc'      => 'URI scheme to use when connecting connect. The SDK will utilize "https" endpoints (i.e., utilize SSL/TLS connections) by default. You can attempt to connect to a service over an unencrypted "http" endpoint by setting ``scheme`` to "http".',
         ],
+        'disable_host_prefix_injection' => [
+            'type'      => 'value',
+            'valid'     => ['bool'],
+            'doc'       => 'Set to true to disable host prefix injection logic for services that use it. This disables the entire prefix injection, including the portions supplied by user-defined parameters. Setting this flag will have no effect on services that do not use host prefix injection.',
+            'default'   => false,
+        ],
         'endpoint' => [
             'type'  => 'value',
             'valid' => ['string'],
@@ -77,13 +89,6 @@ class ClientResolver
             'doc'     => 'A callable that accepts a signature version name (e.g., "v4"), a service name, and region, and  returns a SignatureInterface object or null. This provider is used to create signers utilized by the client. See Aws\\Signature\\SignatureProvider for a list of built-in providers',
             'default' => [__CLASS__, '_default_signature_provider'],
         ],
-        'endpoint_provider' => [
-            'type'     => 'value',
-            'valid'    => ['callable'],
-            'fn'       => [__CLASS__, '_apply_endpoint_provider'],
-            'doc'      => 'An optional PHP callable that accepts a hash of options including a "service" and "region" key and returns NULL or a hash of endpoint data, of which the "endpoint" key is required. See Aws\\Endpoint\\EndpointProvider for a list of built-in providers.',
-            'default' => [__CLASS__, '_default_endpoint_provider'],
-        ],
         'api_provider' => [
             'type'     => 'value',
             'valid'    => ['callable'],
@@ -91,11 +96,37 @@ class ClientResolver
             'fn'       => [__CLASS__, '_apply_api_provider'],
             'default'  => [ApiProvider::class, 'defaultProvider'],
         ],
+        'endpoint_provider' => [
+            'type'     => 'value',
+            'valid'    => ['callable'],
+            'fn'       => [__CLASS__, '_apply_endpoint_provider'],
+            'doc'      => 'An optional PHP callable that accepts a hash of options including a "service" and "region" key and returns NULL or a hash of endpoint data, of which the "endpoint" key is required. See Aws\\Endpoint\\EndpointProvider for a list of built-in providers.',
+            'default' => [__CLASS__, '_default_endpoint_provider'],
+        ],
+        'serializer' => [
+            'default'   => [__CLASS__, '_default_serializer'],
+            'fn'        => [__CLASS__, '_apply_serializer'],
+            'internal'  => true,
+            'type'      => 'value',
+            'valid'     => ['callable'],
+        ],
         'signature_version' => [
             'type'    => 'config',
             'valid'   => ['string'],
             'doc'     => 'A string representing a custom signature version to use with a service (e.g., v4). Note that per/operation signature version MAY override this requested signature version.',
             'default' => [__CLASS__, '_default_signature_version'],
+        ],
+        'signing_name' => [
+            'type'    => 'config',
+            'valid'   => ['string'],
+            'doc'     => 'A string representing a custom service name to be used when calculating a request signature.',
+            'default' => [__CLASS__, '_default_signing_name'],
+        ],
+        'signing_region' => [
+            'type'    => 'config',
+            'valid'   => ['string'],
+            'doc'     => 'A string representing a custom region name to be used when calculating a request signature.',
+            'default' => [__CLASS__, '_default_signing_region'],
         ],
         'profile' => [
             'type'  => 'config',
@@ -108,7 +139,21 @@ class ClientResolver
             'valid'   => [CredentialsInterface::class, CacheInterface::class, 'array', 'bool', 'callable'],
             'doc'     => 'Specifies the credentials used to sign requests. Provide an Aws\Credentials\CredentialsInterface object, an associative array of "key", "secret", and an optional "token" key, `false` to use null credentials, or a callable credentials provider used to create credentials or return null. See Aws\\Credentials\\CredentialProvider for a list of built-in credentials providers. If no credentials are provided, the SDK will attempt to load them from the environment.',
             'fn'      => [__CLASS__, '_apply_credentials'],
-            'default' => [CredentialProvider::class, 'defaultProvider'],
+            'default' => [__CLASS__, '_default_credential_provider'],
+        ],
+        'endpoint_discovery' => [
+            'type'     => 'value',
+            'valid'    => [ConfigurationInterface::class, CacheInterface::class, 'array', 'callable'],
+            'doc'      => 'Specifies settings for endpoint discovery. Provide an instance of Aws\EndpointDiscovery\ConfigurationInterface, an instance Aws\CacheInterface, a callable that provides a promise for a Configuration object, or an associative array with the following keys: enabled: (bool) Set to true to enable endpoint discovery. Defaults to false; cache_limit: (int) The maximum number of keys in the endpoints cache. Defaults to 1000.',
+            'fn'       => [__CLASS__, '_apply_endpoint_discovery'],
+            'default'  => [__CLASS__, '_default_endpoint_discovery_provider']
+        ],
+        'stats' => [
+            'type'  => 'value',
+            'valid' => ['bool', 'array'],
+            'default' => false,
+            'doc'   => 'Set to true to gather transfer statistics on requests sent. Alternatively, you can provide an associative array with the following keys: retries: (bool) Set to false to disable reporting on retries attempted; http: (bool) Set to true to enable collecting statistics from lower level HTTP adapters (e.g., values returned in GuzzleHttp\TransferStats). HTTP handlers must support an http_stats_receiver option for this to have an effect; timer: (bool) Set to true to enable a command timer that reports the total wall clock time spent on an operation in seconds.',
+            'fn'    => [__CLASS__, '_apply_stats'],
         ],
         'retries' => [
             'type'    => 'value',
@@ -119,9 +164,9 @@ class ClientResolver
         ],
         'validate' => [
             'type'    => 'value',
-            'valid'   => ['bool'],
+            'valid'   => ['bool', 'array'],
             'default' => true,
-            'doc'     => 'Set to false to disable client-side parameter validation.',
+            'doc'     => 'Set to false to disable client-side parameter validation. Set to true to utilize default validation constraints. Set to an associative array of validation options to enable specific validation constraints.',
             'fn'      => [__CLASS__, '_apply_validate'],
         ],
         'debug' => [
@@ -129,6 +174,13 @@ class ClientResolver
             'valid' => ['bool', 'array'],
             'doc'   => 'Set to true to display debug information when sending requests. Alternatively, you can provide an associative array with the following keys: logfn: (callable) Function that is invoked with log messages; stream_size: (int) When the size of a stream is greater than this number, the stream data will not be logged (set to "0" to not log any stream data); scrub_auth: (bool) Set to false to disable the scrubbing of auth data from the logged messages; http: (bool) Set to false to disable the "debug" feature of lower level HTTP adapters (e.g., verbose curl output).',
             'fn'    => [__CLASS__, '_apply_debug'],
+        ],
+        'csm' => [
+            'type'     => 'value',
+            'valid'    => [\Aws\ClientSideMonitoring\ConfigurationInterface::class, 'callable', 'array', 'bool'],
+            'doc'      => 'CSM options for the client. Provides a callable wrapping a promise, a boolean "false", an instance of ConfigurationInterface, or an associative array of "enabled", "host", "port", and "client_id".',
+            'fn'       => [__CLASS__, '_apply_csm'],
+            'default'  => [\Aws\ClientSideMonitoring\ConfigurationProvider::class, 'defaultProvider']
         ],
         'http' => [
             'type'    => 'value',
@@ -156,6 +208,13 @@ class ClientResolver
             'fn'       => [__CLASS__, '_apply_user_agent'],
             'default'  => [],
         ],
+        'idempotency_auto_fill' => [
+            'type'      => 'value',
+            'valid'     => ['bool', 'callable'],
+            'doc'       => 'Set to false to disable SDK to populate parameters that enabled \'idempotencyToken\' trait with a random UUID v4 value on your behalf. Using default value \'true\' still allows parameter value to be overwritten when provided. Note: auto-fill only works when cryptographically secure random bytes generator functions(random_bytes, openssl_random_pseudo_bytes or mcrypt_create_iv) can be found. You may also provide a callable source of random bytes.',
+            'default'   => true,
+            'fn'        => [__CLASS__, '_apply_idempotency_auto_fill']
+        ],
     ];
 
     /**
@@ -174,7 +233,9 @@ class ClientResolver
      * - default: (mixed) The default value of the argument if not provided. If
      *   a function is provided, then it will be invoked to provide a default
      *   value. The function is provided the array of options and is expected
-     *   to return the default value of the option.
+     *   to return the default value of the option. The default value can be a
+     *   closure and can not be a callable string that is not  part of the
+     *   defaultArgs array.
      * - doc: (string) The argument documentation string.
      * - fn: (callable) Function used to apply the argument. The function
      *   accepts the provided value, array of arguments by reference, and an
@@ -199,6 +260,7 @@ class ClientResolver
 
     /**
      * Resolves client configuration options and attached event listeners.
+     * Check for missing keys in passed arguments
      *
      * @param array       $args Provided constructor arguments.
      * @param HandlerList $list Handler list to augment.
@@ -215,9 +277,16 @@ class ClientResolver
             if (!isset($args[$key])) {
                 if (isset($a['default'])) {
                     // Merge defaults in when not present.
-                    $args[$key] = is_callable($a['default'])
-                        ? $a['default']($args)
-                        : $a['default'];
+                    if (is_callable($a['default'])
+                        && (
+                            is_array($a['default'])
+                            || $a['default'] instanceof \Closure
+                        )
+                    ) {
+                        $args[$key] = $a['default']($args);
+                    } else {
+                        $args[$key] = $a['default'];
+                    }
                 } elseif (empty($a['required'])) {
                     continue;
                 } else {
@@ -317,7 +386,7 @@ class ClientResolver
         foreach ($this->argDefinitions as $k => $a) {
             if (empty($a['required'])
                 || isset($a['default'])
-                || array_key_exists($k, $args)
+                || isset($args[$k])
             ) {
                 continue;
             }
@@ -332,7 +401,10 @@ class ClientResolver
     {
         if ($value) {
             $decider = RetryMiddleware::createDefaultDecider($value);
-            $list->appendSign(Middleware::retry($decider), 'retry');
+            $list->appendSign(
+                Middleware::retry($decider, null, $args['stats']['retries']),
+                'retry'
+            );
         }
     }
 
@@ -340,7 +412,9 @@ class ClientResolver
     {
         if (is_callable($value)) {
             return;
-        } elseif ($value instanceof CredentialsInterface) {
+        }
+
+        if ($value instanceof CredentialsInterface) {
             $args['credentials'] = CredentialProvider::fromCredentials($value);
         } elseif (is_array($value)
             && isset($value['key'])
@@ -369,7 +443,45 @@ class ClientResolver
         }
     }
 
-    public static function _apply_api_provider(callable $value, array &$args, HandlerList $list)
+    public static function _default_credential_provider(array $args)
+    {
+        return CredentialProvider::defaultProvider($args);
+    }
+
+    public static function _apply_csm($value, array &$args, HandlerList $list)
+    {
+        if ($value === false) {
+            $value = new Configuration(
+                false,
+                \Aws\ClientSideMonitoring\ConfigurationProvider::DEFAULT_HOST,
+                \Aws\ClientSideMonitoring\ConfigurationProvider::DEFAULT_PORT,
+                \Aws\ClientSideMonitoring\ConfigurationProvider::DEFAULT_CLIENT_ID
+            );
+            $args['csm'] = $value;
+        }
+
+        $list->appendBuild(
+            ApiCallMonitoringMiddleware::wrap(
+                $args['credentials'],
+                $value,
+                $args['region'],
+                $args['api']->getServiceId()
+            ),
+            'ApiCallMonitoringMiddleware'
+        );
+
+        $list->appendAttempt(
+            ApiCallAttemptMonitoringMiddleware::wrap(
+                $args['credentials'],
+                $value,
+                $args['region'],
+                $args['api']->getServiceId()
+            ),
+            'ApiCallAttemptMonitoringMiddleware'
+        );
+    }
+
+    public static function _apply_api_provider(callable $value, array &$args)
     {
         $api = new Service(
             ApiProvider::resolve(
@@ -380,35 +492,96 @@ class ClientResolver
             ),
             $value
         );
+
+        if (
+            empty($args['config']['signing_name'])
+            && isset($api['metadata']['signingName'])
+        ) {
+            $args['config']['signing_name'] = $api['metadata']['signingName'];
+        }
+
         $args['api'] = $api;
-        $args['serializer'] = Service::createSerializer($api, $args['endpoint']);
         $args['parser'] = Service::createParser($api);
-        $args['error_parser'] = Service::createErrorParser($api->getProtocol());
-        $list->prependBuild(Middleware::requestBuilder($args['serializer']), 'builder');
+        $args['error_parser'] = Service::createErrorParser($api->getProtocol(), $api);
     }
 
     public static function _apply_endpoint_provider(callable $value, array &$args)
     {
         if (!isset($args['endpoint'])) {
+            $endpointPrefix = isset($args['api']['metadata']['endpointPrefix'])
+                ? $args['api']['metadata']['endpointPrefix']
+                : $args['service'];
+
             // Invoke the endpoint provider and throw if it does not resolve.
             $result = EndpointProvider::resolve($value, [
-                'service' => $args['service'],
+                'service' => $endpointPrefix,
                 'region'  => $args['region'],
-                'scheme'  => $args['scheme']
+                'scheme'  => $args['scheme'],
+                'options' => self::getEndpointProviderOptions($args),
             ]);
 
             $args['endpoint'] = $result['endpoint'];
 
-            if (isset($result['signatureVersion'])) {
-                $args['config']['signature_version'] = $result['signatureVersion'];
+            if (
+                empty($args['config']['signature_version'])
+                && isset($result['signatureVersion'])
+            ) {
+                $args['config']['signature_version']
+                    = $result['signatureVersion'];
+            }
+
+            if (
+                empty($args['config']['signing_region'])
+                && isset($result['signingRegion'])
+            ) {
+                $args['config']['signing_region'] = $result['signingRegion'];
+            }
+
+            if (
+                empty($args['config']['signing_name'])
+                && isset($result['signingName'])
+            ) {
+                $args['config']['signing_name'] = $result['signingName'];
             }
         }
+    }
+
+    public static function _apply_endpoint_discovery($value, array &$args) {
+        $args['endpoint_discovery'] = $value;
+    }
+
+    public static function _default_endpoint_discovery_provider(array $args)
+    {
+        return ConfigurationProvider::defaultProvider($args);
+    }
+
+    public static function _apply_serializer($value, array &$args, HandlerList $list)
+    {
+        $list->prependBuild(Middleware::requestBuilder($value), 'builder');
     }
 
     public static function _apply_debug($value, array &$args, HandlerList $list)
     {
         if ($value !== false) {
             $list->interpose(new TraceMiddleware($value === true ? [] : $value));
+        }
+    }
+
+    public static function _apply_stats($value, array &$args, HandlerList $list)
+    {
+        // Create an array of stat collectors that are disabled (set to false)
+        // by default. If the user has passed in true, enable all stat
+        // collectors.
+        $defaults = array_fill_keys(
+            ['http', 'retries', 'timer'],
+            $value === true
+        );
+        $args['stats'] = is_array($value)
+            ? array_replace($defaults, $value)
+            : $defaults;
+
+        if ($args['stats']['timer']) {
+            $list->prependInit(Middleware::timer(), 'timer');
         }
     }
 
@@ -419,12 +592,17 @@ class ClientResolver
 
     public static function _apply_validate($value, array &$args, HandlerList $list)
     {
-        if ($value === true) {
-            $list->appendValidate(
-                Middleware::validation($args['api'], new Validator()),
-                'validation'
-            );
+        if ($value === false) {
+            return;
         }
+
+        $validator = $value === true
+            ? new Validator()
+            : new Validator($value);
+        $list->appendValidate(
+            Middleware::validation($args['api'], $validator),
+            'validation'
+        );
     }
 
     public static function _apply_handler($value, array &$args, HandlerList $list)
@@ -438,7 +616,8 @@ class ClientResolver
             default_http_handler(),
             $args['parser'],
             $args['error_parser'],
-            $args['exception_class']
+            $args['exception_class'],
+            $args['stats']['http']
         );
     }
 
@@ -448,7 +627,8 @@ class ClientResolver
             $value,
             $args['parser'],
             $args['error_parser'],
-            $args['exception_class']
+            $args['exception_class'],
+            $args['stats']['http']
         );
     }
 
@@ -460,6 +640,9 @@ class ClientResolver
 
         $value = array_map('strval', $value);
 
+        if (defined('HHVM_VERSION')) {
+            array_unshift($value, 'HHVM/' . HHVM_VERSION);
+        }
         array_unshift($value, 'aws-sdk-php/' . Sdk::VERSION);
         $args['ua_append'] = $value;
 
@@ -491,9 +674,43 @@ class ClientResolver
         $args['endpoint'] = $value;
     }
 
-    public static function _default_endpoint_provider()
+    public static function _apply_idempotency_auto_fill(
+        $value,
+        array &$args,
+        HandlerList $list
+    ) {
+        $enabled = false;
+        $generator = null;
+
+
+        if (is_bool($value)) {
+            $enabled = $value;
+        } elseif (is_callable($value)) {
+            $enabled = true;
+            $generator = $value;
+        }
+
+        if ($enabled) {
+            $list->prependInit(
+                IdempotencyTokenMiddleware::wrap($args['api'], $generator),
+                'idempotency_auto_fill'
+            );
+        }
+    }
+
+    public static function _default_endpoint_provider(array $args)
     {
-        return EndpointProvider::defaultProvider();
+        $options = self::getEndpointProviderOptions($args);
+        return PartitionEndpointProvider::defaultProvider($options)
+            ->getPartition($args['region'], $args['service']);
+    }
+
+    public static function _default_serializer(array $args)
+    {
+        return Service::createSerializer(
+            $args['api'],
+            $args['endpoint']
+        );
     }
 
     public static function _default_signature_provider()
@@ -503,9 +720,62 @@ class ClientResolver
 
     public static function _default_signature_version(array &$args)
     {
-        return isset($args['config']['signature_version'])
-            ? $args['config']['signature_version']
+        if (isset($args['config']['signature_version'])) {
+            return $args['config']['signature_version'];
+        }
+
+        $args['__partition_result'] = isset($args['__partition_result'])
+            ? isset($args['__partition_result'])
+            : call_user_func(PartitionEndpointProvider::defaultProvider(), [
+                'service' => $args['service'],
+                'region' => $args['region'],
+            ]);
+
+        return isset($args['__partition_result']['signatureVersion'])
+            ? $args['__partition_result']['signatureVersion']
             : $args['api']->getSignatureVersion();
+    }
+
+    public static function _default_signing_name(array &$args)
+    {
+        if (isset($args['config']['signing_name'])) {
+            return $args['config']['signing_name'];
+        }
+
+        $args['__partition_result'] = isset($args['__partition_result'])
+            ? isset($args['__partition_result'])
+            : call_user_func(PartitionEndpointProvider::defaultProvider(), [
+                'service' => $args['service'],
+                'region' => $args['region'],
+            ]);
+
+        if (isset($args['__partition_result']['signingName'])) {
+            return $args['__partition_result']['signingName'];
+        }
+
+        if ($signingName = $args['api']->getSigningName()) {
+            return $signingName;
+        }
+
+        return $args['service'];
+    }
+
+    public static function _default_signing_region(array &$args)
+    {
+        if (isset($args['config']['signing_region'])) {
+            return $args['config']['signing_region'];
+        }
+
+        $args['__partition_result'] = isset($args['__partition_result'])
+            ? isset($args['__partition_result'])
+            : call_user_func(PartitionEndpointProvider::defaultProvider(), [
+                'service' => $args['service'],
+                'region' => $args['region'],
+            ]);
+
+        return isset($args['__partition_result']['signingRegion'])
+            ? $args['__partition_result']['signingRegion']
+            : $args['region'];
     }
 
     public static function _missing_version(array $args)
@@ -544,5 +814,21 @@ A "region" configuration value is required for the "{$service}" service
 (e.g., "us-west-2"). A list of available public regions and endpoints can be
 found at http://docs.aws.amazon.com/general/latest/gr/rande.html.
 EOT;
+    }
+
+    /**
+     * Extracts client options for the endpoint provider to its own array
+     *
+     * @param array $args
+     * @return array
+     */
+    private static function getEndpointProviderOptions(array $args)
+    {
+        $options = [];
+        if (isset($args['sts_regional_endpoints'])) {
+            $options['sts_regional_endpoints'] = $args['sts_regional_endpoints'];
+        }
+
+        return $options;
     }
 }

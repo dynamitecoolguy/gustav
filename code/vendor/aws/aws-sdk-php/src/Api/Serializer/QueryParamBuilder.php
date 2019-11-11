@@ -96,7 +96,8 @@ class QueryParamBuilder
         $items = $shape->getMember();
 
         if (!$this->isFlat($shape)) {
-            $prefix .= '.member';
+            $locationName = $shape->getMember()['locationName'] ?: 'member';
+            $prefix .= ".$locationName";
         } elseif ($name = $this->queryName($items)) {
             $parts = explode('.', $prefix);
             $parts[count($parts) - 1] = $name;
@@ -143,7 +144,10 @@ class QueryParamBuilder
         $prefix,
         array &$query
     ) {
-        $query[$prefix] = TimestampShape::format($value, 'iso8601');
+        $timestampFormat = !empty($shape['timestampFormat'])
+            ? $shape['timestampFormat']
+            : 'iso8601';
+        $query[$prefix] = TimestampShape::format($value, $timestampFormat);
     }
 
     protected function format_boolean(Shape $shape, $value, $prefix, array &$query)

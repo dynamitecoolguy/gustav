@@ -1,0 +1,150 @@
+Project: Game Server Template
+CodeName: Gustav
+
+==============
+VirtualBox構築
+==============
+
+* Ubuntu18.04LTS Desktop版 ISOで起動
+* "Ubuntuをインストール"
+* キーボードレイアウト: 日本語/日本語
+* 最小インストール (アップデートをダウンロードするはチェックを外す)
+* ディスクを削除してUbuntuをインストール
+* どこに住んでいますか: Tokyo
+* 名前はお好み
+* ...インストール待ち... -> 再起動
+* Ubuntuソフトウェアを起動してインストール済みから以下のアプリケーションを削除
+  - File Roller
+  - LibreOffice
+  - Seahorse
+  - ドキュメントビューア(Evince)
+* "アプリケーションを表示する"から端末を起動 (後々のためにアイコン右クリックしてお気に入りに追加する)
+  $ sudo apt purge thunderbird
+  $ sudo apt update
+  $ sudo apt upgrade
+  $ sudo apt install -y build-essential
+* VirtualBoxのデバイスメニューのGuest Additions CDイメージの追加を選択 -> 実行するかどうか聞かれるので実行する
+  -> Virtual Box CDイメージを右クリックで取り出す -> サーバ再起動
+* VirtualBoxの共有フォルダへのアクセス権付与
+  $ sudo adduser $(whoami) vboxsf
+* インストール続き
+  $ sudo apt install fonts-sawarabi-gothic   (IntelliJ IDEA用。好み)
+  $ sudo snap install intellij-idea-ultimate --classic
+* Git
+  $ sudo apt install git
+  $ ssh-keygen -t rsa
+  $ eval "$(ssh-agent -s)"
+  $ ssh-add ~/.ssh/id_rsa
+  $ cat ~/.ssh/id_rsa.pub   (githubに貼り付け)
+  $ git config --global user.email "<<YOUR MAIL ADDRESS>>"
+  $ git config --global user.name "Shinji Kodama"
+* Local PHP
+  $ sudo apt-add-repository ppa:ondrej/php
+  $ sudo apt update
+  $ sudo apt install php7.3-cli
+  $ sudo apt install php7.3-mbstring php7.3-zip php7.3-json php7.3-bcmath php7.3-curl php7.3-xml php7.3-mysql php7.3-pgsql php7.3-gd
+  $ sudo apt install php-apcu php-apcu-bc php-igbinary php-msgpack php-redis php-xdebug php-yaml
+  $ sudo apt install composer
+* docker/docker-compose-development
+  $ sudo addgroup --system docker
+  $ sudo adduser $(whoami) docker
+  $ newgrp docker
+  $ sudo snap install docker
+  $ sudo systemctl restart snap.docker.dockerd
+* AWS CLI
+  $ sudo apt install awscli
+  $ aws configure (必要なら--profile xxxxxxを付ける)
+    AWS Access Key ID [None]: A*******************
+    AWS Secret Access Key [None]: ****************************************
+    Default region name [None]: ap-northeast-1
+    Default output format [None]: json
+* IntellJ-IDEA
+  $ intellij-idea-ultimate
+    起動したら右クリックでお気に入りに追加
+	初期起動設定
+      UI Themes : Darcula
+	  Default plugins : JavaFrameworks Disable all, Web Development [Haml, Less, Stylus, CoffeeScript, Flash/Flex] Disable
+	                    Version Controls [Mercurial Perforce Subversion] Disable, Clouds [OpenShift] Disable
+                        Swing Disable, Other Tools [Eclipse Interoperability] Disable, Plugin Development Disable
+      Live Edit Tool Install
+	  Version Control
+	    GitHub -> Login
+	起動後 Configure Settings
+      Appearance & Behavior:
+		Appearance: Use custom font: さわらび16pt
+	  Keymap:
+        Emacs
+	  Plugins:
+		Install .ignore, PHP, PHP composer.json
+
+
+==============
+Create Project
+==============
+New Project -> PHP Empty Peojct
+  Project name: gustav
+  Project location: ~/IdesProjects/gustav
+Configuration
+  Laguages & Framewoks
+    PHP
+      CLI Interpreters PHP7.3追加
+
+
+===========
+ProjectTree
+===========
+  .gitignore
+  /aws
+    ec2-userdata.txt
+  /certs
+    README
+	server.crt
+	server.csr
+	server.key
+  /compose
+    /mysql
+	/postgresql
+	/proxy
+	/web_app
+	/web_mgr
+    docker-compose-local.yml
+	docker-compose-development.yml
+  /credentials
+    .gitkeep
+  /code
+    /app
+	  /src              (Sources Root: Gustav\App)
+	  /public
+	  /test             (Test Sources Root: Gustav\App)
+	/mgr
+	  /src              (Sources Root: Gustav\Mgr)
+	  /public
+	  /test             (Test Sources Root: Gustav\Mgr)
+	/common
+	  /src              (Sources Root: Gustav\Common)
+	  /test             (Test Sources Root: Gustav\Common)
+	/vendor
+	composer.json
+	composer.lock
+
+========
+Composer
+========
+$ cd code
+$ composer update
+
+=====
+Build
+=====
+$ cd compose
+$ docker-compose -f docker-compose-local.yml build
+
+======
+XDebug
+======
+Configuration
+  Laguages & Framewoks
+    PHP
+      Servers
+        Name: app.localhost, Host app.localhost:80, Projectfiles: .../code -> /var/www
+        Name: mgr.localhost, Host mgr.localhost:80, Projectfiles: .../code -> /var/www

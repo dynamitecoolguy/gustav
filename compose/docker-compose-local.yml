@@ -17,7 +17,8 @@ services:
 
   web_app:
     build:
-      context: ./web_app
+      context: ..
+      dockerfile: compose/web_app/Dockerfile
       args:
         - environment=local
     volumes:
@@ -29,11 +30,12 @@ services:
       - private_net
     environment:
       XDEBUG_CONFIG: "remote_host=172.28.0.1"
-      PHP_IDE_CONFIG: "serverName=app"
+      PHP_IDE_CONFIG: "serverName=app.localhost"
 
   web_mgr:
     build:
-      context: ./web_mgr
+      context: ..
+      dockerfile: compose/web_mgr/Dockerfile
       args:
         - environment=local
     volumes:
@@ -45,7 +47,7 @@ services:
       - private_net
     environment:
       XDEBUG_CONFIG: "remote_host=172.28.0.1"
-      PHP_IDE_CONFIG: "serverName=mgr"
+      PHP_IDE_CONFIG: "serverName=mgr.localhost"
 
   redis:
     image: redis:5.0.5
@@ -70,14 +72,14 @@ services:
     networks:
       - private_net
 
-  psql:
+  pgsql:
     build:
-      context: ./psql
+      context: pgsql
     volumes:
-      - psql-data:/var/lib/postgresql
+      - pgsql-data:/var/lib/postgresql
     ports:
       - "15432:5432"
-    container_name: psql
+    container_name: pgsql
     networks:
       - private_net
 
@@ -106,7 +108,7 @@ services:
 volumes:
   redis-data:
   mysql-data:
-  psql-data:
+  pgsql-data:
   storage-data:
 
 networks:

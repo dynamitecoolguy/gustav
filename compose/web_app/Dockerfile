@@ -54,23 +54,23 @@ RUN cp /usr/share/zoneinfo/UTC /etc/localtime \
 
 # supervisord
 RUN mkdir -p /etc/supervisor.d
-COPY supervisord.conf /etc/supervisord.conf
+COPY compose/web_app/supervisord.conf /etc/supervisord.conf
 
 # settings
-COPY settings-${environment}.yml /usr/local/etc/myapp/settings.yml
+COPY compose/web_app/settings-${environment}.yml /usr/local/etc/gustav/settings.yml
 
 # PHP
-COPY php.ini /php.ini
-COPY php-fpm.conf /php-fpm.conf
-COPY php-fpm-supervisor.conf /php-fpm-supervisor.conf
+COPY compose/web_app/php.ini /php.ini
+COPY compose/web_app/php-fpm.conf /php-fpm.conf
+COPY compose/web_app/php-fpm-supervisor.conf /php-fpm-supervisor.conf
 RUN cp /php-fpm.conf /etc/php7/php-fpm.d/z-php.conf \
   && cp /php.ini /etc/php7/conf.d/config.ini \
   && cp /php-fpm-supervisor.conf /etc/supervisor.d/php-fpm.conf
 
 # Nginx
-COPY nginx.conf /nginx.conf
-COPY nginx-server.conf /nginx-server.conf
-COPY nginx-supervisor.conf /nginx-supervisor.conf
+COPY compose/web_app/nginx.conf /nginx.conf
+COPY compose/web_app/nginx-server.conf /nginx-server.conf
+COPY compose/web_app/nginx-supervisor.conf /nginx-supervisor.conf
 RUN cp /nginx.conf /etc/nginx/nginx.conf \
   && cp /nginx-server.conf /etc/nginx/conf.d/default.conf \
   && cp /nginx-supervisor.conf /etc/supervisor.d/nginx.conf
@@ -84,6 +84,10 @@ RUN deluser nginx \
     && addgroup -g 1000 -S www-data \
     && adduser -u 1000 -D -S -G www-data www-data \
     && adduser -u 1001 -D -S -G www-data nginx
+
+#COPY src/hoge /var/www/hoge
+#COPY src/vendor /var/www/vendor
+COPY credentials /usr/local/etc/myapp/credentials
 
 EXPOSE 3128
 

@@ -11,13 +11,17 @@ class JsonParser
 {
     public function parse(Shape $shape, $value)
     {
+        if ($value === null) {
+            return $value;
+        }
+
         switch ($shape['type']) {
             case 'structure':
                 $target = [];
                 foreach ($shape->getMembers() as $name => $member) {
-                    $name = $member['locationName'] ?: $name;
-                    if (isset($value[$name])) {
-                        $target[$name] = $this->parse($member, $value[$name]);
+                    $locationName = $member['locationName'] ?: $name;
+                    if (isset($value[$locationName])) {
+                        $target[$name] = $this->parse($member, $value[$locationName]);
                     }
                 }
                 return $target;
@@ -39,6 +43,10 @@ class JsonParser
                 return $target;
 
             case 'timestamp':
+                if (!empty($shape['timestampFormat'])
+                    && $shape['timestampFormat'] !== 'unixTimestamp') {
+                    return new DateTimeResult($value);
+                }
                 // The Unix epoch (or Unix time or POSIX time or Unix
                 // timestamp) is the number of seconds that have elapsed since
                 // January 1, 1970 (midnight UTC/GMT).

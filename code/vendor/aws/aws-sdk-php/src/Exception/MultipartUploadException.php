@@ -1,10 +1,15 @@
 <?php
 namespace Aws\Exception;
 
+use Aws\HasMonitoringEventsTrait;
+use Aws\MonitoringEventsInterface;
 use Aws\Multipart\UploadState;
 
-class MultipartUploadException extends \RuntimeException
+class MultipartUploadException extends \RuntimeException implements
+    MonitoringEventsInterface
 {
+    use HasMonitoringEventsTrait;
+
     /** @var UploadState State of the erroneous transfer */
     private $state;
 
@@ -13,11 +18,11 @@ class MultipartUploadException extends \RuntimeException
      * @param \Exception|array $prev  Exception being thrown.
      */
     public function __construct(UploadState $state, $prev = null) {
-        $msg = 'An exception occurred while performing a multipart upload.';
+        $msg = 'An exception occurred while performing a multipart upload';
 
         if (is_array($prev)) {
             $msg = strtr($msg, ['performing' => 'uploading parts to']);
-            $msg .= " The following parts had errors:\n";
+            $msg .= ". The following parts had errors:\n";
             /** @var $error AwsException */
             foreach ($prev as $part => $error) {
                 $msg .= "- Part {$part}: " . $error->getMessage(). "\n";
@@ -35,6 +40,7 @@ class MultipartUploadException extends \RuntimeException
             if (isset($action)) {
                 $msg = strtr($msg, ['performing' => $action]);
             }
+            $msg .= ": {$prev->getMessage()}";
         }
 
         if (!$prev instanceof \Exception) {

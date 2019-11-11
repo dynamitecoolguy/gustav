@@ -1,7 +1,6 @@
 <?php
 namespace Aws\DynamoDb;
 
-use Aws\AwsClientInterface;
 use Aws\CommandInterface;
 use Aws\CommandPool;
 use Aws\Exception\AwsException;
@@ -227,9 +226,7 @@ class WriteRequestBatch
             foreach ($requests as $request) {
                 $this->queue[] = [
                     'table' => $table,
-                    'data'  => isset($request['PutRequest'])
-                        ? $request['PutRequest']
-                        : $request['DeleteRequest']
+                    'data'  => $request,
                 ];
             }
         }

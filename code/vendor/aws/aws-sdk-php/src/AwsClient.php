@@ -4,6 +4,10 @@ namespace Aws;
 use Aws\Api\ApiProvider;
 use Aws\Api\DocModel;
 use Aws\Api\Service;
+use Aws\ClientSideMonitoring\ApiCallAttemptMonitoringMiddleware;
+use Aws\ClientSideMonitoring\ApiCallMonitoringMiddleware;
+use Aws\ClientSideMonitoring\ConfigurationProvider;
+use Aws\EndpointDiscovery\EndpointDiscoveryMiddleware;
 use Aws\Signature\SignatureProvider;
 use GuzzleHttp\Psr7\Uri;
 
@@ -12,6 +16,14 @@ use GuzzleHttp\Psr7\Uri;
  */
 class AwsClient implements AwsClientInterface
 {
+    use AwsClientTrait;
+
+    /** @var array */
+    private $aliases;
+
+    /** @var array */
+    private $config;
+
     /** @var string */
     private $region;
 
@@ -59,6 +71,16 @@ class AwsClient implements AwsClientInterface
      *   credentials or return null. See Aws\Credentials\CredentialProvider for
      *   a list of built-in credentials providers. If no credentials are
      *   provided, the SDK will attempt to load them from the environment.
+     * - csm:
+     *   (Aws\ClientSideMonitoring\ConfigurationInterface|array|callable) Specifies
+     *   the credentials used to sign requests. Provide an
+     *   Aws\ClientSideMonitoring\ConfigurationInterface object, a callable
+     *   configuration provider used to create client-side monitoring configuration,
+     *   `false` to disable csm, or an associative array with the following keys:
+     *   enabled: (bool) Set to true to enable client-side monitoring, defaults
+     *   to false; host: (string) the host location to send monitoring events to,
+     *   defaults to 127.0.0.1; port: (int) The port used for the host connection,
+     *   defaults to 31000; client_id: (string) An identifier for this project
      * - debug: (bool|array) Set to true to display debug information when
      *   sending requests. Alternatively, you can provide an associative array
      *   with the following keys: logfn: (callable) Function that is invoked
@@ -68,9 +90,31 @@ class AwsClient implements AwsClientInterface
      *   disable the scrubbing of auth data from the logged messages; http:
      *   (bool) Set to false to disable the "debug" feature of lower level HTTP
      *   adapters (e.g., verbose curl output).
+     * - stats: (bool|array) Set to true to gather transfer statistics on
+     *   requests sent. Alternatively, you can provide an associative array with
+     *   the following keys: retries: (bool) Set to false to disable reporting
+     *   on retries attempted; http: (bool) Set to true to enable collecting
+     *   statistics from lower level HTTP adapters (e.g., values returned in
+     *   GuzzleHttp\TransferStats). HTTP handlers must support an
+     *   `http_stats_receiver` option for this to have an effect; timer: (bool)
+     *   Set to true to enable a command timer that reports the total wall clock
+     *   time spent on an operation in seconds.
+     * - disable_host_prefix_injection: (bool) Set to true to disable host prefix
+     *   injection logic for services that use it. This disables the entire
+     *   prefix injection, including the portions supplied by user-defined
+     *   parameters. Setting this flag will have no effect on services that do
+     *   not use host prefix injection.
      * - endpoint: (string) The full URI of the webservice. This is only
      *   required when connecting to a custom endpoint (e.g., a local version
      *   of S3).
+     * - endpoint_discovery: (Aws\EndpointDiscovery\ConfigurationInterface,
+     *   Aws\CacheInterface, array, callable) Settings for endpoint discovery.
+     *   Provide an instance of Aws\EndpointDiscovery\ConfigurationInterface,
+     *   an instance Aws\CacheInterface, a callable that provides a promise for
+     *   a Configuration object, or an associative array with the following
+     *   keys: enabled: (bool) Set to true to enable endpoint discovery,
+     *   defaults to false; cache_limit: (int) The maximum number of keys in the
+     *   endpoints cache, defaults to 1000.
      * - endpoint_provider: (callable) An optional PHP callable that
      *   accepts a hash of options including a "service" and "region" key and
      *   returns NULL or a hash of endpoint data, of which the "endpoint" key
@@ -88,6 +132,13 @@ class AwsClient implements AwsClientInterface
      *   accepts a PSR-7 request object and returns a promise that is fulfilled
      *   with a PSR-7 response object or rejected with an array of exception
      *   data. NOTE: This option supersedes any provided "handler" option.
+     * - idempotency_auto_fill: (bool|callable) Set to false to disable SDK to
+     *   populate parameters that enabled 'idempotencyToken' trait with a random
+     *   UUID v4 value on your behalf. Using default value 'true' still allows
+     *   parameter value to be overwritten when provided. Note: auto-fill only
+     *   works when cryptographically secure random bytes generator functions
+     *   (random_bytes, openssl_random_pseudo_bytes or mcrypt_create_iv) can be
+     *   found. You may also provide a callable source of random bytes.
      * - profile: (string) Allows you to specify which profile to use when
      *   credentials are created from the AWS credentials file in your HOME
      *   directory. This setting overrides the AWS_PROFILE environment
@@ -131,7 +182,6 @@ class AwsClient implements AwsClientInterface
         if (!isset($args['exception_class'])) {
             $args['exception_class'] = $exceptionClass;
         }
-
         $this->handlerList = new HandlerList();
         $resolver = new ClientResolver(static::getArguments());
         $config = $resolver->resolve($args, $this->handlerList);
@@ -143,6 +193,11 @@ class AwsClient implements AwsClientInterface
         $this->config = $config['config'];
         $this->defaultRequestOptions = $config['http'];
         $this->addSignatureMiddleware();
+        $this->addInvocationId();
+        $this->addEndpointParameterMiddleware($args);
+        $this->addEndpointDiscoveryMiddleware($config, $args);
+        $this->loadAliases();
+        $this->addStreamRequestPayload();
 
         if (isset($args['with_resolved'])) {
             $args['with_resolved']($config);
@@ -152,19 +207,6 @@ class AwsClient implements AwsClientInterface
     public function getHandlerList()
     {
         return $this->handlerList;
-    }
-
-    public function __call($name, array $args)
-    {
-        $params = isset($args[0]) ? $args[0] : [];
-
-        if (substr($name, -5) === 'Async') {
-            return $this->executeAsync(
-                $this->getCommand(substr($name, 0, -5), $params)
-            );
-        }
-
-        return $this->execute($this->getCommand($name, $params));
     }
 
     public function getConfig($option = null)
@@ -197,23 +239,12 @@ class AwsClient implements AwsClientInterface
         return $this->api;
     }
 
-    public function execute(CommandInterface $command)
-    {
-        return $this->executeAsync($command)->wait();
-    }
-
-    public function executeAsync(CommandInterface $command)
-    {
-        $handler = $command->getHandlerList()->resolve();
-        return $handler($command);
-    }
-
     public function getCommand($name, array $args = [])
     {
         // Fail fast if the command cannot be found in the description.
-        if (!isset($this->api['operations'][$name])) {
+        if (!isset($this->getApi()['operations'][$name])) {
             $name = ucfirst($name);
-            if (!isset($this->api['operations'][$name])) {
+            if (!isset($this->getApi()['operations'][$name])) {
                 throw new \InvalidArgumentException("Operation not found: $name");
             }
         }
@@ -227,47 +258,10 @@ class AwsClient implements AwsClientInterface
         return new Command($name, $args, clone $this->getHandlerList());
     }
 
-    public function getIterator($name, array $args = [])
+    public function __sleep()
     {
-        $config = $this->api->getPaginatorConfig($name);
-        if (!$config['result_key']) {
-            throw new \UnexpectedValueException(sprintf(
-                'There are no resources to iterate for the %s operation of %s',
-                $name, $this->api['serviceFullName']
-            ));
-        }
-
-        $key = is_array($config['result_key'])
-            ? $config['result_key'][0]
-            : $config['result_key'];
-
-        if ($config['output_token'] && $config['input_token']) {
-            return $this->getPaginator($name, $args)->search($key);
-        }
-
-        $result = $this->execute($this->getCommand($name, $args))->search($key);
-
-        return new \ArrayIterator((array) $result);
-    }
-
-    public function getPaginator($name, array $args = [])
-    {
-        $config = $this->api->getPaginatorConfig($name);
-
-        return new ResultPaginator($this, $name, $args, $config);
-    }
-
-    public function waitUntil($name, array $args = [])
-    {
-        return $this->getWaiter($name, $args)->promise()->wait();
-    }
-
-    public function getWaiter($name, array $args = [])
-    {
-        $config = isset($args['@waiter']) ? $args['@waiter'] : [];
-        $config += $this->api->getWaiterConfig($name);
-
-        return new Waiter($this, $name, $args, $config);
+        throw new \RuntimeException('Instances of ' . static::class
+            . ' cannot be serialized');
     }
 
     /**
@@ -302,21 +296,93 @@ class AwsClient implements AwsClientInterface
         ];
     }
 
+    private function addEndpointParameterMiddleware($args)
+    {
+        if (empty($args['disable_host_prefix_injection'])) {
+            $list = $this->getHandlerList();
+            $list->appendBuild(
+                EndpointParameterMiddleware::wrap(
+                    $this->api
+                ),
+                'endpoint_parameter'
+            );
+        }
+    }
+
+    private function addEndpointDiscoveryMiddleware($config, $args)
+    {
+        $list = $this->getHandlerList();
+
+        if (!isset($args['endpoint'])) {
+            $list->appendBuild(
+                EndpointDiscoveryMiddleware::wrap(
+                    $this,
+                    $args,
+                    $config['endpoint_discovery']
+                ),
+                'EndpointDiscoveryMiddleware'
+            );
+        }
+    }
+
     private function addSignatureMiddleware()
     {
-        // Sign requests. This may need to be modified later to support
-        // variable signatures per/operation.
+        $api = $this->getApi();
+        $provider = $this->signatureProvider;
+        $version = $this->config['signature_version'];
+        $name = $this->config['signing_name'];
+        $region = $this->config['signing_region'];
+
+        $resolver = static function (
+            CommandInterface $c
+        ) use ($api, $provider, $name, $region, $version) {
+            $authType = $api->getOperation($c->getName())['authtype'];
+            switch ($authType){
+                case 'none':
+                    $version = 'anonymous';
+                    break;
+                case 'v4-unsigned-body':
+                    $version = 'v4-unsigned-body';
+                    break;
+            }
+            return SignatureProvider::resolve($provider, $version, $name, $region);
+        };
         $this->handlerList->appendSign(
-            Middleware::signer(
-                $this->credentialProvider,
-                constantly(SignatureProvider::resolve(
-                    $this->signatureProvider,
-                    $this->config['signature_version'],
-                    $this->api->getSigningName(),
-                    $this->region
-                ))
-            ),
+            Middleware::signer($this->credentialProvider, $resolver),
             'signer'
+        );
+    }
+
+    private function addInvocationId()
+    {
+        // Add invocation id to each request
+        $this->handlerList->prependSign(Middleware::invocationId(), 'invocation-id');
+    }
+
+    private function loadAliases($file = null)
+    {
+        if (!isset($this->aliases)) {
+            if (is_null($file)) {
+                $file = __DIR__ . '/data/aliases.json';
+            }
+            $aliases = \Aws\load_compiled_json($file);
+            $serviceId = $this->api->getServiceId();
+            $version = $this->getApi()->getApiVersion();
+            if (!empty($aliases['operations'][$serviceId][$version])) {
+                $this->aliases = array_flip($aliases['operations'][$serviceId][$version]);
+            }
+        }
+    }
+
+    private function addStreamRequestPayload()
+    {
+        $streamRequestPayloadMiddleware = StreamRequestPayloadMiddleware::wrap(
+            $this->api
+        );
+
+        $this->handlerList->prependSign(
+            $streamRequestPayloadMiddleware,
+            'StreamRequestPayloadMiddleware'
         );
     }
 
@@ -334,6 +400,20 @@ class AwsClient implements AwsClientInterface
      */
     public static function applyDocFilters(array $api, array $docs)
     {
+        $aliases = \Aws\load_compiled_json(__DIR__ . '/data/aliases.json');
+        $serviceId = $api['metadata']['serviceId'];
+        $version = $api['metadata']['apiVersion'];
+
+        // Replace names for any operations with SDK aliases
+        if (!empty($aliases['operations'][$serviceId][$version])) {
+            foreach ($aliases['operations'][$serviceId][$version] as $op => $alias) {
+                $api['operations'][$alias] = $api['operations'][$op];
+                $docs['operations'][$alias] = $docs['operations'][$op];
+                unset($api['operations'][$op], $docs['operations'][$op]);
+            }
+        }
+        ksort($api['operations']);
+
         return [
             new Service($api, ApiProvider::defaultProvider()),
             new DocModel($docs)

@@ -27,12 +27,31 @@ class S3SignatureV4 extends SignatureV4
     }
 
     /**
+     * Always add a x-amz-content-sha-256 for data integrity.
+     */
+    public function presign(
+        RequestInterface $request,
+        CredentialsInterface $credentials,
+        $expires,
+        array $options = []
+    ) {
+        if (!$request->hasHeader('x-amz-content-sha256')) {
+            $request = $request->withHeader(
+                'X-Amz-Content-Sha256',
+                $this->getPresignedPayload($request)
+            );
+        }
+
+        return parent::presign($request, $credentials, $expires, $options);
+    }
+
+    /**
      * Override used to allow pre-signed URLs to be created for an
      * in-determinate request payload.
      */
     protected function getPresignedPayload(RequestInterface $request)
     {
-        return 'UNSIGNED-PAYLOAD';
+        return SignatureV4::UNSIGNED_PAYLOAD;
     }
 
     /**
@@ -40,6 +59,10 @@ class S3SignatureV4 extends SignatureV4
      */
     protected function createCanonicalizedPath($path)
     {
-        return '/' . ltrim($path, '/');
+        // Only remove one slash in case of keys that have a preceding slash
+        if (substr($path, 0, 1) === '/') {
+            $path = substr($path, 1);
+        }
+        return '/' . $path;
     }
 }

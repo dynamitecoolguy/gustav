@@ -94,15 +94,18 @@ class StreamWrapper
     /** @var string The opened protocol (e.g., "s3") */
     private $protocol = 's3';
 
+    /** @var bool Keeps track of whether stream has been flushed since opening */
+    private $isFlushed = false;
+
     /**
      * Register the 's3://' stream wrapper
      *
-     * @param S3Client       $client   Client to use with the stream wrapper
-     * @param string         $protocol Protocol to register as.
-     * @param CacheInterface $cache    Default cache for the protocol.
+     * @param S3ClientInterface $client   Client to use with the stream wrapper
+     * @param string            $protocol Protocol to register as.
+     * @param CacheInterface    $cache    Default cache for the protocol.
      */
     public static function register(
-        S3Client $client,
+        S3ClientInterface $client,
         $protocol = 's3',
         CacheInterface $cache = null
     ) {
@@ -127,12 +130,16 @@ class StreamWrapper
 
     public function stream_close()
     {
+        if ($this->body->getSize() === 0 && !($this->isFlushed)) {
+            $this->stream_flush();
+        }
         $this->body = $this->cache = null;
     }
 
     public function stream_open($path, $mode, $options, &$opened_path)
     {
         $this->initProtocol($path);
+        $this->isFlushed = false;
         $this->params = $this->getBucketKey($path);
         $this->mode = rtrim($mode, 'bt');
 
@@ -140,11 +147,11 @@ class StreamWrapper
             return $this->triggerError($errors);
         }
 
-        return $this->boolCall(function() use ($path) {
+        return $this->boolCall(function() {
             switch ($this->mode) {
-                case 'r': return $this->openReadStream($path);
-                case 'a': return $this->openAppendStream($path);
-                default: return $this->openWriteStream($path);
+                case 'r': return $this->openReadStream();
+                case 'a': return $this->openAppendStream();
+                default: return $this->openWriteStream();
             }
         });
     }
@@ -156,6 +163,7 @@ class StreamWrapper
 
     public function stream_flush()
     {
+        $this->isFlushed = true;
         if ($this->mode == 'r') {
             return false;
         }
@@ -174,6 +182,7 @@ class StreamWrapper
             $params['ContentType'] = $type;
         }
 
+        $this->clearCacheKey("s3://{$params['Bucket']}/{$params['Key']}");
         return $this->boolCall(function () use ($params) {
             return (bool) $this->getClient()->putObject($params);
         });
@@ -280,10 +289,10 @@ class StreamWrapper
                     // Return as if it is a bucket to account for console
                     // bucket objects (e.g., zero-byte object "foo/")
                     return $this->formatUrlStat($path);
-                } else {
-                    // Attempt to stat and cache regular object
-                    return $this->formatUrlStat($result->toArray());
                 }
+
+                // Attempt to stat and cache regular object
+                return $this->formatUrlStat($result->toArray());
             } catch (S3Exception $e) {
                 // Maybe this isn't an actual key, but a prefix. Do a prefix
                 // listing of objects to determine.
@@ -445,7 +454,7 @@ class StreamWrapper
      */
     public function dir_rewinddir()
     {
-        $this->boolCall(function() {
+        return $this->boolCall(function() {
             $this->objectIterator = null;
             $this->dir_opendir($this->openedPath, null);
             return true;
@@ -529,20 +538,22 @@ class StreamWrapper
         }
 
         return $this->boolCall(function () use ($partsFrom, $partsTo) {
+            $options = $this->getOptions(true);
             // Copy the object and allow overriding default parameters if
             // desired, but by default copy metadata
-            $this->getClient()->copyObject($this->getOptions(true) + [
-                'Bucket'            => $partsTo['Bucket'],
-                'Key'               => $partsTo['Key'],
-                'MetadataDirective' => 'COPY',
-                'CopySource'        => '/' . $partsFrom['Bucket'] . '/'
-                                           . rawurlencode($partsFrom['Key']),
-            ]);
+            $this->getClient()->copy(
+                $partsFrom['Bucket'],
+                $partsFrom['Key'],
+                $partsTo['Bucket'],
+                $partsTo['Key'],
+                isset($options['acl']) ? $options['acl'] : 'private',
+                $options
+            );
             // Delete the original object
             $this->getClient()->deleteObject([
                 'Bucket' => $partsFrom['Bucket'],
                 'Key'    => $partsFrom['Key']
-            ] + $this->getOptions(true));
+            ] + $options);
             return true;
         });
     }
@@ -635,7 +646,7 @@ class StreamWrapper
     /**
      * Gets the client from the stream context
      *
-     * @return S3Client
+     * @return S3ClientInterface
      * @throws \RuntimeException if no client has been configured
      */
     private function getClient()
@@ -942,6 +953,6 @@ class StreamWrapper
     {
         $size = $this->body->getSize();
 
-        return $size !== null ? $size : $this->size;
+        return !empty($size) ? $size : $this->size;
     }
 }

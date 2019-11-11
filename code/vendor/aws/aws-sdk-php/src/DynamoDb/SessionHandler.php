@@ -29,28 +29,33 @@ class SessionHandler implements \SessionHandlerInterface
     /** @var string Session name. */
     private $sessionName;
 
-    /** @var string Stores serialized data for tracking changes. */
-    private $dataRead;
+    /** @var string The last known session ID */
+    private $openSessionId = '';
 
-    /** @var string Keeps track of the open session's ID. */
-    private $openSessionId;
+    /** @var string Stores serialized data for tracking changes. */
+    private $dataRead = '';
 
     /** @var bool Keeps track of whether the session has been written. */
-    private $sessionWritten;
+    private $sessionWritten = false;
 
     /**
      * Creates a new DynamoDB Session Handler.
      *
      * The configuration array accepts the following array keys and values:
-     * - table_name:               Name of table to store the sessions.
-     * - hash_key:                 Name of hash key in table. Default: "id".
-     * - session_lifetime:         Lifetime of inactive sessions expiration.
-     * - consistent_read:          Whether or not to use consistent reads.
-     * - batch_config:             Batch options used for garbage collection.
-     * - locking:                  Whether or not to use session locking.
-     * - max_lock_wait_time:       Max time (s) to wait for lock acquisition.
-     * - min_lock_retry_microtime: Min time (µs) to wait between lock attempts.
-     * - max_lock_retry_microtime: Max time (µs) to wait between lock attempts.
+     * - table_name:                    Name of table to store the sessions.
+     * - hash_key:                      Name of hash key in table. Default: "id".
+     * - data_attribute:                Name of the data attribute in table. Default: "data".
+     * - session_lifetime:              Lifetime of inactive sessions expiration.
+     * - session_lifetime_attribute:    Name of the session life time attribute in table. Default: "expires".
+     * - consistent_read:               Whether or not to use consistent reads.
+     * - batch_config:                  Batch options used for garbage collection.
+     * - locking:                       Whether or not to use session locking.
+     * - max_lock_wait_time:            Max time (s) to wait for lock acquisition.
+     * - min_lock_retry_microtime:      Min time (µs) to wait between lock attempts.
+     * - max_lock_retry_microtime:      Max time (µs) to wait between lock attempts.
+     *
+     * You can find the full list of parameters and defaults within the trait
+     * Aws\DynamoDb\SessionConnectionConfigTrait
      *
      * @param DynamoDbClient $client Client for doing DynamoDB operations
      * @param array          $config Configuration for the Session Handler
@@ -100,9 +105,8 @@ class SessionHandler implements \SessionHandlerInterface
     {
         $this->savePath = $savePath;
         $this->sessionName = $sessionName;
-        $this->openSessionId = session_id();
 
-        return (bool) $this->openSessionId;
+        return true;
     }
 
     /**
@@ -112,15 +116,13 @@ class SessionHandler implements \SessionHandlerInterface
      */
     public function close()
     {
+        $id = session_id();
         // Make sure the session is unlocked and the expiration time is updated,
         // even if the write did not occur
-        if (!$this->sessionWritten) {
-            $id = $this->formatId($this->openSessionId);
-            $result = $this->connection->write($id, '', false);
+        if ($this->openSessionId !== $id || !$this->sessionWritten) {
+            $result = $this->connection->write($this->formatId($id), '', false);
             $this->sessionWritten = (bool) $result;
         }
-
-        $this->openSessionId = null;
 
         return $this->sessionWritten;
     }
@@ -134,6 +136,7 @@ class SessionHandler implements \SessionHandlerInterface
      */
     public function read($id)
     {
+        $this->openSessionId = $id;
         // PHP expects an empty string to be returned from this method if no
         // data is retrieved
         $this->dataRead = '';
@@ -141,10 +144,13 @@ class SessionHandler implements \SessionHandlerInterface
         // Get session data using the selected locking strategy
         $item = $this->connection->read($this->formatId($id));
 
+        $dataAttribute = $this->connection->getDataAttribute();
+        $sessionLifetimeAttribute = $this->connection->getSessionLifetimeAttribute();
+
         // Return the data if it is not expired. If it is expired, remove it
-        if (isset($item['expires']) && isset($item['data'])) {
-            $this->dataRead = $item['data'];
-            if ($item['expires'] <= time()) {
+        if (isset($item[$sessionLifetimeAttribute]) && isset($item[$dataAttribute])) {
+            $this->dataRead = $item[$dataAttribute];
+            if ($item[$sessionLifetimeAttribute] <= time()) {
                 $this->dataRead = '';
                 $this->destroy($id);
             }
@@ -163,12 +169,13 @@ class SessionHandler implements \SessionHandlerInterface
      */
     public function write($id, $data)
     {
+        $changed = $id !== $this->openSessionId
+            || $data !== $this->dataRead;
+        $this->openSessionId = $id;
+
         // Write the session data using the selected locking strategy
-        $this->sessionWritten = $this->connection->write(
-            $this->formatId($id),
-            $data,
-            ($data !== $this->dataRead)
-        );
+        $this->sessionWritten = $this->connection
+            ->write($this->formatId($id), $data, $changed);
 
         return $this->sessionWritten;
     }
@@ -182,8 +189,10 @@ class SessionHandler implements \SessionHandlerInterface
      */
     public function destroy($id)
     {
+        $this->openSessionId = $id;
         // Delete the session data using the selected locking strategy
-        $this->sessionWritten = $this->connection->delete($this->formatId($id));
+        $this->sessionWritten
+            = $this->connection->delete($this->formatId($id));
 
         return $this->sessionWritten;
     }
