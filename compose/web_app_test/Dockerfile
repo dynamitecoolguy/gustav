@@ -83,6 +83,15 @@ RUN deluser nginx \
 #COPY src/vendor /var/www/vendor
 COPY credentials /usr/local/etc/gustav/credentials
 
+# PHPUnit
+COPY compose/web_app_test/bootstrap.php /var/www/bootstrap.php
+RUN echo "[apcu]" >> /etc/php7/conf.d/apcu.ini \
+  && echo "apc.enable_cli=1" >> /etc/php7/conf.d/apcu.ini
+
+
+
+
+
 EXPOSE 3128
 
 ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]

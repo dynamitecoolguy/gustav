@@ -60,20 +60,14 @@ COPY compose/web_mgr/supervisord.conf /etc/supervisord.conf
 COPY compose/web_mgr/settings-${environment}.yml /usr/local/etc/gustav/settings.yml
 
 # PHP
-COPY compose/web_mgr/php.ini /php.ini
-COPY compose/web_mgr/php-fpm.conf /php-fpm.conf
-COPY compose/web_mgr/php-fpm-supervisor.conf /php-fpm-supervisor.conf
-RUN cp /php-fpm.conf /etc/php7/php-fpm.d/z-php.conf \
-  && cp /php.ini /etc/php7/conf.d/config.ini \
-  && cp /php-fpm-supervisor.conf /etc/supervisor.d/php-fpm.conf
+COPY compose/web_mgr/php.ini /etc/php7/conf.d/config.ini
+COPY compose/web_mgr/php-fpm.conf /etc/php7/php-fpm.d/z-php.conf
+COPY compose/web_mgr/php-fpm-supervisor.conf /etc/supervisor.d/php-fpm.conf
 
 # Nginx
-COPY compose/web_mgr/nginx.conf /nginx.conf
-COPY compose/web_mgr/nginx-server.conf /nginx-server.conf
-COPY compose/web_mgr/nginx-supervisor.conf /nginx-supervisor.conf
-RUN cp /nginx.conf /etc/nginx/nginx.conf \
-  && cp /nginx-server.conf /etc/nginx/conf.d/default.conf \
-  && cp /nginx-supervisor.conf /etc/supervisor.d/nginx.conf
+COPY compose/web_mgr/nginx.conf /etc/nginx/nginx.conf
+COPY compose/web_mgr/nginx-server.conf /etc/nginx/conf.d/default.conf
+COPY compose/web_mgr/nginx-supervisor.conf /etc/supervisor.d/nginx.conf
 
 RUN apk del --purge .build-deps \
   && rm -rf /var/cache/apk/* \
@@ -85,7 +79,7 @@ RUN deluser nginx \
     && adduser -u 1000 -D -S -G www-data www-data \
     && adduser -u 1001 -D -S -G www-data nginx
 
-COPY credentials /usr/local/etc/myapp/credentials
+COPY credentials /usr/local/etc/gustav/credentials
 
 EXPOSE 3128
 

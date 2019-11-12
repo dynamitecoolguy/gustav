@@ -106,7 +106,9 @@ ProjectTree
 	/postgresql
 	/proxy
 	/web_app
+	/web_app_test
 	/web_mgr
+	/web_mgr_test
     docker-compose-local.yml
 	docker-compose-development.yml
   /credentials
@@ -148,3 +150,5 @@ Configuration
       Servers
         Name: app.localhost, Host app.localhost:80, Projectfiles: .../code -> /var/www
         Name: mgr.localhost, Host mgr.localhost:80, Projectfiles: .../code -> /var/www
+        Name: app.test.localhost, Host app.test.localhost:80, Projectfiles: .../code -> /var/www,
+                   .../compose/web_app_test/bootstrap.php -> /var/www/bootstrap.php
