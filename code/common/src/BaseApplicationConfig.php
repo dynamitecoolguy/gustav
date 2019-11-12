@@ -6,6 +6,7 @@ use Aws\Credentials\CredentialProvider;
 use Aws\Exception\AwsException;
 use Aws\Sdk;
 use Gustav\Common\Exception\ConfigException;
+use Gustav\Common\Network\NameResolver;
 
 /**
  * Class BaseApplicationConfig
@@ -26,6 +27,16 @@ class BaseApplicationConfig
      * localにcacheするparameterのTTL
      */
     const PARAMETER_TTL = 60;
+
+    /**
+     * Config値をapcuに格納するときのPrefix
+     */
+    const CONFIG_APCU_PREFIX = 'c_';
+
+    /**
+     * SSMで置換する値をapcuに格納するときのPrefix
+     */
+    const REPLACED_APCU_PREFIX = 'r_';
 
     /**
      * @var BaseApplicationConfig
@@ -125,9 +136,9 @@ class BaseApplicationConfig
      * @return string
      * @throws ConfigException
      */
-    public function getValue(string $category, string $key)
+    public function getValue(string $category, string $key): string
     {
-        $categoryKey = 'C_' . $category . '$$' . $key;
+        $categoryKey = self::CONFIG_APCU_PREFIX . $category . '$$' . $key;
 
         // すでに取得した値か?
         if (isset($this->fetchedValue[$categoryKey])) {
@@ -135,8 +146,8 @@ class BaseApplicationConfig
         }
 
         // apcuに保存されている値か?
-        $fetchedValue = apcu_fetch($categoryKey);
-        if ($fetchedValue) {
+        $fetchedValue = apcu_fetch($categoryKey, $success);
+        if ($success) {
             $this->fetchedValue[$categoryKey] = $fetchedValue;
             return $fetchedValue;
         }
@@ -186,9 +197,9 @@ class BaseApplicationConfig
         }
 
         // apcuに保存されている値か?
-        $apcuKey = 'R_' . $original;
-        $fetchedValue = apcu_fetch($apcuKey);
-        if ($fetchedValue) {
+        $apcuKey = self::REPLACED_APCU_PREFIX . $original;
+        $fetchedValue = apcu_fetch($apcuKey, $success);
+        if ($success) {
             $this->replacedText[$original] = $fetchedValue;
             return $fetchedValue;
         }
@@ -202,9 +213,9 @@ class BaseApplicationConfig
         $memoizedProvider = CredentialProvider::memoize($provider);
 
         // SSM Clientの取得
-        $endPoint = 'https://ssm.' . self::$ssmRegion . '.amazonaws.com';
+        $ip = NameResolver::getIp('ssm.' . self::$ssmRegion . '.amazonaws.com');
         $sdk = new Sdk([
-            'endpoint' => $endPoint,
+            'endpoint' => 'https://' . $ip,
             'region' => self::$ssmRegion,
             'version' => '2014-11-06',
             'credentials' => $memoizedProvider

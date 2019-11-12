@@ -3,6 +3,7 @@
 namespace Gustav\Common;
 
 use Aws\Sdk;
+use Gustav\Common\Network\NameResolver;
 use PDO;
 use Psr\Container\ContainerInterface;
 use DI\Container;
@@ -40,8 +41,11 @@ class BaseContainerBuilder extends ContainerBuilder
         return [
             'mysql' => function (ContainerInterface $container) use($config)
             {
-                $dsn = 'mysql:host=' . $config->getValue('mysql', 'host')
-                    . ';dbname=' . $config->getValue('mysql', 'dbname');
+                list($host, $port) = $this->resolveHostAndPort($config->getValue('mysql', 'host'));
+                $dsn = 'mysql:host=' . $host . ';dbname=' . $config->getValue('mysql', 'dbname');
+                if ($port !== false) {
+                    $dsn .= ';port=' . $port;
+                }
                 $options = [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -56,8 +60,11 @@ class BaseContainerBuilder extends ContainerBuilder
             },
             'pgsql' => function (ContainerInterface $container) use($config)
             {
-                $dsn = 'pgsql:host=' . $config->getValue('pgsql', 'host')
-                    . ';dbname=' . $config->getValue('pgsql', 'dbname');
+                list($host, $port) = $this->resolveHostAndPort($config->getValue('pgsql', 'host'));
+                $dsn = 'pgsql:host=' . $host . ';dbname=' . $config->getValue('pgsql', 'dbname');
+                if ($port !== false) {
+                    $dsn .= ';port=' . $port;
+                }
                 $options = [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -72,8 +79,13 @@ class BaseContainerBuilder extends ContainerBuilder
             },
             'redis' => function (ContainerInterface $container) use($config)
             {
+                list($host, $port) = $this->resolveHostAndPort($config->getValue('redis', 'host'));
                 $redis = new Redis();
-                $redis->connect($config->getValue('redis', 'host'));
+                if ($port !== false) {
+                    $redis->connect($host, $port);
+                } else {
+                    $redis->connect($host);
+                }
                 $redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_IGBINARY);
 
                 return $redis;
@@ -81,7 +93,7 @@ class BaseContainerBuilder extends ContainerBuilder
             'dynamodb' => function (ContainerInterface $container) use($config)
             {
                 $sdk = new Sdk([
-                    'endpoint' => $config->getValue('dynamodb', 'endpoint'),
+                    'endpoint' => $this->resolveEndpoint($config->getValue('dynamodb', 'endpoint')),
                     'region' => $config->getValue('dynamodb', 'region'),
                     'version' => '2012-08-10',
                     'credentials' => [
@@ -95,7 +107,7 @@ class BaseContainerBuilder extends ContainerBuilder
             'storage' => function (ContainerInterface $container) use($config)
             {
                 $sdk = new Sdk([
-                    'endpoint' => $config->getValue('storage', 'endpoint'),
+                    'endpoint' => $this->resolveEndpoint($config->getValue('storage', 'endpoint')),
                     'region' => $config->getValue('storage', 'region'),
                     'version' => '2006-03-01',
                     'credentials' => [
@@ -107,5 +119,40 @@ class BaseContainerBuilder extends ContainerBuilder
                 return $sdk->createS3();
             }
         ];
+    }
+
+    /**
+     * Endpointの名前を解決
+     * @param string $endpoint
+     * @return string
+     */
+    private function resolveEndpoint($endpoint): string
+    {
+        $protocolPos = strpos($endpoint, ':');
+        $protocol = substr($endpoint, 0, $protocolPos + 3);
+        $hostAndPort = substr($endpoint, $protocolPos + 3);
+        list($host, $port) = $this->resolveHostAndPort($hostAndPort);
+        if ($port !== false) {
+            $endpoint = $protocol . $host . ':' . $port;
+        } else {
+            $endpoint = $protocol . $host;
+        }
+        return $endpoint;
+    }
+
+    /**
+     * ホスト名からIPとポートを分離する
+     * @param $host
+     * @return array  [string, integer|false] ホスト名, ポート番号
+     */
+    private function resolveHostAndPort($host): array
+    {
+        $portPos = strrpos($host, ':');
+        if ($portPos === false) {
+            return [NameResolver::getIp($host), false];
+        }
+        $hostBody = substr($host, 0, $portPos);
+        $port = substr($host, $portPos + 1);
+        return [NameResolver::getIp($hostBody), intval($port)];
     }
 }
