@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="bootstrap.php">
+    <filter>
+        <whitelist>
+            <directory suffix=".php">code/app/src</directory>
+            <directory suffix=".php">code/mgr/src</directory>
+            <directory suffix=".php">code/common/src</directory>
+        </whitelist>
+    </filter>
+
+    <testsuites>
+        <testsuite name="common">
+            <directory>code/common/test</directory>
+        </testsuite>
+        <testsuite name="app">
+            <directory>code/app/test</directory>
+        </testsuite>
+        <testsuite name="mgr">
+            <directory>code/mgr/test</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

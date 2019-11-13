@@ -36,23 +36,6 @@ services:
       XDEBUG_CONFIG: "remote_host=172.28.0.1"
       PHP_IDE_CONFIG: "serverName=app.localhost"
 
-  web_app_test:
-    build:
-      context: ..
-      dockerfile: compose/web_app_test/Dockerfile
-      args:
-        - environment=local
-    volumes:
-      - ../code/app:/var/www/app
-      - ../code/common:/var/www/common
-      - ../code/vendor:/var/www/vendor
-    container_name: web_app_test
-    networks:
-      - private_net
-    environment:
-      XDEBUG_CONFIG: "remote_host=172.28.0.1"
-      PHP_IDE_CONFIG: "serverName=app.test.localhost"
-
   web_mgr:
     build:
       context: ..

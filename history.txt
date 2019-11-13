@@ -75,7 +75,7 @@ VirtualBox構築
 	  Keymap:
         Emacs
 	  Plugins:
-		Install .ignore, PHP, PHP composer.json
+		Install .ignore, PHP, PHP composer.json, PHPUnit code coverage, PHPUnit Enhancement
 
 
 ==============
@@ -103,16 +103,13 @@ ProjectTree
 	server.key
   /compose
     /mysql
-	/postgresql
+	/pgsql
 	/proxy
 	/web_app
-	/web_app_test
 	/web_mgr
-	/web_mgr_test
     docker-compose-local.yml
 	docker-compose-development.yml
   /credentials
-    .gitkeep
   /code
     /app
 	  /src              (Sources Root: Gustav\App)
@@ -135,20 +132,38 @@ Composer
 $ cd code
 $ composer update
 
-=====
-Build
-=====
+=============
+Build(Manual)
+=============
 $ cd compose
 $ docker-compose -f docker-compose-local.yml build
 
-======
-XDebug
-======
+==========
+Build(IDE)
+==========
+Build Execution, Deployment
+  Docker
+    Docker追加 (connect to Unix socket)
+
+Run/Debug Configuration
+  Edit configuration
+    Docker-Compose追加
+      docker-composeファイル ./compose/docker-compose-local.yml;
+
+
+================
+XDebug & PHPUnit
+================
 Configuration
   Laguages & Framewoks
     PHP
       Servers
         Name: app.localhost, Host app.localhost:80, Projectfiles: .../code -> /var/www
         Name: mgr.localhost, Host mgr.localhost:80, Projectfiles: .../code -> /var/www
-        Name: app.test.localhost, Host app.test.localhost:80, Projectfiles: .../code -> /var/www,
-                   .../compose/web_app_test/bootstrap.php -> /var/www/bootstrap.php
+      Test Frameworks
+        Use Composer autoloader: Default config -> phpunit.xml, Default bootstrap -> bootstrap.php
+
+Run/Debug Configuration
+  Edit configuration
+    PHPUnit : defined in configuration file
+              Interpreter option: -dapc.enable_cli=1
