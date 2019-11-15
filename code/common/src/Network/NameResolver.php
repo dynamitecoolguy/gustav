@@ -38,6 +38,16 @@ class NameResolver
     }
 
     /**
+     * 内部キャッシュをクリアします
+     * @param string $name
+     */
+    public static function flushCache(string $name): void
+    {
+        $key = self::makeKey($name);
+        apcu_delete($key);
+    }
+
+    /**
      * AOCUに格納するときのキーを生成する
      * @param string $name
      * @return string

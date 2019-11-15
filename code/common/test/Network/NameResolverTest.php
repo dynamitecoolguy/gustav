@@ -9,19 +9,11 @@ use PHPUnit\Framework\TestCase;
 class NameResolverTest extends TestCase
 {
     /**
-     * @throws \ReflectionException
+     * @test
      */
-    public static function setUpBeforeClass(): void
+    public function getLocalhost(): void
     {
-        $reflection = new \ReflectionClass(NameResolver::class);
-        $method = $reflection->getMethod('makeKey');
-        $method->setAccessible(true);
-
-        apcu_delete($method->invoke(null, 'localhost'));
-    }
-
-    public function testGetLocalhost(): void
-    {
+        NameResolver::flushCache('localhost');
         $this->assertEquals(NameResolver::getIp('localhost'), '127.0.0.1');
         $this->assertEquals(NameResolver::getIp('localhost'), '127.0.0.1'); // cache used
     }
