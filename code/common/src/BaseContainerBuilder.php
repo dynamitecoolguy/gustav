@@ -3,12 +3,14 @@
 namespace Gustav\Common;
 
 use Aws\Sdk;
-use Gustav\Common\Network\NameResolver;
 use PDO;
 use Psr\Container\ContainerInterface;
 use DI\Container;
 use DI\ContainerBuilder;
 use Redis;
+
+use Gustav\Common\Network\NameResolver;
+use Gustav\Common\Config\BaseApplicationConfig;
 
 /**
  * Class BaseContainerBuilder

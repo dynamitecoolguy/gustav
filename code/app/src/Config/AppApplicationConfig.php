@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Gustav\App;
+namespace Gustav\App\Config;
 
 
-use Gustav\Common\BaseApplicationConfig;
+use Gustav\Common\Config\BaseApplicationConfig;
 
 /**
  * Class AppApplicationConfig
