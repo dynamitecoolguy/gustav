@@ -1,6 +1,6 @@
 <?php
 
-namespace Gustav\Common;
+namespace Gustav\Common\Config;
 
 use Gustav\Common\Exception\ConfigException;
 
@@ -26,14 +26,9 @@ class BaseApplicationConfig
     private static $theInstance = null;
 
     /**
-     * @var ConfigFileLoader
+     * @var ConfigLoader
      */
-    private $configFileLoader = null;
-
-    /**
-     * @var SsmLoader
-     */
-    private $ssmLoader = null;
+    private $configLoader = null;
 
     /**
      * @var array
@@ -42,19 +37,19 @@ class BaseApplicationConfig
     private $fetchedValue = [];
 
     /**
-     * @param ConfigFileLoader $configFileLoader
-     * @param SsmLoader $ssmLoader
+     * @param ConfigLoader $configLoader
      * @return BaseApplicationConfig インスタンスを取得
      */
-    public static function getInstance(ConfigFileLoader $configFileLoader, SsmLoader $ssmLoader): BaseApplicationConfig
+    public static function getInstance(ConfigLoader $configLoader): BaseApplicationConfig
     {
-        self::$theInstance = self::$theInstance ?? new static($configFileLoader, $ssmLoader);
+        self::$theInstance = self::$theInstance ?? new static($configLoader);
 
         return self::$theInstance;
     }
 
     /**
      * シングルトンのクリア
+     * For development only.
      */
     public static function resetInstance(): void
     {
@@ -62,14 +57,12 @@ class BaseApplicationConfig
     }
 
     /**
-     * @param ConfigFileLoader $configFileLoader
-     * @param SsmLoader $ssmLoader
+     * @param ConfigLoader $configLoader
      * ApplicationSetting constructor.
      */
-    protected function __construct(ConfigFileLoader $configFileLoader, SsmLoader $ssmLoader)
+    protected function __construct(ConfigLoader $configLoader)
     {
-        $this->configFileLoader = $configFileLoader;
-        $this->ssmLoader = $ssmLoader;
+        $this->configLoader = $configLoader;
     }
 
     /**
@@ -96,14 +89,14 @@ class BaseApplicationConfig
         }
 
         // config fileから値を取得する
-        $value = $this->configFileLoader->getValue($categoryKey, $key);
+        $value = $this->configLoader->getConfig($category, $key);
 
         // SSMによる置換を行う必要がある値か?
         if (strpos($value, '$$') !== false
             && preg_match('/^(.*)\$\$(.*)\$\$(.*)$/', $value, $matches) // $$KEY_NAME$$?
         ) {
             // 置換する
-            $replaced = $this->ssmLoader->replaceValue($this->configFileLoader, $matches[2]);
+            $replaced = $this->configLoader->replaceVariable($matches[2]);
             $result = $matches[1] . $replaced . $matches[3];
         } else {
             $result = $value;

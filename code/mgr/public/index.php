@@ -5,7 +5,7 @@ use DI\Bridge\Slim\Bridge;
 
 use Gustav\Mgr\MgrApplicationConfig as ApplicationConfig;
 use Gustav\Mgr\MgrContainerBuilder as ContainerBuilder;
-use Gustav\Common\ConfigFileLoader;
+use Gustav\Common\ConfigLoader;
 use Gustav\Common\SsmLoader;
 
 /** @var Composer\Autoload\ClassLoader $loader */
@@ -14,7 +14,7 @@ $loader->addPsr4('Gustav\\Mgr\\', __DIR__ . '/../src');               // mgr/src
 $loader->addPsr4('Gustav\\Common\\', __DIR__ . '/../../common/src');  // common/src
 
 $config = ApplicationConfig::getInstance(
-    ConfigFileLoader::getInstance('/usr/local/etc/gustav/settings.yml'),
+    ConfigLoader::getInstance('/usr/local/etc/gustav/settings.yml'),
     SsmLoader::getInstance('/usr/local/etc/gustav/credentials/ssm')
 );
 $containerBuilder = new ContainerBuilder($config);

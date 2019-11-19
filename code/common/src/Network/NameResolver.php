@@ -48,7 +48,7 @@ class NameResolver
     }
 
     /**
-     * AOCUに格納するときのキーを生成する
+     * APCUに格納するときのキーを生成する
      * @param string $name
      * @return string
      */
