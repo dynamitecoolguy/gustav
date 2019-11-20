@@ -4,7 +4,7 @@
 namespace Gustav\Common\Config;
 
 
-class DummySsmObject extends AbstractSsmObject
+class DummySsmObject implements SsmObjectInterface
 {
     public function getParameters(array $keys): array
     {
@@ -12,5 +12,14 @@ class DummySsmObject extends AbstractSsmObject
             $accumulator[$key] = "${key}_VALUE";
             return $accumulator;
         }, []);
+    }
+
+    /**
+     * セットアップ用パラメータのセット
+     * @param string[] $parameters
+     */
+    public function setUp(array $parameters): void
+    {
+        // do nothing
     }
 }

@@ -24,15 +24,20 @@ class ConfigLoader
     const REPLACED_APCU_PREFIX = 'r_';
 
     /**
-     * @var ConfigLoader
-     */
-    private static $theInstance = null;
-
-    /**
      * @var string
      * 設定yamlファイル
      */
-    private $configFile = null;
+    private $configFile;
+
+    /**
+     * @var string
+     */
+    private $ssmObjectClass;
+
+    /**
+     * @var array
+     */
+    private $ssmObjectParameters;
 
     /**
      * @var array
@@ -47,39 +52,16 @@ class ConfigLoader
     private $replacedVariableMap = [];
 
     /**
-     * @var SsmObjectMaker
-     */
-    private $ssmObjectMaker = null;
-
-    /**
-     * @param string $configFile
-     * @param SsmObjectMaker $ssmObjectMaker
-     * @return ConfigLoader インスタンスを取得
-     */
-    public static function getInstance(string $configFile, SsmObjectMaker $ssmObjectMaker): ConfigLoader
-    {
-        self::$theInstance = self::$theInstance ?? new static($configFile, $ssmObjectMaker);
-        return self::$theInstance;
-    }
-
-    /**
-     * シングルトンのクリア
-     * For development only.
-     */
-    public static function resetInstance(): void
-    {
-        self::$theInstance = null;
-    }
-
-    /**
      * ApplicationSetting constructor.
      * @param string $configFile
-     * @param SsmObjectMaker $ssmObjectMaker
+     * @param string $ssmObjectClass
+     * @param array $ssmObjectParameters
      */
-    protected function __construct(string $configFile, SsmObjectMaker $ssmObjectMaker)
+    public function __construct(string $configFile, string $ssmObjectClass, array $ssmObjectParameters = [])
     {
         $this->configFile = $configFile;
-        $this->ssmObjectMaker = $ssmObjectMaker;
+        $this->ssmObjectClass = $ssmObjectClass;
+        $this->ssmObjectParameters = $ssmObjectParameters;
     }
 
     /**
@@ -113,7 +95,9 @@ class ConfigLoader
             return $cached;
         }
 
-        $ssmObject = $this->ssmObjectMaker->getSsmObject();
+        /** @var SsmObjectInterface $ssmObject */
+        $ssmObject = new $this->ssmObjectClass();
+        $ssmObject->setUp($this->ssmObjectParameters);
         $ssmVariables = $ssmObject->getParameters($this->getAllVariables());
         foreach ($ssmVariables as $key => $value) {
             $this->replacedVariableMap[$key] = $value;

@@ -1,10 +1,10 @@
-userdb:
+mysql:
   host: mysql
   dbname: userdb
   user: scott
   password: tiger
 
-logdb:
+pgsql:
   host: psql
   dbname: logdb
   user: scott

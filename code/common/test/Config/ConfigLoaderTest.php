@@ -62,38 +62,12 @@ __EOF__
     }
 
     /**
-     * @after
-     */
-    public function resetInstance(): void
-    {
-        ConfigLoader::resetInstance();
-        SsmObjectMaker::resetInstance();
-    }
-
-    /**
-     * @test
-     */
-    public function singleton(): void
-    {
-        $ssmObjectMaker= SsmObjectMaker::getInstance(DummySsmObject::class, 'ssm');
-
-        $instanceA = ConfigLoader::getInstance('dummy', $ssmObjectMaker);
-        $instanceB = ConfigLoader::getInstance('dummy', $ssmObjectMaker);
-        ConfigLoader::resetInstance();
-        $instanceC = ConfigLoader::getInstance('dummy', $ssmObjectMaker);
-
-        $this->assertTrue($instanceA === $instanceB);
-        $this->assertTrue($instanceA !== $instanceC);
-    }
-
-    /**
      * @test
      * @throws ConfigException
      */
     public function getValidValue(): void
     {
-        $ssmObjectMaker= SsmObjectMaker::getInstance(DummySsmObject::class, 'ssm');
-        $loader = ConfigLoader::getInstance(self::$tempFilePath, $ssmObjectMaker);
+        $loader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
         $this->assertEquals($loader->getConfig('dynamodb', 'table'), 'hogehoge');
     }
 
@@ -105,8 +79,7 @@ __EOF__
     {
         $this->expectException(ConfigException::class);
 
-        $ssmObjectMaker= SsmObjectMaker::getInstance(DummySsmObject::class, 'ssm');
-        $loader = ConfigLoader::getInstance(self::$tempFilePath, $ssmObjectMaker);
+        $loader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
         $loader->getConfig('no_such_category', 'table');
     }
 
@@ -118,8 +91,7 @@ __EOF__
     {
         $this->expectException(ConfigException::class);
 
-        $ssmObjectMaker= SsmObjectMaker::getInstance(DummySsmObject::class, 'ssm');
-        $loader = ConfigLoader::getInstance(self::$tempFilePath, $ssmObjectMaker);
+        $loader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
         $loader->getConfig('dynamodb', 'no_such_key');
     }
 
@@ -128,8 +100,7 @@ __EOF__
      */
     public function allVariables(): void
     {
-        $ssmObjectMaker= SsmObjectMaker::getInstance(DummySsmObject::class, 'ssm');
-        $loader = ConfigLoader::getInstance(self::$tempFilePath, $ssmObjectMaker);
+        $loader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
         $values = $loader->getAllVariables();
         sort($values);
         $this->assertSame($values, ['LOG_DB_PASSWORD', 'LOG_DB_USER']);
@@ -141,8 +112,7 @@ __EOF__
      */
     public function replaceValue(): void
     {
-        $ssmObjectMaker= SsmObjectMaker::getInstance(DummySsmObject::class, 'ssm');
-        $loader = ConfigLoader::getInstance(self::$tempFilePath, $ssmObjectMaker);
+        $loader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
 
         $this->assertEquals('LOG_DB_USER_VALUE', $loader->replaceVariable('LOG_DB_USER'));
         $this->assertEquals('LOG_DB_PASSWORD_VALUE', $loader->replaceVariable('LOG_DB_PASSWORD'));
@@ -151,8 +121,7 @@ __EOF__
         $this->assertEquals('LOG_DB_PASSWORD_VALUE', $loader->replaceVariable('LOG_DB_PASSWORD'));
 
         // apc used
-        ConfigLoader::resetInstance();
-        $anotherLoader = ConfigLoader::getInstance(self::$tempFilePath, $ssmObjectMaker);
+        $anotherLoader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
         $this->assertEquals('LOG_DB_PASSWORD_VALUE', $anotherLoader->replaceVariable('LOG_DB_PASSWORD'));
     }
 
@@ -164,8 +133,7 @@ __EOF__
     {
         $this->expectException(ConfigException::class);
 
-        $ssmObjectMaker= SsmObjectMaker::getInstance(DummySsmObject::class, 'ssm');
-        $loader = ConfigLoader::getInstance(self::$tempFilePath, $ssmObjectMaker);
+        $loader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
 
         $loader->replaceVariable('NO_SUCH_VARIABLE');
     }

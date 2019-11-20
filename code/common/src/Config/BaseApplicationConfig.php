@@ -8,7 +8,7 @@ use Gustav\Common\Exception\ConfigException;
  * Class BaseApplicationConfig
  * @package Gustav\Common
  */
-class BaseApplicationConfig
+class BaseApplicationConfig implements ApplicationConfigInterface
 {
     /**
      * localにcacheするparameterのTTL
@@ -19,11 +19,6 @@ class BaseApplicationConfig
      * Config値をapcuに格納するときのPrefix
      */
     const CONFIG_APCU_PREFIX = 'c_';
-
-    /**
-     * @var BaseApplicationConfig
-     */
-    private static $theInstance = null;
 
     /**
      * @var ConfigLoader
@@ -38,29 +33,9 @@ class BaseApplicationConfig
 
     /**
      * @param ConfigLoader $configLoader
-     * @return BaseApplicationConfig インスタンスを取得
-     */
-    public static function getInstance(ConfigLoader $configLoader): BaseApplicationConfig
-    {
-        self::$theInstance = self::$theInstance ?? new static($configLoader);
-
-        return self::$theInstance;
-    }
-
-    /**
-     * シングルトンのクリア
-     * For development only.
-     */
-    public static function resetInstance(): void
-    {
-        self::$theInstance = null;
-    }
-
-    /**
-     * @param ConfigLoader $configLoader
      * ApplicationSetting constructor.
      */
-    protected function __construct(ConfigLoader $configLoader)
+    public function __construct(ConfigLoader $configLoader)
     {
         $this->configLoader = $configLoader;
     }
@@ -71,6 +46,7 @@ class BaseApplicationConfig
      * @param string $key
      * @return string
      * @throws ConfigException
+     * @implements ApplicationConfigInterface
      */
     public function getValue(string $category, string $key): string
     {

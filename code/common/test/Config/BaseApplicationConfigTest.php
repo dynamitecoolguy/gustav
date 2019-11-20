@@ -28,42 +28,14 @@ __EOF__
     }
 
     /**
-     * @after
-     */
-    public function resetInstance(): void
-    {
-        BaseApplicationConfig::resetInstance();
-        SsmObjectMaker::resetInstance();
-        ConfigLoader::resetInstance();
-    }
-
-    /**
-     * @test
-     */
-    public function singleton(): void
-    {
-        $ssmObjectMaker = SsmObjectMaker::getInstance(SsmObject::class, 'dummy');
-        $configLoader = ConfigLoader::getInstance('dummy', $ssmObjectMaker);
-
-        $instanceA = BaseApplicationConfig::getInstance($configLoader);
-        $instanceB = BaseApplicationConfig::getInstance($configLoader);
-        BaseApplicationConfig::resetInstance();
-        $instanceC = BaseApplicationConfig::getInstance($configLoader);
-
-        $this->assertTrue($instanceA === $instanceB);
-        $this->assertTrue($instanceA !== $instanceC);
-    }
-
-    /**
      * @test
      * @throws ConfigException
      */
     public function getValue(): void
     {
-        $ssmObjectMaker= SsmObjectMaker::getInstance(DummySsmObject::class, 'dummy');
-        $loader = ConfigLoader::getInstance(self::$tempFilePath, $ssmObjectMaker);
+        $loader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
 
-        $instance = BaseApplicationConfig::getInstance($loader);
+        $instance = new BaseApplicationConfig($loader);
 
         $this->assertEquals('value1', $instance->getValue('category', 'key1'));
         $this->assertEquals('HOGEVALUE2_VALUEFUGA', $instance->getValue('category', 'key2'));
@@ -71,8 +43,7 @@ __EOF__
         // cached
         $this->assertEquals('HOGEVALUE2_VALUEFUGA', $instance->getValue('category', 'key2'));
 
-        BaseApplicationConfig::resetInstance();
-        $instance2 = BaseApplicationConfig::getInstance($loader);
+        $instance2 = new BaseApplicationConfig($loader);
 
         // apcu
         $this->assertEquals('HOGEVALUE2_VALUEFUGA', $instance2->getValue('category', 'key2'));

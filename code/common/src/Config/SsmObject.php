@@ -10,12 +10,49 @@ use Aws\Ssm\SsmClient;
 use Gustav\Common\Exception\ConfigException;
 use Gustav\Common\Network\NameResolver;
 
-class SsmObject extends AbstractSsmObject
+class SsmObject implements SsmObjectInterface
 {
     /**
      * ssm:getparametersで取得できる最大数
      */
     const SSM_GET_PARAMETERS_MAX = 10;
+
+    /**
+     * @var SsmClient
+     */
+    private $client;
+
+    /**
+     * SsmObject constructor.
+     */
+    public function __construct()
+    {
+        // do nothing
+    }
+
+    /**
+     * @param array $parameters
+     */
+    public function setUp(array $parameters): void
+    {
+        $account = $parameters['account'] ?: 'ssm';
+        $profile = $parameters['profile'] ?: 'default';
+        $region = $parameters['region'] ?: 'ap-northeast-1';
+
+        // SSMサービスへの認証
+        $provider = CredentialProvider::ini($profile, $account);
+        $memoizedProvider = CredentialProvider::memoize($provider);
+
+        // SSM Clientの取得
+        $ip = NameResolver::getIp("ssm.${region}.amazonaws.com");
+        $sdk = new Sdk([
+            'endpoint' => "https://${ip}",
+            'region' => $region,
+            'version' => '2014-11-06',
+            'credentials' => $memoizedProvider
+        ]);
+        $this->client = $sdk->createSsm();
+    }
 
     /**
      * @param string[] $keys
@@ -24,14 +61,12 @@ class SsmObject extends AbstractSsmObject
      */
     public function getParameters(array $keys): array
     {
-        $ssm = $this->createClient();
-
         $result = [];
 
         // SystemManagerのパラメータストアから値を一斉に取得
         try {
             foreach (array_chunk($keys, self::SSM_GET_PARAMETERS_MAX) as $chunkedKeys) {
-                $result = $ssm->getParameters([
+                $result = $this->client->getParameters([
                     'Names' => $chunkedKeys
                 ]);
 
@@ -44,22 +79,5 @@ class SsmObject extends AbstractSsmObject
             throw new ConfigException('Access error to aws(' . $e->getAwsErrorMessage() . ')');
         }
         return $result;
-    }
-
-    private function createClient(): SsmClient
-    {
-        // SSMサービスへの認証
-        $provider = CredentialProvider::ini($this->getProfile(), $this->getAccountFile());
-        $memoizedProvider = CredentialProvider::memoize($provider);
-
-        // SSM Clientの取得
-        $ip = NameResolver::getIp('ssm.' . $this->getRegion() . '.amazonaws.com');
-        $sdk = new Sdk([
-            'endpoint' => 'https://' . $ip,
-            'region' => $this->getRegion(),
-            'version' => '2014-11-06',
-            'credentials' => $memoizedProvider
-        ]);
-        return $sdk->createSsm();
     }
 }
