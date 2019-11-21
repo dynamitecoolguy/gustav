@@ -35,7 +35,7 @@ __EOF__
     {
         $loader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
 
-        $instance = new BaseApplicationConfig($loader);
+        $instance = new ApplicationConfig($loader);
 
         $this->assertEquals('value1', $instance->getValue('category', 'key1'));
         $this->assertEquals('HOGEVALUE2_VALUEFUGA', $instance->getValue('category', 'key2'));
@@ -43,7 +43,7 @@ __EOF__
         // cached
         $this->assertEquals('HOGEVALUE2_VALUEFUGA', $instance->getValue('category', 'key2'));
 
-        $instance2 = new BaseApplicationConfig($loader);
+        $instance2 = new ApplicationConfig($loader);
 
         // apcu
         $this->assertEquals('HOGEVALUE2_VALUEFUGA', $instance2->getValue('category', 'key2'));

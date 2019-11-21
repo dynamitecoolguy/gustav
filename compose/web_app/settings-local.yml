@@ -5,7 +5,7 @@ mysql:
   password: tiger
 
 pgsql:
-  host: psql
+  host: pgsql
   dbname: logdb
   user: scott
   password: tiger

@@ -3,8 +3,8 @@
 use Slim\Middleware\ContentLengthMiddleware;
 use DI\Bridge\Slim\Bridge;
 
-use Gustav\App\Config\AppApplicationConfig as ApplicationConfig;
 use Gustav\App\AppContainerBuilder as ContainerBuilder;
+use Gustav\Common\Config\ApplicationConfig;
 use Gustav\Common\Config\ConfigLoader;
 use Gustav\Common\Config\SsmObject;
 
@@ -17,7 +17,7 @@ $loader = new ConfigLoader(
     '/usr/local/etc/gustav/settings.yml',
     SsmObject::class,
     [
-        'account' => '/usr/local/etc/gustav/credentials/ssm'
+        SsmObject::KEY_ACCOUNT_FILE => '/usr/local/etc/gustav/credentials/ssm'
     ]
 );
 $config = new ApplicationConfig($loader);
@@ -32,6 +32,10 @@ $app->add(new ContentLengthMiddleware());
 
 // Routing (@see PHP-DI in Slim)
 $app->get('/hello/{who}', [Gustav\App\Controller\HelloController::class, 'hello']);
-$app->get('/mysql/{number}', [Gustav\App\Controller\MySQLController::class, 'get']);
+$app->get('/mysql/{number}', [Gustav\App\Controller\HelloController::class, 'mysql']);
+$app->get('/pgsql', [Gustav\App\Controller\HelloController::class, 'pgsql']);
+$app->get('/redis', [Gustav\App\Controller\HelloController::class, 'redis']);
+$app->get('/dynamo', [Gustav\App\Controller\HelloController::class, 'dynamo']);
+$app->get('/s3/{from}/{to}', [Gustav\App\Controller\HelloController::class, 's3']);
 
 $app->run();

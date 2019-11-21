@@ -4,12 +4,12 @@
 namespace Gustav\Mgr\Config;
 
 
-use Gustav\Common\Config\BaseApplicationConfig;
+use Gustav\Common\Config\ApplicationConfig;
 
 /**
  * Class MgrApplicationConfig
  * @package Gustav\Mgr
  */
-class MgrApplicationConfig extends BaseApplicationConfig
+class MgrApplicationConfig extends ApplicationConfig
 {
 }

@@ -8,7 +8,7 @@ use Gustav\Common\Exception\ConfigException;
  * Class BaseApplicationConfig
  * @package Gustav\Common
  */
-class BaseApplicationConfig implements ApplicationConfigInterface
+class ApplicationConfig implements ApplicationConfigInterface
 {
     /**
      * localにcacheするparameterのTTL

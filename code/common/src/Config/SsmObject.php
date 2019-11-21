@@ -12,6 +12,12 @@ use Gustav\Common\Network\NameResolver;
 
 class SsmObject implements SsmObjectInterface
 {
+    const KEY_ACCOUNT_FILE = 'accountFile';
+    const KEY_PROFILE = 'profile';
+    const KEY_REGION = 'region';
+    const DEFAULT_PROFILE = 'default';
+    const DEFAULT_REGION = 'ap-northeast-1';
+
     /**
      * ssm:getparametersで取得できる最大数
      */
@@ -35,9 +41,9 @@ class SsmObject implements SsmObjectInterface
      */
     public function setUp(array $parameters): void
     {
-        $account = $parameters['account'] ?: 'ssm';
-        $profile = $parameters['profile'] ?: 'default';
-        $region = $parameters['region'] ?: 'ap-northeast-1';
+        $account = $parameters[self::KEY_ACCOUNT_FILE] ?: 'ssm';
+        $profile = $parameters[self::KEY_PROFILE] ?: self::DEFAULT_PROFILE;
+        $region = $parameters[self::KEY_REGION] ?: self::DEFAULT_REGION;
 
         // SSMサービスへの認証
         $provider = CredentialProvider::ini($profile, $account);

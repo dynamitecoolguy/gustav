@@ -21,7 +21,7 @@ use DI\ContainerBuilder;
 use Redis;
 
 use Gustav\Common\Network\NameResolver;
-use Gustav\Common\Config\BaseApplicationConfig;
+use Gustav\Common\Config\ApplicationConfig;
 use Slim\App;
 
 /**
@@ -32,10 +32,10 @@ class BaseContainerBuilder extends ContainerBuilder
 {
     /**
      * BaseContainerBuilder constructor.
-     * @param BaseApplicationConfig $config
+     * @param ApplicationConfig $config
      * @param string $containerClass
      */
-    public function __construct(BaseApplicationConfig $config, string $containerClass = Container::class)
+    public function __construct(ApplicationConfig $config, string $containerClass = Container::class)
     {
         parent::__construct($containerClass);
 
@@ -47,10 +47,10 @@ class BaseContainerBuilder extends ContainerBuilder
 
     /**
      * デフォルトの定義
-     * @param BaseApplicationConfig $config
+     * @param ApplicationConfig $config
      * @return array 定義
      */
-    protected function getDefinitions(BaseApplicationConfig $config): array
+    protected function getDefinitions(ApplicationConfig $config): array
     {
         return [
             ApplicationConfigInterface::class  => $config,
