@@ -41,18 +41,17 @@ class SsmObject implements SsmObjectInterface
      */
     public function setUp(array $parameters): void
     {
-        $account = $parameters[self::KEY_ACCOUNT_FILE] ?: 'ssm';
-        $profile = $parameters[self::KEY_PROFILE] ?: self::DEFAULT_PROFILE;
-        $region = $parameters[self::KEY_REGION] ?: self::DEFAULT_REGION;
+        $account = $parameters[self::KEY_ACCOUNT_FILE] ?? 'ssm';
+        $profile = $parameters[self::KEY_PROFILE] ?? self::DEFAULT_PROFILE;
+        $region = $parameters[self::KEY_REGION] ?? self::DEFAULT_REGION;
 
         // SSMサービスへの認証
         $provider = CredentialProvider::ini($profile, $account);
         $memoizedProvider = CredentialProvider::memoize($provider);
 
         // SSM Clientの取得
-        $ip = NameResolver::getIp("ssm.${region}.amazonaws.com");
         $sdk = new Sdk([
-            'endpoint' => "https://${ip}",
+            'endpoint' => "https://ssm.${region}.amazonaws.com",
             'region' => $region,
             'version' => '2014-11-06',
             'credentials' => $memoizedProvider
@@ -72,12 +71,12 @@ class SsmObject implements SsmObjectInterface
         // SystemManagerのパラメータストアから値を一斉に取得
         try {
             foreach (array_chunk($keys, self::SSM_GET_PARAMETERS_MAX) as $chunkedKeys) {
-                $result = $this->client->getParameters([
+                $params = $this->client->getParameters([
                     'Names' => $chunkedKeys
                 ]);
 
                 // APCUにすべてのデータを登録
-                foreach ($result['Parameters'] as $parameter) {
+                foreach ($params['Parameters'] as $parameter) {
                     $result[$parameter['Name']] = $parameter['Value'];
                 }
             }

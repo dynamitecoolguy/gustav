@@ -20,17 +20,20 @@ class ConfigLoaderTest extends TestCase
 
         $fd = fopen(self::$tempFilePath, 'w');
         fwrite($fd, <<<'__EOF__'
-userdb:
+ssm:
+  class: Gustav\Common\Config\LocalSsmObject
+
+mysql:
   host: mysql
   dbname: userdb
-  user: scott
-  password: tiger
+  user: $$MYSQL_USER$$
+  password: $$MYSQL_PASSWORD$$
 
-logdb:
-  host: psql
+pgsql:
+  host: pgsql
   dbname: logdb
-  user: $$LOG_DB_USER$$
-  password: $$LOG_DB_PASSWORD$$
+  user: $$PGSQL_USER$$
+  password: $$PGSQL_PASSWORD$$
 
 redis:
   host: redis
@@ -38,16 +41,16 @@ redis:
 dynamodb:
   endpoint: http://dynamodb:8000
   region: ap-northeast-1
-  key: dummy
-  secret: dummy
+  key: $$DYNAMODB_ACCESSKEY$$
+  secret: $$DYNAMODB_SECRET$$
   table: hogehoge
 
 storage:
   endpoint: http://storage:9000
   region: ap-northeast-1
-  key: s3accesskey
-  secret: s3secretkey
-  bucket: dummy
+  key: $$STORAGE_ACCESSKEY$$
+  secret: $$STORAGE_SECRET$$
+  bucket: $$STORAGE_BUCKET$$
 __EOF__
         );
         fclose($fd);
@@ -67,7 +70,7 @@ __EOF__
      */
     public function getValidValue(): void
     {
-        $loader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
+        $loader = new ConfigLoader(self::$tempFilePath);
         $this->assertEquals($loader->getConfig('dynamodb', 'table'), 'hogehoge');
     }
 
@@ -79,7 +82,7 @@ __EOF__
     {
         $this->expectException(ConfigException::class);
 
-        $loader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
+        $loader = new ConfigLoader(self::$tempFilePath);
         $loader->getConfig('no_such_category', 'table');
     }
 
@@ -91,7 +94,7 @@ __EOF__
     {
         $this->expectException(ConfigException::class);
 
-        $loader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
+        $loader = new ConfigLoader(self::$tempFilePath);
         $loader->getConfig('dynamodb', 'no_such_key');
     }
 
@@ -100,10 +103,15 @@ __EOF__
      */
     public function allVariables(): void
     {
-        $loader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
+        $loader = new ConfigLoader(self::$tempFilePath);
         $values = $loader->getAllVariables();
         sort($values);
-        $this->assertSame($values, ['LOG_DB_PASSWORD', 'LOG_DB_USER']);
+        $this->assertSame($values, [
+            'DYNAMODB_ACCESSKEY', 'DYNAMODB_SECRET',
+            'MYSQL_PASSWORD', 'MYSQL_USER',
+            'PGSQL_PASSWORD', 'PGSQL_USER',
+            'STORAGE_ACCESSKEY', 'STORAGE_BUCKET', 'STORAGE_SECRET'
+        ]);
     }
 
     /**
@@ -112,17 +120,17 @@ __EOF__
      */
     public function replaceValue(): void
     {
-        $loader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
+        $loader = new ConfigLoader(self::$tempFilePath);
 
-        $this->assertEquals('LOG_DB_USER_VALUE', $loader->replaceVariable('LOG_DB_USER'));
-        $this->assertEquals('LOG_DB_PASSWORD_VALUE', $loader->replaceVariable('LOG_DB_PASSWORD'));
+        $this->assertEquals('scott', $loader->replaceVariable('PGSQL_USER'));
+        $this->assertEquals('tiger', $loader->replaceVariable('PGSQL_PASSWORD'));
 
         // cache used
-        $this->assertEquals('LOG_DB_PASSWORD_VALUE', $loader->replaceVariable('LOG_DB_PASSWORD'));
+        $this->assertEquals('tiger', $loader->replaceVariable('PGSQL_PASSWORD'));
 
         // apc used
-        $anotherLoader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
-        $this->assertEquals('LOG_DB_PASSWORD_VALUE', $anotherLoader->replaceVariable('LOG_DB_PASSWORD'));
+        $anotherLoader = new ConfigLoader(self::$tempFilePath);
+        $this->assertEquals('tiger', $anotherLoader->replaceVariable('PGSQL_PASSWORD'));
     }
 
     /**
@@ -133,7 +141,7 @@ __EOF__
     {
         $this->expectException(ConfigException::class);
 
-        $loader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
+        $loader = new ConfigLoader(self::$tempFilePath);
 
         $loader->replaceVariable('NO_SUCH_VARIABLE');
     }

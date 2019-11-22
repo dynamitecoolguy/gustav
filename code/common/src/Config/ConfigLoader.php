@@ -24,26 +24,30 @@ class ConfigLoader
     const REPLACED_APCU_PREFIX = 'r_';
 
     /**
-     * @var string
-     * 設定yamlファイル
+     * @var bool 設定YAMLファイルを読み込んだかどうか
+     */
+    private $configLoaded = false;
+
+    /**
+     * @var string  設定yamlファイル
      */
     private $configFile;
 
     /**
-     * @var string
+     * @var ?string configFile内のssm.class
      */
-    private $ssmObjectClass;
+    private $ssmObjectClass = null;
 
     /**
-     * @var array
+     * @var ?array configFile内のssm.parameters
      */
-    private $ssmObjectParameters;
+    private $ssmObjectParameters = null;
 
     /**
      * @var array
      * 設定yamlファイルの内容
      */
-    private $configMap = null;
+    private $configMap = [];
 
     /**
      * @var array
@@ -54,14 +58,10 @@ class ConfigLoader
     /**
      * ApplicationSetting constructor.
      * @param string $configFile
-     * @param string $ssmObjectClass
-     * @param array $ssmObjectParameters
      */
-    public function __construct(string $configFile, string $ssmObjectClass, array $ssmObjectParameters = [])
+    public function __construct(string $configFile)
     {
         $this->configFile = $configFile;
-        $this->ssmObjectClass = $ssmObjectClass;
-        $this->ssmObjectParameters = $ssmObjectParameters;
     }
 
     /**
@@ -95,9 +95,15 @@ class ConfigLoader
             return $cached;
         }
 
+        $this->checkLoaded();
+
+        if (is_null($this->ssmObjectClass)) {
+            throw new ConfigException("SSM Object class is not defined");
+        }
+
         /** @var SsmObjectInterface $ssmObject */
         $ssmObject = new $this->ssmObjectClass();
-        $ssmObject->setUp($this->ssmObjectParameters);
+        $ssmObject->setUp($this->ssmObjectParameters ?? []);
         $ssmVariables = $ssmObject->getParameters($this->getAllVariables());
         foreach ($ssmVariables as $key => $value) {
             $this->replacedVariableMap[$key] = $value;
@@ -123,7 +129,7 @@ class ConfigLoader
         $keys = [];
         foreach ($this->configMap as $map) {
             foreach ($map as $key => $value) {
-                if (preg_match('/\$\$(.*)\$\$/', $value, $matches)) { // $$KEY_NAME$$?
+                if (is_string($value) && preg_match('/\$\$(.*)\$\$/', $value, $matches)) { // $$KEY_NAME$$?
                     $keys[$matches[1]] = 1;
                 }
             }
@@ -159,8 +165,18 @@ class ConfigLoader
      */
     private function checkLoaded(): void
     {
+        if ($this->configLoaded) {
+            return;
+        }
+
         // YAMLを読み込んでいなければ読み込む
-        $this->configMap = $this->configMap ??
-            (is_string($this->configFile) ? yaml_parse_file($this->configFile) : []);
+        $this->configMap = yaml_parse_file($this->configFile);
+
+        $this->ssmObjectClass = $this->configMap['ssm']['class'] ?? null;
+        if (!is_null($this->ssmObjectClass)) {
+            $this->ssmObjectParameters = $this->configMap['ssm']['parameters'] ?? null;
+        }
+
+        $this->configLoaded = true;
     }
 }

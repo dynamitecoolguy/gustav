@@ -22,7 +22,6 @@ use Redis;
 
 use Gustav\Common\Network\NameResolver;
 use Gustav\Common\Config\ApplicationConfig;
-use Slim\App;
 
 /**
  * Class BaseContainerBuilder
@@ -97,7 +96,7 @@ class BaseContainerBuilder extends ContainerBuilder
      */
     protected function getPgSQLFunction(): callable
     {
-        return function (ContainerInterface $container, ApplicationConfigInterface $config): PgSQLAdapter
+        return function (ApplicationConfigInterface $config): PgSQLAdapter
         {
             list($host, $port) = $this->resolveHostAndPort($config->getValue('pgsql', 'host'));
             $dsn = 'pgsql:host=' . $host . ';dbname=' . $config->getValue('pgsql', 'dbname');
@@ -126,7 +125,7 @@ class BaseContainerBuilder extends ContainerBuilder
      */
     protected function getRedisFunction(): callable
     {
-        return function (ContainerInterface $container, ApplicationConfigInterface $config): RedisAdapter
+        return function (ApplicationConfigInterface $config): RedisAdapter
         {
             list($host, $port) = $this->resolveHostAndPort($config->getValue('redis', 'host'));
             $redis = new Redis();
@@ -146,10 +145,10 @@ class BaseContainerBuilder extends ContainerBuilder
      */
     protected function getDynamoDbFunction(): callable
     {
-        return function (ContainerInterface $container, ApplicationConfigInterface $config): DynamoDbAdapter
+        return function (ApplicationConfigInterface $config): DynamoDbAdapter
         {
             $sdk = new Sdk([
-                'endpoint' => $this->resolveEndpoint($config->getValue('dynamodb', 'endpoint')),
+                'endpoint' => $config->getValue('dynamodb', 'endpoint'),
                 'region' => $config->getValue('dynamodb', 'region'),
                 'version' => '2012-08-10',
                 'credentials' => [
@@ -166,10 +165,10 @@ class BaseContainerBuilder extends ContainerBuilder
      */
     protected function getS3Function(): callable
     {
-        return function (ContainerInterface $container, ApplicationConfigInterface $config): S3Adapter
+        return function (ApplicationConfigInterface $config): S3Adapter
         {
             $sdk = new Sdk([
-                'endpoint' => $this->resolveEndpoint($config->getValue('storage', 'endpoint')),
+                'endpoint' => $config->getValue('storage', 'endpoint'),
                 'region' => $config->getValue('storage', 'region'),
                 'version' => '2006-03-01',
                 'credentials' => [
@@ -180,25 +179,6 @@ class BaseContainerBuilder extends ContainerBuilder
             ]);
             return new S3Adapter($sdk->createS3());
         };
-    }
-
-    /**
-     * Endpointの名前を解決
-     * @param string $endpoint
-     * @return string
-     */
-    private function resolveEndpoint($endpoint): string
-    {
-        $protocolPos = strpos($endpoint, ':');
-        $protocol = substr($endpoint, 0, $protocolPos + 3);
-        $hostAndPort = substr($endpoint, $protocolPos + 3);
-        list($host, $port) = $this->resolveHostAndPort($hostAndPort);
-        if ($port !== false) {
-            $endpoint = $protocol . $host . ':' . $port;
-        } else {
-            $endpoint = $protocol . $host;
-        }
-        return $endpoint;
     }
 
     /**

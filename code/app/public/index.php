@@ -6,20 +6,13 @@ use DI\Bridge\Slim\Bridge;
 use Gustav\App\AppContainerBuilder as ContainerBuilder;
 use Gustav\Common\Config\ApplicationConfig;
 use Gustav\Common\Config\ConfigLoader;
-use Gustav\Common\Config\SsmObject;
 
 /** @var Composer\Autoload\ClassLoader $loader */
 $loader = require __DIR__ . '/../../vendor/autoload.php';
 $loader->addPsr4('Gustav\\App\\', __DIR__ . '/../src');               // app/src
 $loader->addPsr4('Gustav\\Common\\', __DIR__ . '/../../common/src');  // common/src
 
-$loader = new ConfigLoader(
-    '/usr/local/etc/gustav/settings.yml',
-    SsmObject::class,
-    [
-        SsmObject::KEY_ACCOUNT_FILE => '/usr/local/etc/gustav/credentials/ssm'
-    ]
-);
+$loader = new ConfigLoader('/usr/local/etc/gustav/settings.yml');
 $config = new ApplicationConfig($loader);
 
 $containerBuilder = new ContainerBuilder($config);

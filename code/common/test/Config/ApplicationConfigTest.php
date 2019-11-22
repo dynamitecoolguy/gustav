@@ -6,7 +6,7 @@ namespace Gustav\Common\Config;
 use Gustav\Common\Exception\ConfigException;
 use PHPUnit\Framework\TestCase;
 
-class BaseApplicationConfigTest extends TestCase
+class ApplicationConfigTest extends TestCase
 {
     private static $tempFilePath;
 
@@ -19,9 +19,12 @@ class BaseApplicationConfigTest extends TestCase
 
         $fd = fopen(self::$tempFilePath, 'w');
         fwrite($fd, <<<'__EOF__'
+ssm:
+  class: Gustav\Common\Config\LocalSsmObject
+
 category:
   key1: value1
-  key2: HOGE$$VALUE2$$FUGA
+  key2: $$MYSQL_USER$$
 __EOF__
         );
         fclose($fd);
@@ -33,19 +36,19 @@ __EOF__
      */
     public function getValue(): void
     {
-        $loader = new ConfigLoader(self::$tempFilePath, DummySsmObject::class);
+        $loader = new ConfigLoader(self::$tempFilePath);
 
         $instance = new ApplicationConfig($loader);
 
         $this->assertEquals('value1', $instance->getValue('category', 'key1'));
-        $this->assertEquals('HOGEVALUE2_VALUEFUGA', $instance->getValue('category', 'key2'));
+        $this->assertEquals('scott', $instance->getValue('category', 'key2'));
 
         // cached
-        $this->assertEquals('HOGEVALUE2_VALUEFUGA', $instance->getValue('category', 'key2'));
+        $this->assertEquals('scott', $instance->getValue('category', 'key2'));
 
         $instance2 = new ApplicationConfig($loader);
 
         // apcu
-        $this->assertEquals('HOGEVALUE2_VALUEFUGA', $instance2->getValue('category', 'key2'));
+        $this->assertEquals('scott', $instance2->getValue('category', 'key2'));
     }
 }
