@@ -1,11 +1,11 @@
-userdb:
+mysql:
   host: mysql
   dbname: userdb
   user: scott
   password: tiger
 
-logdb:
-  host: psql
+pgsql:
+  host: pgsql
   dbname: logdb
   user: scott
   password: tiger

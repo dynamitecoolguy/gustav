@@ -14,8 +14,9 @@ use Gustav\Common\Adapter\RedisInterface;
 use Gustav\Common\Adapter\S3Adapter;
 use Gustav\Common\Adapter\S3Interface;
 use Gustav\Common\Config\ApplicationConfigInterface;
+use Gustav\Common\Data\BinaryEncryptor;
+use Gustav\Common\Data\BinaryEncryptorInterface;
 use PDO;
-use Psr\Container\ContainerInterface;
 use DI\Container;
 use DI\ContainerBuilder;
 use Redis;
@@ -57,7 +58,8 @@ class BaseContainerBuilder extends ContainerBuilder
             PgSQLInterface::class => $this->getPgSQLFunction(),
             RedisInterface::class => $this->getRedisFunction(),
             DynamoDbInterface::class => $this->getDynamoDbFunction(),
-            S3Interface::class => $this->getS3Function()
+            S3Interface::class => $this->getS3Function(),
+            BinaryEncryptorInterface::class => $this->getBinaryEncryptorFunction()
         ];
     }
 
@@ -157,6 +159,17 @@ class BaseContainerBuilder extends ContainerBuilder
                 ]
             ]);
             return new DynamoDbAdapter($sdk->createDynamoDb());
+        };
+    }
+
+    /**
+     * @return callable
+     */
+    protected function getBinaryEncryptorFunction(): callable
+    {
+        return function (): BinaryEncryptor
+        {
+            return new BinaryEncryptor();
         };
     }
 
