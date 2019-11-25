@@ -64,6 +64,7 @@ class ComposerStaticInit6a7382a3ad506b647ed3242c9c26d274
         ),
         'F' => 
         array (
+            'Fluent\\Logger\\' => 14,
             'Fig\\Http\\Message\\' => 17,
             'FastRoute\\' => 10,
         ),
@@ -164,6 +165,10 @@ class ComposerStaticInit6a7382a3ad506b647ed3242c9c26d274
         'GuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'Fluent\\Logger\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fluent/logger/src',
         ),
         'Fig\\Http\\Message\\' => 
         array (

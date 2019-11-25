@@ -55,6 +55,7 @@
       <path value="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php" />
       <path value="$PROJECT_DIR$/code/vendor/phar-io/manifest" />
       <path value="$PROJECT_DIR$/code/vendor/php-di/slim-bridge" />
+      <path value="$PROJECT_DIR$/code/vendor/fluent/logger" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />
