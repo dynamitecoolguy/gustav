@@ -4,6 +4,7 @@
       <w>encryptor</w>
       <w>fluentd</w>
       <w>igbinary</w>
+      <w>msgpack</w>
     </words>
   </dictionary>
 </component>
