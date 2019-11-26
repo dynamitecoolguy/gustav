@@ -88,7 +88,7 @@ Configuration
   Laguages & Framewoks
     PHP
       CLI Interpreters PHP7.3追加
-
+      PHP runtimeにmsgpackを追加
 
 ===========
 ProjectTree

@@ -14,8 +14,10 @@ use Gustav\Common\Adapter\RedisInterface;
 use Gustav\Common\Adapter\S3Adapter;
 use Gustav\Common\Adapter\S3Interface;
 use Gustav\Common\Config\ApplicationConfigInterface;
-use Gustav\Common\Data\BinaryEncryptor;
-use Gustav\Common\Data\BinaryEncryptorInterface;
+use Gustav\Common\Log\DataLoggerFluent;
+use Gustav\Common\Log\DataLoggerInterface;
+use Gustav\Common\Operation\BinaryEncryptor;
+use Gustav\Common\Operation\BinaryEncryptorInterface;
 use PDO;
 use DI\Container;
 use DI\ContainerBuilder;
@@ -59,7 +61,8 @@ class BaseContainerBuilder extends ContainerBuilder
             RedisInterface::class => $this->getRedisFunction(),
             DynamoDbInterface::class => $this->getDynamoDbFunction(),
             S3Interface::class => $this->getS3Function(),
-            BinaryEncryptorInterface::class => $this->getBinaryEncryptorFunction()
+            BinaryEncryptorInterface::class => $this->getBinaryEncryptorFunction(),
+            DataLoggerInterface::class => $this->getDataLoggerFunction()
         ];
     }
 
@@ -69,7 +72,7 @@ class BaseContainerBuilder extends ContainerBuilder
      */
     protected function getMySQLFunction(): callable
     {
-        return function (ApplicationConfigInterface $config): MySQLAdapter
+        return function (ApplicationConfigInterface $config): MySQLInterface
         {
             list($host, $port) = $this->resolveHostAndPort($config->getValue('mysql', 'host'));
             $dsn = 'mysql:host=' . $host . ';dbname=' . $config->getValue('mysql', 'dbname');
@@ -98,7 +101,7 @@ class BaseContainerBuilder extends ContainerBuilder
      */
     protected function getPgSQLFunction(): callable
     {
-        return function (ApplicationConfigInterface $config): PgSQLAdapter
+        return function (ApplicationConfigInterface $config): PgSQLInterface
         {
             list($host, $port) = $this->resolveHostAndPort($config->getValue('pgsql', 'host'));
             $dsn = 'pgsql:host=' . $host . ';dbname=' . $config->getValue('pgsql', 'dbname');
@@ -127,7 +130,7 @@ class BaseContainerBuilder extends ContainerBuilder
      */
     protected function getRedisFunction(): callable
     {
-        return function (ApplicationConfigInterface $config): RedisAdapter
+        return function (ApplicationConfigInterface $config): RedisInterface
         {
             list($host, $port) = $this->resolveHostAndPort($config->getValue('redis', 'host'));
             $redis = new Redis();
@@ -147,7 +150,7 @@ class BaseContainerBuilder extends ContainerBuilder
      */
     protected function getDynamoDbFunction(): callable
     {
-        return function (ApplicationConfigInterface $config): DynamoDbAdapter
+        return function (ApplicationConfigInterface $config): DynamoDbInterface
         {
             $sdk = new Sdk([
                 'endpoint' => $config->getValue('dynamodb', 'endpoint'),
@@ -167,7 +170,7 @@ class BaseContainerBuilder extends ContainerBuilder
      */
     protected function getBinaryEncryptorFunction(): callable
     {
-        return function (): BinaryEncryptor
+        return function (): BinaryEncryptorInterface
         {
             return new BinaryEncryptor();
         };
@@ -178,7 +181,7 @@ class BaseContainerBuilder extends ContainerBuilder
      */
     protected function getS3Function(): callable
     {
-        return function (ApplicationConfigInterface $config): S3Adapter
+        return function (ApplicationConfigInterface $config): S3Interface
         {
             $sdk = new Sdk([
                 'endpoint' => $config->getValue('storage', 'endpoint'),
@@ -191,6 +194,20 @@ class BaseContainerBuilder extends ContainerBuilder
                 'use_path_style_endpoint' => true
             ]);
             return new S3Adapter($sdk->createS3());
+        };
+    }
+
+    /**
+     * FluentLoggerを取得するためのFunction
+     * @return callable
+     */
+    protected function getDataLoggerFunction(): callable
+    {
+        return function (ApplicationConfigInterface $config): DataLoggerInterface
+        {
+            list($host, $port) = $this->resolveHostAndPort($config->getValue('logger', 'host'));
+
+            return DataLoggerFluent::getInstance($host, $port);
         };
     }
 

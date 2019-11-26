@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Gustav\Common\Data;
+namespace Gustav\Common\Operation;
 
 
 use Gustav\Common\Exception\FormatException;
@@ -68,7 +68,7 @@ class BinaryEncryptorTest extends TestCase
         for ($i = 0; $i < strlen($encrypted); $i++) {
             $c = $encrypted[$i];
             try {
-                $encrypted[$i] = '?';
+                $encrypted[$i] = chr(ord($encrypted[$i]) + 1);
                 $encryptor->decrypt($encrypted);
             } catch (FormatException $e) {
                 $exceptionCounter++;

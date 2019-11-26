@@ -1,5 +1,6 @@
 <?php
 
+use Gustav\Common\Operation\Time;
 use Slim\Middleware\ContentLengthMiddleware;
 use DI\Bridge\Slim\Bridge;
 
@@ -11,6 +12,9 @@ use Gustav\Common\Config\ConfigLoader;
 $loader = require __DIR__ . '/../../vendor/autoload.php';
 $loader->addPsr4('Gustav\\App\\', __DIR__ . '/../src');               // app/src
 $loader->addPsr4('Gustav\\Common\\', __DIR__ . '/../../common/src');  // common/src
+
+// Set currentTime
+Time::now();
 
 $loader = new ConfigLoader('/usr/local/etc/gustav/settings.yml');
 $config = new ApplicationConfig($loader);

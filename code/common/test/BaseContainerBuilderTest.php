@@ -14,7 +14,10 @@ use Gustav\Common\Adapter\S3Interface;
 use Gustav\Common\Config\ApplicationConfig;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\Config\ConfigLoader;
-use Gustav\Common\Exception\ConfigException;
+use Gustav\Common\Log\BaseDataLogger;
+use Gustav\Common\Log\DataLoggerInterface;
+use Gustav\Common\Operation\BinaryEncryptor;
+use Gustav\Common\Operation\BinaryEncryptorInterface;
 use PHPUnit\Framework\TestCase;
 
 class BaseContainerBuilderTest extends TestCase
@@ -61,6 +64,9 @@ storage:
   key: $$STORAGE_ACCESS_KEY$$
   secret: $$STORAGE_SECRET$$
   bucket: $$STORAGE_BUCKET$$
+
+logger:
+  host: localhost:24224
 __EOF__
         );
         fclose($fd);
@@ -178,5 +184,31 @@ __EOF__
         $config = $s3->getConfig();
 
         $this->assertEquals('s3', $config['signing_name']);
+    }
+
+    /**
+     * @test
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function binaryEncryptor(): void
+    {
+        $container = $this->getContainer();
+        $encryptor = $container->get(BinaryEncryptorInterface::class);
+
+        $this->assertInstanceOf(BinaryEncryptor::class, $encryptor);
+    }
+
+    /**
+     * @test
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function getLogger(): void
+    {
+        $container = $this->getContainer();
+        $logger = $container->get(DataLoggerInterface::class);
+
+        $this->assertInstanceOf(BaseDataLogger::class, $logger);
     }
 }

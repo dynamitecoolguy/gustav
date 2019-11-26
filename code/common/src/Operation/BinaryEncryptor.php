@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Gustav\Common\Data;
+namespace Gustav\Common\Operation;
 
 
 use Gustav\Common\Exception\FormatException;

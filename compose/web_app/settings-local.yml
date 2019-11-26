@@ -26,3 +26,6 @@ storage:
   key: s3accesskey
   secret: s3secretkey
   bucket: dummy
+
+logger:
+  host: fluentd:24224

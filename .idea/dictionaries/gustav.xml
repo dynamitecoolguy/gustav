@@ -2,6 +2,7 @@
   <dictionary name="gustav">
     <words>
       <w>encryptor</w>
+      <w>fluentd</w>
       <w>igbinary</w>
     </words>
   </dictionary>

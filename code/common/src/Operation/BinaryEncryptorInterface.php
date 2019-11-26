@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Gustav\Common\Data;
+namespace Gustav\Common\Operation;
 
 /**
  * バイナリの暗号化/復号化

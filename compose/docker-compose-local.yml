@@ -110,6 +110,15 @@ services:
     networks:
       - private_net
 
+  fluentd:
+    build:
+      context: ./fluentd
+    container_name: fluentd
+    ports:
+      - "24224:24224"
+    networks:
+      - private_net
+
 volumes:
   redis-data:
   mysql-data:
