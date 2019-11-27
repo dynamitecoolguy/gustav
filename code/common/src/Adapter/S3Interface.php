@@ -15,5 +15,4 @@ interface S3Interface
      * @return S3Client
      */
     public function getClient(): S3Client;
-
 }

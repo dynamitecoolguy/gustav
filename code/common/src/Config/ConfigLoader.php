@@ -68,15 +68,19 @@ class ConfigLoader
      * config yamlファイルから、指定されたカテゴリー、キーの値を取得する
      * @param string $category
      * @param string $key
+     * @param string|null $default
      * @return string
      * @throws ConfigException
      */
-    public function getConfig(string $category, string $key): string
+    public function getConfig(string $category, string $key, ?string $default): string
     {
         $this->checkLoaded();
 
-        // YAMLに無い値ならばエラー
+        // YAMLに無い値ならばデフォルト値、デフォルト値指定が無ければエラー
         if (!isset($this->configMap[$category]) || !isset($this->configMap[$category][$key])) {
+            if (is_string($default)) {
+                return $default;
+            }
             throw new ConfigException("No such category or key in YAML (Category:${category}, Key:${key}");
         }
 

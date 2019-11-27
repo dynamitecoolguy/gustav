@@ -15,14 +15,12 @@ redis:
 
 dynamodb:
   endpoint: http://dynamodb:8000
-  region: ap-northeast-1
   key: dummy
   secret: dummy
   table: hogehoge
 
 storage:
   endpoint: http://storage:9000
-  region: ap-northeast-1
   key: s3accesskey
   secret: s3secretkey
   bucket: dummy

@@ -79,7 +79,7 @@ services:
 
   pgsql:
     build:
-      context: pgsql
+      context: ./pgsql
     volumes:
       - pgsql-data:/var/lib/postgresql
     ports:
@@ -89,7 +89,10 @@ services:
       - private_net
 
   dynamodb:
-    image: amazon/dynamodb-local
+    build:
+      context: ./dynamodb
+    volumes:
+      - dynamodb-data:/data
     container_name: dynamodb
     ports:
       - "18000:8000"
@@ -110,6 +113,15 @@ services:
     networks:
       - private_net
 
+  sqs:
+    build:
+      context: ./sqs
+    ports:
+      - "9324:9324"
+    container_name: sqs
+    networks:
+      - private_net
+
   fluentd:
     build:
       context: ./fluentd
@@ -124,6 +136,7 @@ volumes:
   mysql-data:
   pgsql-data:
   storage-data:
+  dynamodb-data:
 
 networks:
   private_net:

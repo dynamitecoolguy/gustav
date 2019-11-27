@@ -71,7 +71,7 @@ __EOF__
     public function getValidValue(): void
     {
         $loader = new ConfigLoader(self::$tempFilePath);
-        $this->assertEquals($loader->getConfig('dynamodb', 'table'), 'hogehoge');
+        $this->assertEquals($loader->getConfig('dynamodb', 'table', null), 'hogehoge');
     }
 
     /**
@@ -83,7 +83,7 @@ __EOF__
         $this->expectException(ConfigException::class);
 
         $loader = new ConfigLoader(self::$tempFilePath);
-        $loader->getConfig('no_such_category', 'table');
+        $loader->getConfig('no_such_category', 'table', null);
     }
 
     /**
@@ -95,7 +95,17 @@ __EOF__
         $this->expectException(ConfigException::class);
 
         $loader = new ConfigLoader(self::$tempFilePath);
-        $loader->getConfig('dynamodb', 'no_such_key');
+        $loader->getConfig('dynamodb', 'no_such_key', null);
+    }
+
+    /**
+     * @test
+     * @throws ConfigException
+     */
+    public function defaultValue(): void
+    {
+        $loader = new ConfigLoader(self::$tempFilePath);
+        $this->assertEquals('default', $loader->getConfig('dynamodb', 'no_such_key_too', 'default'));
     }
 
     /**

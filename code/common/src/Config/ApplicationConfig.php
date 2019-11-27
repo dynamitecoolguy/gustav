@@ -44,11 +44,12 @@ class ApplicationConfig implements ApplicationConfigInterface
      * 指定されたカテゴリ内のキーの値を取得する
      * @param string $category
      * @param string $key
+     * @param string|null $default
      * @return string
      * @throws ConfigException
      * @implements ApplicationConfigInterface
      */
-    public function getValue(string $category, string $key): string
+    public function getValue(string $category, string $key, ?string $default = null): string
     {
         $categoryKey = self::CONFIG_APCU_PREFIX . $category . '$$' . $key;
 
@@ -65,7 +66,7 @@ class ApplicationConfig implements ApplicationConfigInterface
         }
 
         // config fileから値を取得する
-        $value = $this->configLoader->getConfig($category, $key);
+        $value = $this->configLoader->getConfig($category, $key, $default);
 
         // SSMによる置換を行う必要がある値か?
         if (strpos($value, '$$') !== false

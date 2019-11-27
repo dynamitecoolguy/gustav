@@ -11,6 +11,7 @@ use Gustav\Common\Adapter\MySQLInterface;
 use Gustav\Common\Adapter\PgSQLInterface;
 use Gustav\Common\Adapter\RedisInterface;
 use Gustav\Common\Adapter\S3Interface;
+use Gustav\Common\Adapter\SqsInterface;
 use Gustav\Common\Config\ApplicationConfig;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\Config\ConfigLoader;
@@ -64,6 +65,11 @@ storage:
   key: $$STORAGE_ACCESS_KEY$$
   secret: $$STORAGE_SECRET$$
   bucket: $$STORAGE_BUCKET$$
+
+sqs:
+  endpoint: http://localhost:19000
+  key: hoge
+  secret: fuga
 
 logger:
   host: localhost:24224
@@ -184,6 +190,22 @@ __EOF__
         $config = $s3->getConfig();
 
         $this->assertEquals('s3', $config['signing_name']);
+    }
+
+    /**
+     * @test
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function getSqs(): void
+    {
+        $container = $this->getContainer();
+        $sqsi = $container->get(SqsInterface::class);
+        $sqs = $sqsi->getClient();
+
+        $config = $sqs->getConfig();
+
+        $this->assertEquals('sqs', $config['signing_name']);
     }
 
     /**

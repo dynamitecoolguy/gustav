@@ -13,6 +13,8 @@ use Gustav\Common\Adapter\RedisAdapter;
 use Gustav\Common\Adapter\RedisInterface;
 use Gustav\Common\Adapter\S3Adapter;
 use Gustav\Common\Adapter\S3Interface;
+use Gustav\Common\Adapter\SqsAdapter;
+use Gustav\Common\Adapter\SqsInterface;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\Log\DataLoggerFluent;
 use Gustav\Common\Log\DataLoggerInterface;
@@ -32,6 +34,8 @@ use Gustav\Common\Config\ApplicationConfig;
  */
 class BaseContainerBuilder extends ContainerBuilder
 {
+    const DEFAULT_AWS_REGION = 'ap-northeast-1';
+
     /**
      * BaseContainerBuilder constructor.
      * @param ApplicationConfig $config
@@ -61,6 +65,7 @@ class BaseContainerBuilder extends ContainerBuilder
             RedisInterface::class => $this->getRedisFunction(),
             DynamoDbInterface::class => $this->getDynamoDbFunction(),
             S3Interface::class => $this->getS3Function(),
+            SqsInterface::class => $this->getSqsFunction(),
             BinaryEncryptorInterface::class => $this->getBinaryEncryptorFunction(),
             DataLoggerInterface::class => $this->getDataLoggerFunction()
         ];
@@ -154,7 +159,7 @@ class BaseContainerBuilder extends ContainerBuilder
         {
             $sdk = new Sdk([
                 'endpoint' => $config->getValue('dynamodb', 'endpoint'),
-                'region' => $config->getValue('dynamodb', 'region'),
+                'region' => $config->getValue('dynamodb', 'region', self::DEFAULT_AWS_REGION),
                 'version' => '2012-08-10',
                 'credentials' => [
                     'key' => $config->getValue('dynamodb', 'key'),
@@ -168,24 +173,13 @@ class BaseContainerBuilder extends ContainerBuilder
     /**
      * @return callable
      */
-    protected function getBinaryEncryptorFunction(): callable
-    {
-        return function (): BinaryEncryptorInterface
-        {
-            return new BinaryEncryptor();
-        };
-    }
-
-    /**
-     * @return callable
-     */
     protected function getS3Function(): callable
     {
         return function (ApplicationConfigInterface $config): S3Interface
         {
             $sdk = new Sdk([
                 'endpoint' => $config->getValue('storage', 'endpoint'),
-                'region' => $config->getValue('storage', 'region'),
+                'region' => $config->getValue('storage', 'region', self::DEFAULT_AWS_REGION),
                 'version' => '2006-03-01',
                 'credentials' => [
                     'key' => $config->getValue('storage', 'key'),
@@ -194,6 +188,37 @@ class BaseContainerBuilder extends ContainerBuilder
                 'use_path_style_endpoint' => true
             ]);
             return new S3Adapter($sdk->createS3());
+        };
+    }
+
+    /**
+     * @return callable
+     */
+    protected function getSqsFunction(): callable
+    {
+        return function (ApplicationConfigInterface $config): SqsInterface
+        {
+            $sdk = new Sdk([
+                'endpoint' => $config->getValue('sqs', 'endpoint'),
+                'region' => $config->getValue('sqs', 'region', self::DEFAULT_AWS_REGION),
+                'version' => '2012-11-05',
+                'credentials' => [
+                    'key' => $config->getValue('sqs', 'key'),
+                    'secret' => $config->getValue('sqs', 'secret')
+                ]
+            ]);
+            return new SqsAdapter($sdk->createSqs());
+        };
+    }
+
+    /**
+     * @return callable
+     */
+    protected function getBinaryEncryptorFunction(): callable
+    {
+        return function (): BinaryEncryptorInterface
+        {
+            return new BinaryEncryptor();
         };
     }
 
