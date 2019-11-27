@@ -6,7 +6,7 @@ namespace Gustav\Common\Log;
 
 use Fluent\Logger\Entity;
 
-class EntityUs extends Entity
+class FluentLoggerEntity extends Entity
 {
     /* @var float w/microtime */
     private $microTime;

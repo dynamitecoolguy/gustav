@@ -25,5 +25,15 @@ storage:
   secret: s3secretkey
   bucket: dummy
 
+sqs:
+  endpoint: http://sqs:9324
+  key: hoge
+  secret: fuga
+
 logger:
+  type: fluent
   host: fluentd:24224
+
+#logger:
+#  type: sqs
+#  queue: http://sqs:9324/queue/hoge_queue

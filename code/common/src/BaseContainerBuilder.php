@@ -16,8 +16,10 @@ use Gustav\Common\Adapter\S3Interface;
 use Gustav\Common\Adapter\SqsAdapter;
 use Gustav\Common\Adapter\SqsInterface;
 use Gustav\Common\Config\ApplicationConfigInterface;
+use Gustav\Common\Exception\ConfigException;
 use Gustav\Common\Log\DataLoggerFluent;
 use Gustav\Common\Log\DataLoggerInterface;
+use Gustav\Common\Log\DataLoggerSqs;
 use Gustav\Common\Operation\BinaryEncryptor;
 use Gustav\Common\Operation\BinaryEncryptorInterface;
 use PDO;
@@ -228,11 +230,19 @@ class BaseContainerBuilder extends ContainerBuilder
      */
     protected function getDataLoggerFunction(): callable
     {
-        return function (ApplicationConfigInterface $config): DataLoggerInterface
+        return function (ApplicationConfigInterface $config, Container $container): DataLoggerInterface
         {
-            list($host, $port) = $this->resolveHostAndPort($config->getValue('logger', 'host'));
+            $loggerType = $config->getValue('logger', 'type');
 
-            return DataLoggerFluent::getInstance($host, $port);
+            if ($loggerType == 'fluent') {
+                list($host, $port) = $this->resolveHostAndPort($config->getValue('logger', 'host'));
+                return DataLoggerFluent::getInstance($host, $port);
+            } elseif ($loggerType == 'sqs') {
+                $sqsI = $container->get(SqsInterface::class);
+                $queueUrl = $config->getValue('logger', 'queue');
+                return DataLoggerSqs::getInstance($sqsI->getClient(), $queueUrl);
+            }
+            throw new ConfigException("logger.type is unknown type(${loggerType}");
         };
     }
 

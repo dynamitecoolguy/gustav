@@ -11,5 +11,4 @@ interface SqsInterface
      * @return SqsClient
      */
     public function getClient(): SqsClient;
-
 }

@@ -15,7 +15,6 @@ use Gustav\Common\Adapter\SqsInterface;
 use Gustav\Common\Config\ApplicationConfig;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\Config\ConfigLoader;
-use Gustav\Common\Log\BaseDataLogger;
 use Gustav\Common\Log\DataLoggerInterface;
 use Gustav\Common\Operation\BinaryEncryptor;
 use Gustav\Common\Operation\BinaryEncryptorInterface;
@@ -72,6 +71,7 @@ sqs:
   secret: fuga
 
 logger:
+  type: fluent
   host: localhost:24224
 __EOF__
         );
@@ -231,6 +231,6 @@ __EOF__
         $container = $this->getContainer();
         $logger = $container->get(DataLoggerInterface::class);
 
-        $this->assertInstanceOf(BaseDataLogger::class, $logger);
+        $this->assertInstanceOf(DataLoggerInterface::class, $logger);
     }
 }

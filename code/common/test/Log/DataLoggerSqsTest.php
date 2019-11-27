@@ -3,17 +3,39 @@
 
 namespace Gustav\Common\Log;
 
+use Aws\Sdk;
 use PHPUnit\Framework\TestCase;
 
-class DataLoggerFluentTest extends TestCase
+class DataLoggerSqsTest extends TestCase
 {
+    private static $client;
+
+    private static $queueUrl = 'http://localhost:9324/queue/hoge_queue';
+
+    /**
+     * @beforeClass
+     */
+    public static function setUpSqsClient()
+    {
+        $sdk = new Sdk([
+            'endpoint' => 'http://localhost:9324',
+            'region' => 'ap-northeast-1',
+            'version' => '2012-11-05',
+            'credentials' => [
+                'key' => 'x',
+                'secret' => 'x'
+            ]
+        ]);
+        self::$client = $sdk->createSqs();
+    }
+
     /**
      * @test
      */
     public function createLogger()
     {
-        $logger = DataLoggerFluent::getInstance('localhost', 24224);
-        $this->assertInstanceOf(DataLoggerFluent::class, $logger);
+        $logger = DataLoggerSqs::getInstance(self::$client, self::$queueUrl);
+        $this->assertInstanceOf(DataLoggerSqs::class, $logger);
     }
 
     /**
@@ -21,7 +43,7 @@ class DataLoggerFluentTest extends TestCase
      */
     public function singleLog()
     {
-        $logger = DataLoggerFluent::getInstance('localhost', 24224);
+        $logger = DataLoggerSqs::getInstance(self::$client, self::$queueUrl);
 
         $logger->add('test.tag', microtime(true), ['body' => 'testData']);
         $logger->flush();
@@ -34,7 +56,7 @@ class DataLoggerFluentTest extends TestCase
      */
     public function multiLog()
     {
-        $logger = DataLoggerFluent::getInstance('localhost', 24224);
+        $logger = DataLoggerSqs::getInstance(self::$client, self::$queueUrl);
 
         $logger->add('test.tag', microtime(true), ['body' => 'testData1']);
         $logger->add('test.tag', microtime(true), ['body' => 'testData2']);
@@ -49,7 +71,7 @@ class DataLoggerFluentTest extends TestCase
      */
     public function clear()
     {
-        $logger = DataLoggerFluent::getInstance('localhost', 24224);
+        $logger = DataLoggerSqs::getInstance(self::$client, self::$queueUrl);
 
         $logger->add('test.cleared', microtime(true), ['body' => 'testData']);
         $logger->add('test.cleared', microtime(true), ['body' => 'testData']);
@@ -57,20 +79,5 @@ class DataLoggerFluentTest extends TestCase
         $logger->flush();
 
         $this->assertTrue(true);
-    }
-
-    /**
-     * @test
-     */
-    public function entity()
-    {
-        $now = microtime(true);
-        $data = ['hoge' => 'fuga'];
-        $entity = new FluentLoggerEntity('tag', $data, $now);
-
-        $this->assertEquals('tag', $entity->getTag());
-        $this->assertEquals(intval($now), $entity->getTime());
-        $this->assertEquals(['now' => $now, 'hoge' => 'fuga'], $entity->getData());
-        $this->assertEquals($now, $entity->getMicroTime());
     }
 }

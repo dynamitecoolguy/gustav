@@ -12,12 +12,17 @@ use Fluent\Logger\PackerInterface;
  * Class DataLoggerFluent
  * @package Gustav\Common\Log
  */
-class DataLoggerFluent extends BaseDataLogger
+class DataLoggerFluent implements DataLoggerInterface
 {
     /**
      * @var DataLoggerInterface
      */
     private static $theInstance = null;
+
+    /**
+     * @var FluentLoggerEntity[]
+     */
+    private $entityList;
 
     /**
      * @var FluentLogger
@@ -45,8 +50,7 @@ class DataLoggerFluent extends BaseDataLogger
      */
     protected function __construct(string $host, int $port)
     {
-        parent::__construct();
-
+        $this->entityList = [];
         $this->logger = new FluentLogger(
             $host,
             $port,
@@ -64,16 +68,35 @@ class DataLoggerFluent extends BaseDataLogger
     }
 
     /**
+     * ログ用データの追加.
+     * ただし、 flushするまでは出力されない
+     * @param string $tag
+     * @param float $timestamp
+     * @param array $dataHash
+     */
+    public function add(string $tag, float $timestamp, array $dataHash): void
+    {
+        $this->entityList[] = new FluentLoggerEntity($tag, $dataHash, $timestamp);
+    }
+
+    /**
      * 貯めたログのflush
      * DBのトランザクションでコミットしたときを想定
      */
     public function flush(): void
     {
-        if ($this->hasEntity()) {
-            foreach ($this->getEntityList() as $entity) {
-                $this->logger->post2($entity);
-            }
+        foreach ($this->entityList as $entity) {
+            $this->logger->post2($entity);
         }
-        $this->clearEntityList();
+        $this->entityList = [];
+    }
+
+    /**
+     * 貯めたログを出力せずにクリア.
+     * DBのトランザクションでロールバックしたときを想定
+     */
+    public function clear(): void
+    {
+        $this->entityList = [];
     }
 }
