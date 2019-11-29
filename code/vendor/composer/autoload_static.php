@@ -61,6 +61,7 @@ class ComposerStaticInit6a7382a3ad506b647ed3242c9c26d274
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
+            'Google\\FlatBuffers\\' => 19,
         ),
         'F' => 
         array (
@@ -165,6 +166,10 @@ class ComposerStaticInit6a7382a3ad506b647ed3242c9c26d274
         'GuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'Google\\FlatBuffers\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/google/flatbuffers/php',
         ),
         'Fluent\\Logger\\' => 
         array (

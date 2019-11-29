@@ -7,6 +7,7 @@
         "php-di/slim-bridge": "^3.0",
         "aws/aws-sdk-php": "^3.115",
         "fluent/logger": "^1.0",
+        "google/flatbuffers": "^1.11",
         "ext-PDO": "^7.3",
         "ext-json": "^1.7",
         "ext-redis": "^5.0",

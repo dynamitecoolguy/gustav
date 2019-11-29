@@ -1,0 +1,13 @@
+namespace Gustav.Common.Model.FlatBuffers;
+
+table DataChunk {
+  id: string;
+  version: ubyte;
+  content: [ubyte];
+}
+
+table DataModel {
+  chunk: [DataChunk];
+}
+
+root_type DataModel;

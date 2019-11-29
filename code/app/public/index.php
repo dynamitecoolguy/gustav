@@ -8,10 +8,11 @@ use Gustav\App\AppContainerBuilder as ContainerBuilder;
 use Gustav\Common\Config\ApplicationConfig;
 use Gustav\Common\Config\ConfigLoader;
 
-/** @var Composer\Autoload\ClassLoader $loader */
-$loader = require __DIR__ . '/../../vendor/autoload.php';
-$loader->addPsr4('Gustav\\App\\', __DIR__ . '/../src');               // app/src
-$loader->addPsr4('Gustav\\Common\\', __DIR__ . '/../../common/src');  // common/src
+/** @var Composer\Autoload\ClassLoader $autoloader */
+$autoloader = require __DIR__ . '/../../vendor/autoload.php';
+$autoloader->addPsr4('Gustav\\App\\', __DIR__ . '/../src');               // app/src
+$autoloader->addPsr4('Gustav\\Common\\', __DIR__ . '/../../common/src');  // common/src
+$autoloader->addPsr4('', __DIR__ . '/../../flatbuffers/php');             // flatbuffers/src
 
 // Set currentTime
 Time::now();

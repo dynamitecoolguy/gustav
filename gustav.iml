@@ -11,11 +11,13 @@
       <sourceFolder url="file://$MODULE_DIR$/code/mgr/test" isTestSource="true" packagePrefix="Gustav\Mgr" />
       <sourceFolder url="file://$MODULE_DIR$/code/mgr/public" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/code/app/public" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/code/flatbuffers/php" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/code/vendor/aws/aws-sdk-php" />
       <excludeFolder url="file://$MODULE_DIR$/code/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/code/vendor/doctrine/instantiator" />
       <excludeFolder url="file://$MODULE_DIR$/code/vendor/fig/http-message-util" />
       <excludeFolder url="file://$MODULE_DIR$/code/vendor/fluent/logger" />
+      <excludeFolder url="file://$MODULE_DIR$/code/vendor/google/flatbuffers" />
       <excludeFolder url="file://$MODULE_DIR$/code/vendor/guzzlehttp/guzzle" />
       <excludeFolder url="file://$MODULE_DIR$/code/vendor/guzzlehttp/promises" />
       <excludeFolder url="file://$MODULE_DIR$/code/vendor/guzzlehttp/psr7" />

@@ -58,6 +58,16 @@ VirtualBox構築
     AWS Secret Access Key [None]: ****************************************
     Default region name [None]: ap-northeast-1
     Default output format [None]: json
+* FlatBuffers
+  $ sudo snap install cmake --classic
+  $ wget https://github.com/google/flatbuffers/archive/1.11.0.tar.gz
+  $ tar xvzf 1.11.0.tar.gz
+  $ cd flatbuffers-1.11.0
+  $ cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+  $ make
+  $ make test
+  $ sudo make install
+
 * IntellJ-IDEA
   $ intellij-idea-ultimate
     起動したら右クリックでお気に入りに追加
@@ -101,30 +111,36 @@ ProjectTree
 	server.crt
 	server.csr
 	server.key
-  /compose
-    /mysql
-	/pgsql
-	/proxy
-	/web_app
-	/web_mgr
-    docker-compose-local.yml
-	docker-compose-development.yml
-  /credentials
   /code
     /app
 	  /src              (Sources Root: Gustav\App)
 	  /public
 	  /test             (Test Sources Root: Gustav\App)
+	/common
+	  /src              (Sources Root: Gustav\Common)
+	  /test             (Test Sources Root: Gustav\Common)
+	/flatbuffers
+	  /php              (Sources Root: \)
+	  /idl
 	/mgr
 	  /src              (Sources Root: Gustav\Mgr)
 	  /public
 	  /test             (Test Sources Root: Gustav\Mgr)
-	/common
-	  /src              (Sources Root: Gustav\Common)
-	  /test             (Test Sources Root: Gustav\Common)
 	/vendor
 	composer.json
 	composer.lock
+  /compose
+    /dynamodb
+    /fluentd
+    /mysql
+	/pgsql
+	/proxy
+	/sqs
+	/web_app
+	/web_mgr
+    docker-compose-local.yml
+	docker-compose-development.yml
+  /credentials
 
 ========
 Composer
@@ -167,3 +183,4 @@ Run/Debug Configuration
   Edit configuration
     PHPUnit : defined in configuration file
               Interpreter option: -dapc.enable_cli=1
+
