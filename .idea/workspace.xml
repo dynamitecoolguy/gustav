@@ -2,18 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="42a86106-9ee1-482e-8a8e-7d4cde83786b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.phpunit.result.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/common/src/Model/ModelSerializable.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/common/test/Model/Weapon.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/vendor/google/flatbuffers/android/.project" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/vendor/google/flatbuffers/grpc/samples/greeter/Makefile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/vendor/phpunit/phpunit/.phpunit.result.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/credentials/ssm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Model/ModelInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/ModelInterface.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Model/ModelSerializer.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/ModelSerializer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.phpunit.result.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.phpunit.result.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/public/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/public/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/test/FlatBuffersTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/FlatBuffersTest.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/common/test/Model/ModelTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/Model/ModelTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/test/Model/Monster.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/Model/Monster.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/flatbuffers/idl/example.fbs" beforeDir="false" afterPath="$PROJECT_DIR$/code/flatbuffers/example/idl/example.fbs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/flatbuffers/php/MyGame/Sample/Color.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/flatbuffers/php/MyGame/Sample/Equipment.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/flatbuffers/php/MyGame/Sample/Monster.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/flatbuffers/php/MyGame/Sample/Vec3.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/flatbuffers/php/MyGame/Sample/Weapon.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/mgr/public/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/mgr/public/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compose/web_mgr/settings-local.yml" beforeDir="false" afterPath="$PROJECT_DIR$/compose/web_mgr/settings-local.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,11 +141,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/code/flatbuffers/example/php" />
+      <recent name="$PROJECT_DIR$/code/flatbuffers/example/idl" />
       <recent name="$PROJECT_DIR$/code/common/src/Model/FlatBuffers" />
       <recent name="$PROJECT_DIR$/code/common/src/Data" />
       <recent name="$PROJECT_DIR$/code/mgr/src/Config" />
-      <recent name="$PROJECT_DIR$/code/app/src/Config" />
-      <recent name="$PROJECT_DIR$/code/common/test/Config" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/code/common/src/Model" />
@@ -231,7 +232,7 @@
       <workItem from="1575014091664" duration="27000" />
       <workItem from="1575014133795" duration="4048000" />
       <workItem from="1575246358067" duration="29000" />
-      <workItem from="1575246402650" duration="1434000" />
+      <workItem from="1575246402650" duration="2695000" />
     </task>
     <task id="LOCAL-00001" summary="* http://mgr.localhost/phpinfo.phpが表示できるところまで&#10;* [BUG] https://mgr.localhostがPR_END_OF_FILEエラーになる">
       <created>1573204290729</created>
@@ -359,7 +360,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575006415796</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="シリアル化を、root可能なオブジェクトと一般オブジェクトで分けるように変更">
+      <created>1575248306061</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1575248306061</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -397,29 +405,42 @@
     <MESSAGE value="sqsインターフェースを追加&#10;dynamodbのDockerfileを追加 (将来的にカスタマイズできるように)&#10;Configでデフォルト値を指定可能なように変更" />
     <MESSAGE value="SQSを使ったDataLoggerの追加" />
     <MESSAGE value="Flatbuffersを使ったモデルのシリアライズ/デシリアライズの仕組みを追加" />
-    <option name="LAST_COMMIT_MESSAGE" value="Flatbuffersを使ったモデルのシリアライズ/デシリアライズの仕組みを追加" />
+    <MESSAGE value="シリアル化を、root可能なオブジェクトと一般オブジェクトで分けるように変更" />
+    <option name="LAST_COMMIT_MESSAGE" value="シリアル化を、root可能なオブジェクトと一般オブジェクトで分けるように変更" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="580" y="166" width="800" height="677" key="#Project_Structure" timestamp="1575249622191">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state x="580" y="166" width="800" height="677" key="#Project_Structure/51.27.1869.958@51.27.1869.958" timestamp="1575249622191" />
     <state x="668" y="225" width="624" height="562" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1575246383108">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="668" y="225" width="624" height="562" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/51.27.1869.958@51.27.1869.958" timestamp="1575246383108" />
-    <state width="1811" height="241" key="GridCell.Tab.0.bottom" timestamp="1575248245049">
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1575248305837">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575248245049" />
-    <state width="1811" height="241" key="GridCell.Tab.0.center" timestamp="1575248245048">
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1575248305837" />
+    <state x="151" y="125" width="1669" height="760" key="DiffContextDialog" timestamp="1575249911192">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.center/51.27.1869.958@51.27.1869.958" timestamp="1575248245048" />
-    <state width="1811" height="241" key="GridCell.Tab.0.left" timestamp="1575248245048">
+    <state x="151" y="125" width="1669" height="760" key="DiffContextDialog/51.27.1869.958@51.27.1869.958" timestamp="1575249911192" />
+    <state width="1811" height="241" key="GridCell.Tab.0.bottom" timestamp="1575249570890">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.left/51.27.1869.958@51.27.1869.958" timestamp="1575248245048" />
-    <state width="1811" height="241" key="GridCell.Tab.0.right" timestamp="1575248245049">
+    <state width="1811" height="241" key="GridCell.Tab.0.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575249570890" />
+    <state width="1811" height="241" key="GridCell.Tab.0.center" timestamp="1575249570888">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.right/51.27.1869.958@51.27.1869.958" timestamp="1575248245049" />
+    <state width="1811" height="241" key="GridCell.Tab.0.center/51.27.1869.958@51.27.1869.958" timestamp="1575249570888" />
+    <state width="1811" height="241" key="GridCell.Tab.0.left" timestamp="1575249570888">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state width="1811" height="241" key="GridCell.Tab.0.left/51.27.1869.958@51.27.1869.958" timestamp="1575249570888" />
+    <state width="1811" height="241" key="GridCell.Tab.0.right" timestamp="1575249570889">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state width="1811" height="241" key="GridCell.Tab.0.right/51.27.1869.958@51.27.1869.958" timestamp="1575249570889" />
     <state width="1811" height="278" key="GridCell.Tab.1.bottom" timestamp="1575018186557">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -444,6 +465,14 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="598" y="139" key="SettingsEditor/51.27.1869.958@51.27.1869.958" timestamp="1575014205656" />
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1575248307959">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1575248307959" />
+    <state x="610" y="187" width="751" height="636" key="find.popup" timestamp="1575249527962">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state x="610" y="187" width="751" height="636" key="find.popup/51.27.1869.958@51.27.1869.958" timestamp="1575249527962" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

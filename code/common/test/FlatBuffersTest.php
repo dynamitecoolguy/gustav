@@ -22,7 +22,7 @@ class FlatBuffersTest extends TestCase
     {
         /** @var ClassLoader $autoloader */
         $autoloader = require __DIR__ . '/../../vendor/autoload.php';
-        $autoloader->addPsr4('', __DIR__ . '/../../flatbuffers/php');              // flatbuffers/php
+        $autoloader->addPsr4('', __DIR__ . '/../../flatbuffers/example/php');              // flatbuffers/php
     }
 
     /**
