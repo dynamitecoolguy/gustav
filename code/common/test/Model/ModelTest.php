@@ -152,7 +152,7 @@ class DuplicatedChunkIdModel implements ModelInterface
 {
     public static function chunkId(): string { return 'MON'; }
     public static function formatVersion(): int { return 1; }
-    public function serialize(FlatbufferBuilder &$builder): void {}
+    public function serialize(FlatbufferBuilder &$builder): int {return $builder->offset(); }
     public static function deserialize(int $version, ByteBuffer $buffer): ModelInterface { return null;}
 }
 

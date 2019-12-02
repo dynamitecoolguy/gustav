@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="42a86106-9ee1-482e-8a8e-7d4cde83786b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.phpunit.result.cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/common/src/Model/ModelSerializable.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/common/test/Model/Weapon.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/google/flatbuffers/android/.project" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/google/flatbuffers/grpc/samples/greeter/Makefile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/phpunit/phpunit/.phpunit.result.cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/credentials/ssm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/src/Model/ModelInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/ModelInterface.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/src/Model/ModelSerializer.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/ModelSerializer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/test/Model/ModelTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/Model/ModelTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/test/Model/Monster.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/Model/Monster.php" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/code/composer.json</pharConfigPath>
+    <execution>
+      <executable path="composer" />
+    </execution>
+  </component>
+  <component name="CoverageViewManager">
+    <option name="myAutoScrollToSource" value="true" />
+    <option name="myElementSize" value="518" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="$PROJECT_DIR$/.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="PhpDebugGeneral" listening_started="true" notify_if_session_was_finished_without_being_paused="false" />
+  <component name="PhpServers">
+    <servers>
+      <server host="app.localhost" id="3eeda998-e9a4-4e02-bc65-574276d9676f" name="app.localhost" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$/code" remote-root="/var/www" />
+        </path_mappings>
+      </server>
+      <server host="mgr.localhost" id="7f5a91c9-e7ae-4ac4-b254-017bf65f5b69" name="mgr.localhost" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$/code" remote-root="/var/www" />
+        </path_mappings>
+      </server>
+    </servers>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP 7.3">
+    <include_path>
+      <path value="$PROJECT_DIR$/code/vendor/composer" />
+      <path value="$PROJECT_DIR$/code/vendor/slim/psr7" />
+      <path value="$PROJECT_DIR$/code/vendor/slim/slim" />
+      <path value="$PROJECT_DIR$/code/vendor/phpdocumentor/reflection-docblock" />
+      <path value="$PROJECT_DIR$/code/vendor/phpdocumentor/type-resolver" />
+      <path value="$PROJECT_DIR$/code/vendor/theseer/tokenizer" />
+      <path value="$PROJECT_DIR$/code/vendor/phpdocumentor/reflection-common" />
+      <path value="$PROJECT_DIR$/code/vendor/psr/http-server-handler" />
+      <path value="$PROJECT_DIR$/code/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/code/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/code/vendor/psr/http-server-middleware" />
+      <path value="$PROJECT_DIR$/code/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/code/vendor/mtdowling/jmespath.php" />
+      <path value="$PROJECT_DIR$/code/vendor/php-di/phpdoc-reader" />
+      <path value="$PROJECT_DIR$/code/vendor/php-di/invoker" />
+      <path value="$PROJECT_DIR$/code/vendor/php-di/php-di" />
+      <path value="$PROJECT_DIR$/code/vendor/fig/http-message-util" />
+      <path value="$PROJECT_DIR$/code/vendor/phpunit/php-token-stream" />
+      <path value="$PROJECT_DIR$/code/vendor/phpunit/php-code-coverage" />
+      <path value="$PROJECT_DIR$/code/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/code/vendor/phpunit/php-text-template" />
+      <path value="$PROJECT_DIR$/code/vendor/nikic/fast-route" />
+      <path value="$PROJECT_DIR$/code/vendor/phpunit/php-timer" />
+      <path value="$PROJECT_DIR$/code/vendor/phpunit/php-file-iterator" />
+      <path value="$PROJECT_DIR$/code/vendor/phpunit/phpunit" />
+      <path value="$PROJECT_DIR$/code/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/code/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/code/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/code/vendor/jeremeamia/superclosure" />
+      <path value="$PROJECT_DIR$/code/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/code/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/code/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/code/vendor/symfony/polyfill-util" />
+      <path value="$PROJECT_DIR$/code/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/code/vendor/symfony/polyfill-php56" />
+      <path value="$PROJECT_DIR$/code/vendor/sebastian/recursion-context" />
+      <path value="$PROJECT_DIR$/code/vendor/sebastian/version" />
+      <path value="$PROJECT_DIR$/code/vendor/sebastian/exporter" />
+      <path value="$PROJECT_DIR$/code/vendor/sebastian/environment" />
+      <path value="$PROJECT_DIR$/code/vendor/sebastian/type" />
+      <path value="$PROJECT_DIR$/code/vendor/sebastian/code-unit-reverse-lookup" />
+      <path value="$PROJECT_DIR$/code/vendor/sebastian/diff" />
+      <path value="$PROJECT_DIR$/code/vendor/sebastian/object-reflector" />
+      <path value="$PROJECT_DIR$/code/vendor/phpspec/prophecy" />
+      <path value="$PROJECT_DIR$/code/vendor/sebastian/object-enumerator" />
+      <path value="$PROJECT_DIR$/code/vendor/sebastian/comparator" />
+      <path value="$PROJECT_DIR$/code/vendor/sebastian/resource-operations" />
+      <path value="$PROJECT_DIR$/code/vendor/myclabs/deep-copy" />
+      <path value="$PROJECT_DIR$/code/vendor/sebastian/global-state" />
+      <path value="$PROJECT_DIR$/code/vendor/phar-io/version" />
+      <path value="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php" />
+      <path value="$PROJECT_DIR$/code/vendor/phar-io/manifest" />
+      <path value="$PROJECT_DIR$/code/vendor/php-di/slim-bridge" />
+      <path value="$PROJECT_DIR$/code/vendor/fluent/logger" />
+      <path value="$PROJECT_DIR$/code/vendor/google/flatbuffers" />
+    </include_path>
+  </component>
+  <component name="ProjectId" id="1TRlCYXURIuV8r50uBwGYYyozP9" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="ToolWindowCoverage.ShowToolbar" value="false" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/code/common/src/Model" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="php.override.implement.member.chooser.php.doc" value="NONE" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.splitter.proportion" value="0.28125" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/code/common/src/Model/FlatBuffers" />
+      <recent name="$PROJECT_DIR$/code/common/src/Data" />
+      <recent name="$PROJECT_DIR$/code/mgr/src/Config" />
+      <recent name="$PROJECT_DIR$/code/app/src/Config" />
+      <recent name="$PROJECT_DIR$/code/common/test/Config" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/code/common/src/Model" />
+      <recent name="$PROJECT_DIR$/code/common/test/Log" />
+      <recent name="$PROJECT_DIR$/code/common/src/Log" />
+      <recent name="$PROJECT_DIR$/code/common/src/Config" />
+      <recent name="$PROJECT_DIR$/code/mgr/src/Controller" />
+    </key>
+  </component>
+  <component name="RunManager" selected="PHPUnit.phpunit">
+    <configuration name="Log" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
+      <TestRunner directory="$PROJECT_DIR$/code/common/src/Log" />
+      <method v="2" />
+    </configuration>
+    <configuration name="phpunit" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <CommandLine parameters="-dapc.enable_cli=1" />
+      <TestRunner configuration_file="$PROJECT_DIR$/phpunit.xml" scope="XML" options="--exclude-group use_aws" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose build" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="sourceFilePath" value="compose/docker-compose-local.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Docker.docker-compose build" />
+      <item itemvalue="PHPUnit.phpunit" />
+      <item itemvalue="PHPUnit.Log" />
+    </list>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="42a86106-9ee1-482e-8a8e-7d4cde83786b" name="Default Changelist" comment="" />
+      <created>1573193962295</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1573193962295</updated>
+      <workItem from="1573193965749" duration="7563000" />
+      <workItem from="1573430672504" duration="23608000" />
+      <workItem from="1573520979259" duration="416000" />
+      <workItem from="1573521412087" duration="19445000" />
+      <workItem from="1573605812828" duration="1284000" />
+      <workItem from="1573607114966" duration="12384000" />
+      <workItem from="1573700383226" duration="20000" />
+      <workItem from="1573700416858" duration="855000" />
+      <workItem from="1573701288709" duration="1220000" />
+      <workItem from="1573780764274" duration="14736000" />
+      <workItem from="1574040958240" duration="9167000" />
+      <workItem from="1574063346098" duration="1661000" />
+      <workItem from="1574135432349" duration="10616000" />
+      <workItem from="1574213007865" duration="14907000" />
+      <workItem from="1574301665069" duration="10646000" />
+      <workItem from="1574385885339" duration="12664000" />
+      <workItem from="1574642838210" duration="13249000" />
+      <workItem from="1574729761599" duration="22956000" />
+      <workItem from="1574815084720" duration="21036000" />
+      <workItem from="1574901443325" duration="659000" />
+      <workItem from="1574902942562" duration="3368000" />
+      <workItem from="1574910132417" duration="22000" />
+      <workItem from="1574910169848" duration="5751000" />
+      <workItem from="1574920082147" duration="11935000" />
+      <workItem from="1574989168310" duration="13144000" />
+      <workItem from="1575014091664" duration="27000" />
+      <workItem from="1575014133795" duration="4048000" />
+      <workItem from="1575246358067" duration="29000" />
+      <workItem from="1575246402650" duration="1434000" />
+    </task>
+    <task id="LOCAL-00001" summary="* http://mgr.localhost/phpinfo.phpが表示できるところまで&#10;* [BUG] https://mgr.localhostがPR_END_OF_FILEエラーになる">
+      <created>1573204290729</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1573204290729</updated>
+    </task>
+    <task id="LOCAL-00002" summary="* 原型まで">
+      <created>1573463557173</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1573463557173</updated>
+    </task>
+    <task id="LOCAL-00003" summary="* 名前解決のキャッシュ処理を追加">
+      <created>1573527947826</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1573527947826</updated>
+    </task>
+    <task id="LOCAL-00004" summary="* PHPUnit用モジュールの追加">
+      <created>1573545432825</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1573545432825</updated>
+    </task>
+    <task id="LOCAL-00005" summary="* PHPUnitをDockerコンテナではなく外部から実行するように変更">
+      <created>1573628374656</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1573628374656</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Config設定周りの整理とテスト追加">
+      <created>1573806732463</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1573806732463</updated>
+    </task>
+    <task id="LOCAL-00007" summary="SSM周りをremake">
+      <created>1574150726305</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1574150726305</updated>
+    </task>
+    <task id="LOCAL-00008" summary="index.phpなどのパッケージを変更していなかったので修正">
+      <created>1574152583117</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1574152583117</updated>
+    </task>
+    <task id="LOCAL-00009" summary="ControllerのDI周りを少し整理">
+      <created>1574239386625</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1574239386625</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Mgrの方をAppに合わせて修正">
+      <created>1574305779993</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1574305779993</updated>
+    </task>
+    <task id="LOCAL-00011" summary="ContainerBuilderのテスト追加&#10;SSM参照クラスの指定を設定ファイルに移動">
+      <created>1574395315702</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1574395315702</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Binaryの暗号復号クラスの追加">
+      <created>1574652487040</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1574652487040</updated>
+    </task>
+    <task id="LOCAL-00013" summary="fluent/loggerのcomposerへの追加">
+      <created>1574654582619</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1574654582619</updated>
+    </task>
+    <task id="LOCAL-00014" summary="fluentd loggerの追加&#10;Gustav/Common/DataをGustav/Common/Operationに変更&#10;Time::now()の追加">
+      <created>1574749305213</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1574749305213</updated>
+    </task>
+    <task id="LOCAL-00015" summary="M系列処理を追加">
+      <created>1574758127056</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1574758127056</updated>
+    </task>
+    <task id="LOCAL-00016" summary="sqsインターフェースを追加&#10;dynamodbのDockerfileを追加 (将来的にカスタマイズできるように)&#10;Configでデフォルト値を指定可能なように変更">
+      <created>1574823534177</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1574823534177</updated>
+    </task>
+    <task id="LOCAL-00017" summary="SQSを使ったDataLoggerの追加">
+      <created>1574835446471</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1574835446471</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Flatbuffersを使ったモデルのシリアライズ/デシリアライズの仕組みを追加">
+      <created>1575006415796</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1575006415796</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="* http://mgr.localhost/phpinfo.phpが表示できるところまで&#10;* [BUG] https://mgr.localhostがPR_END_OF_FILEエラーになる" />
+    <MESSAGE value="* 原型まで" />
+    <MESSAGE value="* 名前解決のキャッシュ処理を追加" />
+    <MESSAGE value="* PHPUnit用モジュールの追加" />
+    <MESSAGE value="* PHPUnitをDockerコンテナではなく外部から実行するように変更" />
+    <MESSAGE value="Config設定周りの整理とテスト追加" />
+    <MESSAGE value="SSM周りをremake" />
+    <MESSAGE value="index.phpなどのパッケージを変更していなかったので修正" />
+    <MESSAGE value="ControllerのDI周りを少し整理" />
+    <MESSAGE value="Mgrの方をAppに合わせて修正" />
+    <MESSAGE value="ContainerBuilderのテスト追加&#10;SSM参照クラスの指定を設定ファイルに移動" />
+    <MESSAGE value="Binaryの暗号復号クラスの追加" />
+    <MESSAGE value="fluent/loggerのcomposerへの追加" />
+    <MESSAGE value="fluentd loggerの追加&#10;Gustav/Common/DataをGustav/Common/Operationに変更&#10;Time::now()の追加" />
+    <MESSAGE value="M系列処理を追加" />
+    <MESSAGE value="sqsインターフェースを追加&#10;dynamodbのDockerfileを追加 (将来的にカスタマイズできるように)&#10;Configでデフォルト値を指定可能なように変更" />
+    <MESSAGE value="SQSを使ったDataLoggerの追加" />
+    <MESSAGE value="Flatbuffersを使ったモデルのシリアライズ/デシリアライズの仕組みを追加" />
+    <option name="LAST_COMMIT_MESSAGE" value="Flatbuffersを使ったモデルのシリアライズ/デシリアライズの仕組みを追加" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="668" y="225" width="624" height="562" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1575246383108">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state x="668" y="225" width="624" height="562" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/51.27.1869.958@51.27.1869.958" timestamp="1575246383108" />
+    <state width="1811" height="241" key="GridCell.Tab.0.bottom" timestamp="1575248245049">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state width="1811" height="241" key="GridCell.Tab.0.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575248245049" />
+    <state width="1811" height="241" key="GridCell.Tab.0.center" timestamp="1575248245048">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state width="1811" height="241" key="GridCell.Tab.0.center/51.27.1869.958@51.27.1869.958" timestamp="1575248245048" />
+    <state width="1811" height="241" key="GridCell.Tab.0.left" timestamp="1575248245048">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state width="1811" height="241" key="GridCell.Tab.0.left/51.27.1869.958@51.27.1869.958" timestamp="1575248245048" />
+    <state width="1811" height="241" key="GridCell.Tab.0.right" timestamp="1575248245049">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state width="1811" height="241" key="GridCell.Tab.0.right/51.27.1869.958@51.27.1869.958" timestamp="1575248245049" />
+    <state width="1811" height="278" key="GridCell.Tab.1.bottom" timestamp="1575018186557">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state width="1811" height="278" key="GridCell.Tab.1.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575018186557" />
+    <state width="1811" height="278" key="GridCell.Tab.1.center" timestamp="1575018186556">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state width="1811" height="278" key="GridCell.Tab.1.center/51.27.1869.958@51.27.1869.958" timestamp="1575018186556" />
+    <state width="1811" height="278" key="GridCell.Tab.1.left" timestamp="1575018186556">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state width="1811" height="278" key="GridCell.Tab.1.left/51.27.1869.958@51.27.1869.958" timestamp="1575018186556" />
+    <state width="1811" height="278" key="GridCell.Tab.1.right" timestamp="1575018186557">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state width="1811" height="278" key="GridCell.Tab.1.right/51.27.1869.958@51.27.1869.958" timestamp="1575018186557" />
+    <state x="663" y="294" width="635" height="421" key="NewPhpClassDialog" timestamp="1575015267376">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state x="663" y="294" width="635" height="421" key="NewPhpClassDialog/51.27.1869.958@51.27.1869.958" timestamp="1575015267376" />
+    <state x="598" y="139" key="SettingsEditor" timestamp="1575014205656">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state x="598" y="139" key="SettingsEditor/51.27.1869.958@51.27.1869.958" timestamp="1575014205656" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/code/common/test/Model/Monster.php</url>
+          <line>95</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/code/common/test/Model/Monster.php</url>
+          <line>89</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/gustav@phpunit.xml" NAME="phpunit Coverage Results" MODIFIED="1575014328557" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="PhpCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
+</project>

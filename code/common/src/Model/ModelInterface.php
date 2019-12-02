@@ -6,12 +6,13 @@ namespace Gustav\Common\Model;
 
 use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
+use Google\FlatBuffers\Table;
 
 /**
  * Interface ModelInterface
  * @package Gustav\Common\Model
  */
-interface ModelInterface
+interface ModelInterface extends ModelSerializable
 {
     /**
      * 識別コードの取得
@@ -26,14 +27,7 @@ interface ModelInterface
     public static function formatVersion(): int;
 
     /**
-     * シリアル化
-     * @param FlatbufferBuilder $builder
-     * @return void
-     */
-    public function serialize(FlatbufferBuilder &$builder): void;
-
-    /**
-     * デシリアル化
+     * デシリアル化(ルートのみ)
      * @param int $version
      * @param ByteBuffer $buffer
      * @return ModelInterface

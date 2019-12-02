@@ -40,25 +40,29 @@ class Monster implements ModelInterface
     /**
      * シリアル化
      * @param FlatbufferBuilder $builder
-     * @return void
+     * @return int
      */
-    public function serialize(FlatbufferBuilder &$builder): void
+    public function serialize(FlatbufferBuilder &$builder): int
     {
         // 名前登録
-        $names = [
-            'Sword' => $builder->createString('Sword'),
-            'Axe' => $builder->createString('Axe'),
-            $this->name => $builder->createString($this->name)
-        ];
+        $name = $builder->createString($this->name);
+
+        $sword = new Weapon();
+        $sword->name = 'Sword';
+        $sword->damage = 3;
+
+        $axe = new Weapon();
+        $axe->name = 'Axe';
+        $axe->damage = 5;
 
         // Monsterで使用されているobject, vectorなどを登録
-        $sword = FBWeapon::createWeapon($builder, $names['Sword'], 3);
-        $axe = FBWeapon::createWeapon($builder, $names['Axe'], 5);
+        $swordPos = $sword->serialize($builder);
+        $axePos = $axe->serialize($builder);
 
         $treasure = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
         $inv = FBMonster::createInventoryVector($builder, $treasure);
 
-        $weapons = FBMonster::createWeaponsVector($builder, [$sword, $axe]);
+        $weapons = FBMonster::createWeaponsVector($builder, [$swordPos, $axePos]);
 
         $pos = FBVec3::createVec3($builder, 1.0, 2.0, 3.0);
 
@@ -66,16 +70,13 @@ class Monster implements ModelInterface
         FBMonster::startMonster($builder);;
         FBMonster::addPos($builder, $pos);
         FBMonster::addHp($builder, $this->hp);
-        FBMonster::addName($builder, $names[$this->name]);
+        FBMonster::addName($builder, $name);
         FBMonster::addInventory($builder, $inv);
         FBMonster::addColor($builder, FBColor::Red);
         FBMonster::addWeapons($builder, $weapons);
         FBMonster::addEquippedType($builder, FBEquipment::Weapon);
-        FBMonster::addEquipped($builder, $sword);
-        $orc = FBMonster::endMonster($builder);
-
-        // 登録完了
-        $builder->finish($orc);
+        FBMonster::addEquipped($builder, $swordPos);
+        return FBMonster::endMonster($builder);
     }
 
     /**
@@ -91,6 +92,11 @@ class Monster implements ModelInterface
         $self = new Monster();
         $self->name = $monster->getName();
         $self->hp = $monster->getHp();
+
+        $fbWeapon = $monster->getEquipped(new FBWeapon());
+        $equipped = Weapon::convertFromTable($fbWeapon);
+        $equipped->name = $fbWeapon->getName();
+        $equipped->damage = $fbWeapon->getDamage();
 
         return $self;
     }

@@ -123,7 +123,8 @@ class ModelSerializer
     {
         $builder = new FlatbufferBuilder(self::INITIAL_MODEL_BUFFER_SIZE);
 
-        $object->serialize($builder);
+        $pos = $object->serialize($builder);
+        $builder->finish($pos);
 
         return array_values(unpack('C*', $builder->sizedByteArray()));
     }
