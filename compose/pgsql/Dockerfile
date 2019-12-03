@@ -1,4 +1,4 @@
-FROM postgres:10.10
+FROM postgres:10.11
 
 ENV POSTGRES_DB logdb
 ENV POSTGRES_USER scott

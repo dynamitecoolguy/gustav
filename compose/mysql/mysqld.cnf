@@ -1,0 +1,5 @@
+[mysqld]
+sql-mode=NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+character-set-server=utf8mb4
+default-time-zone=+00:00
+default-storage-engine=innodb
