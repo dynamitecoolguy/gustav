@@ -129,7 +129,7 @@ class DummyServerRequestInterface extends Request
     }
 }
 
-class DummyDispathcer implements DispatcherInterface
+class DummyDispatcher implements DispatcherInterface
 {
     public function dispatch(Container $container, ModelInterface $request): ?ModelInterface
     {
@@ -145,7 +145,7 @@ class DummyContainerBuilder extends AppContainerBuilder
     protected function getDefinitions(ApplicationConfig $config): array
     {
         $definitions = parent::getDefinitions($config);
-        $definitions[DispatcherInterface::class] = new DummyDispathcer();
+        $definitions[DispatcherInterface::class] = new DummyDispatcher();
         return $definitions;
     }
 }

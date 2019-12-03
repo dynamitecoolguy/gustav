@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="42a86106-9ee1-482e-8a8e-7d4cde83786b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/code/app/src/DispatcherInterface.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/app/test/Controller/MainControllerTest.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.phpunit.result.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.phpunit.result.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/AppContainerBuilder.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/AppContainerBuilder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/Controller/MainController.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Controller/MainController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/Dispatcher.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Dispatcher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/test/.gitkeep" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/test/BaseContainerBuilderTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/BaseContainerBuilderTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/test/Controller/MainControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/test/Controller/MainControllerTest.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -260,7 +253,7 @@
       <workItem from="1575246402650" duration="2695000" />
       <workItem from="1575249864470" duration="3304000" />
       <workItem from="1575256131050" duration="16883000" />
-      <workItem from="1575332142662" duration="20088000" />
+      <workItem from="1575332142662" duration="20898000" />
     </task>
     <task id="LOCAL-00001" summary="* http://mgr.localhost/phpinfo.phpが表示できるところまで&#10;* [BUG] https://mgr.localhostがPR_END_OF_FILEエラーになる">
       <created>1573204290729</created>
@@ -430,7 +423,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575344955222</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Dispatcherのインターフェイス化">
+      <created>1575358579133</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1575358579133</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -474,7 +474,8 @@
     <MESSAGE value="Ranking処理の追加&#10;flatbuffersのサンプルを別ディレクトリに移動" />
     <MESSAGE value="MariaDBのオプション変更&#10;docker-hubのrevision更新" />
     <MESSAGE value="binaryによるdispatcher機構を追加" />
-    <option name="LAST_COMMIT_MESSAGE" value="binaryによるdispatcher機構を追加" />
+    <MESSAGE value="Dispatcherのインターフェイス化" />
+    <option name="LAST_COMMIT_MESSAGE" value="Dispatcherのインターフェイス化" />
   </component>
   <component name="WindowStateProjectService">
     <state x="580" y="166" width="800" height="677" key="#Project_Structure" timestamp="1575249622191">
@@ -505,10 +506,10 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="718" y="251" width="524" height="508" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/51.27.1869.958@51.27.1869.958" timestamp="1575250669942" />
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1575344955072">
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1575358578967">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1575344955072" />
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1575358578967" />
     <state x="151" y="125" width="1669" height="760" key="DiffContextDialog" timestamp="1575249911192">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -573,10 +574,10 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="598" y="139" key="SettingsEditor/51.27.1869.958@51.27.1869.958" timestamp="1575014205656" />
-    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1575344956996">
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1575358580629">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1575344956996" />
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1575358580629" />
     <state x="772" y="242" width="416" height="526" key="VcsDiffUtil.ChangesDialog" timestamp="1575335626328">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -589,17 +590,6 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="732" y="282" key="git4idea.merge.GitMergeDialog/51.27.1869.958@51.27.1869.958" timestamp="1575335616620" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/code/app/test/Controller/MainControllerTest.php</url>
-          <line>88</line>
-          <option name="timeStamp" value="23" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/gustav@phpunit.xml" NAME="phpunit Coverage Results" MODIFIED="1575358490843" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="PhpCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
