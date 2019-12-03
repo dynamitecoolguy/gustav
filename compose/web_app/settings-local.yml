@@ -1,3 +1,6 @@
+app:
+  debugapi: true
+
 mysql:
   host: mysql
   dbname: userdb

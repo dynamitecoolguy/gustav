@@ -32,14 +32,16 @@ class ModelTest extends TestCase
         $monster->name = 'single';
         $monster->hp = 123;
 
-        $stream = ModelSerializer::serialize([$monster]);
+        $stream = ModelSerializer::serialize([['req', $monster]]);
 
         $result = ModelSerializer::deserialize($stream);
 
         $this->assertIsArray($result);
 
-        $resultMonster = $result[0];
+        $requestId = $result[0][0];
+        $resultMonster = $result[0][1];
 
+        $this->assertEquals('req', $requestId);
         $this->assertFalse($monster === $resultMonster);
         $this->assertEquals('single', $resultMonster->name);
         $this->assertEquals(123, $resultMonster->hp);
@@ -64,15 +66,23 @@ class ModelTest extends TestCase
         $monster3->name = 'mash';
         $monster3->hp = 333;
 
-        $stream = ModelSerializer::serialize([$monster1, $monster2, $monster3]);
+        $stream = ModelSerializer::serialize([['req1', $monster1], ['req2', $monster2], ['req3', $monster3]]);
 
         $result = ModelSerializer::deserialize($stream);
 
         $this->assertIsArray($result);
 
-        $resultMonster1 = $result[0];
-        $resultMonster2 = $result[1];
-        $resultMonster3 = $result[2];
+        $resultMonster1 = $result[0][1];
+        $resultMonster2 = $result[1][1];
+        $resultMonster3 = $result[2][1];
+
+        $resultId1 = $result[0][0];
+        $resultId2 = $result[1][0];
+        $resultId3 = $result[2][0];
+
+        $this->assertEquals('req1', $resultId1);
+        $this->assertEquals('req2', $resultId2);
+        $this->assertEquals('req3', $resultId3);
 
         $this->assertEquals(111, $resultMonster1->hp);
         $this->assertEquals(222, $resultMonster2->hp);
@@ -143,7 +153,7 @@ class ModelTest extends TestCase
         $monster->name = 'noone';
         $monster->hp = 0;
 
-        $stream = ModelSerializer::serialize([$monster]);
+        $stream = ModelSerializer::serialize([['req', $monster]]);
         ModelSerializer::deserialize($stream);
     }
 }

@@ -32,7 +32,7 @@ class DataChunk extends Table
         return $this;
     }
 
-    public function getId()
+    public function getChunkId()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
@@ -47,13 +47,19 @@ class DataChunk extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
+    public function getRequestId()
+    {
+        $o = $this->__offset(8);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param int offset
      * @return byte
      */
     public function getContent($j)
     {
-        $o = $this->__offset(8);
+        $o = $this->__offset(10);
         return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
     }
 
@@ -62,7 +68,7 @@ class DataChunk extends Table
      */
     public function getContentLength()
     {
-        $o = $this->__offset(8);
+        $o = $this->__offset(10);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -71,7 +77,7 @@ class DataChunk extends Table
      */
     public function getContentBytes()
     {
-        return $this->__vector_as_bytes(8);
+        return $this->__vector_as_bytes(10);
     }
 
     /**
@@ -80,18 +86,19 @@ class DataChunk extends Table
      */
     public static function startDataChunk(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(4);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return DataChunk
      */
-    public static function createDataChunk(FlatBufferBuilder $builder, $id, $version, $content)
+    public static function createDataChunk(FlatBufferBuilder $builder, $chunkId, $version, $requestId, $content)
     {
-        $builder->startObject(3);
-        self::addId($builder, $id);
+        $builder->startObject(4);
+        self::addChunkId($builder, $chunkId);
         self::addVersion($builder, $version);
+        self::addRequestId($builder, $requestId);
         self::addContent($builder, $content);
         $o = $builder->endObject();
         return $o;
@@ -102,9 +109,9 @@ class DataChunk extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addId(FlatBufferBuilder $builder, $id)
+    public static function addChunkId(FlatBufferBuilder $builder, $chunkId)
     {
-        $builder->addOffsetX(0, $id, 0);
+        $builder->addOffsetX(0, $chunkId, 0);
     }
 
     /**
@@ -119,12 +126,22 @@ class DataChunk extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addRequestId(FlatBufferBuilder $builder, $requestId)
+    {
+        $builder->addOffsetX(2, $requestId, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param VectorOffset
      * @return void
      */
     public static function addContent(FlatBufferBuilder $builder, $content)
     {
-        $builder->addOffsetX(2, $content, 0);
+        $builder->addOffsetX(3, $content, 0);
     }
 
     /**

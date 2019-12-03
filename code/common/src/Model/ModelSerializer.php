@@ -36,7 +36,7 @@ class ModelSerializer
     const INITIAL_MODEL_BUFFER_SIZE = 512;
 
     /**
-     * @param ModelInterface[] $objectList
+     * @param array $objectList   [[string, ModelInterface]]
      * @return string
      */
     public static function serialize(array $objectList): string
@@ -48,16 +48,20 @@ class ModelSerializer
         $chunkList = [];
 
         // DataChunkのリストを作成する
-        foreach ($objectList as $object) {
+        foreach ($objectList as [$requestId, $object]) {
+            /** @var ModelInterface $object */
+
             $chunkId = $object->chunkId();
             if (!isset($chunkIdMap[$chunkId])) {
                 $chunkIdMap[$chunkId] = $builder->createString($chunkId);
             }
+            $requestIdPos = $builder->createString($requestId);
 
             $chunkList[] = DataChunk::createDataChunk(
                 $builder,
-                $chunkIdMap[$chunkId],                                                   // id
-                $object->formatVersion(),                                                // version
+                $chunkIdMap[$chunkId],                                                  // id
+                $object->formatVersion(),                                               // version
+                $requestIdPos,                                                          // requestId
                 DataChunk::createContentVector($builder, self::serializeModel($object)) // content
             );
         }
@@ -92,11 +96,12 @@ class ModelSerializer
         for ($i = 0; $i < $chunkLength; $i++) {
             $chunk = $dataModel->getChunk($i);
 
-            $id = $chunk->getId();
+            $chunkId = $chunk->getChunkId();
             $version = $chunk->getVersion();
+            $requestId = $chunk->getRequestId();
             $content = $chunk->getContentBytes();
 
-            $className = ModelClassMap::findModelClass($id);
+            $className = ModelClassMap::findModelClass($chunkId);
 
             try {
                 // ModelInterface::deserialize(int $version, ByteBuffer $buffer): ModelInterfaceの呼び出し
@@ -108,7 +113,7 @@ class ModelSerializer
                 throw new ModelException('Deserialize Error Reason:' . $e->getMessage(), 0, $e);
             }
 
-            $objectList[] = $object;
+            $objectList[] = [$requestId, $object];
         }
 
         return $objectList;

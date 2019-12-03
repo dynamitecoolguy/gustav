@@ -22,7 +22,7 @@ class ModelClassMap
 
     /**
      * モデルのクラスを登録する
-     * @param string $objectClass
+     * @param string $objectClass ModelInterfaceを実装したクラスのクラス名
      * @throws ModelException
      */
     public static function registerModel(string $objectClass): void
@@ -45,12 +45,12 @@ class ModelClassMap
     }
 
     /**
-     * 識別コードに対応するクラスを返す。なければnull
-     * @param $chunkId
-     * @return string
+     * 識別コードに対応するクラスを返す。なければModelException
+     * @param string $chunkId 識別コード
+     * @return string クラス名
      * @throws ModelException
      */
-    public static function findModelClass($chunkId): string
+    public static function findModelClass(string $chunkId): string
     {
         static::checkDefault();
         if (isset(self::$chunkIdToModelClassMap[$chunkId])) {

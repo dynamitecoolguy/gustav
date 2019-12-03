@@ -88,6 +88,7 @@ class ConfigLoader
     }
 
     /**
+     * 文字列がSSMに登録されていればその値を返す。無ければConfigException
      * @param string $variable
      * @return string
      * @throws ConfigException

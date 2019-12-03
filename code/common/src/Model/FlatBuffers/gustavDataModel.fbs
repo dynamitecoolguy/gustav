@@ -1,8 +1,9 @@
 namespace Gustav.Common.Model.FlatBuffers;
 
 table DataChunk {
-  id: string;
+  chunkId: string;
   version: ubyte;
+  requestId: string;
   content: [ubyte];
 }
 

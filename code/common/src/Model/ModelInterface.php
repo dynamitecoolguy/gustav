@@ -5,8 +5,6 @@ namespace Gustav\Common\Model;
 
 
 use Google\FlatBuffers\ByteBuffer;
-use Google\FlatBuffers\FlatbufferBuilder;
-use Google\FlatBuffers\Table;
 
 /**
  * Interface ModelInterface
@@ -27,7 +25,7 @@ interface ModelInterface extends ModelSerializable
     public static function formatVersion(): int;
 
     /**
-     * デシリアル化(ルートのみ)
+     * デシリアル化
      * @param int $version
      * @param ByteBuffer $buffer
      * @return ModelInterface

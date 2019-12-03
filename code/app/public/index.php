@@ -29,11 +29,14 @@ $app = Bridge::create($container);
 $app->add(new ContentLengthMiddleware());
 
 // Routing (@see PHP-DI in Slim)
-$app->get('/hello/{who}', [Gustav\App\Controller\HelloController::class, 'hello']);
-$app->get('/mysql/{number}', [Gustav\App\Controller\HelloController::class, 'mysql']);
-$app->get('/pgsql', [Gustav\App\Controller\HelloController::class, 'pgsql']);
-$app->get('/redis', [Gustav\App\Controller\HelloController::class, 'redis']);
-$app->get('/dynamo', [Gustav\App\Controller\HelloController::class, 'dynamo']);
-$app->get('/s3/{from}/{to}', [Gustav\App\Controller\HelloController::class, 's3']);
+if ($config->getValue('app', 'debugapi', 'false') == 'true') {
+    $app->get('/hello/{who}', [Gustav\App\Controller\HelloController::class, 'hello']);
+    $app->get('/mysql/{number}', [Gustav\App\Controller\HelloController::class, 'mysql']);
+    $app->get('/pgsql', [Gustav\App\Controller\HelloController::class, 'pgsql']);
+    $app->get('/redis', [Gustav\App\Controller\HelloController::class, 'redis']);
+    $app->get('/dynamo', [Gustav\App\Controller\HelloController::class, 'dynamo']);
+    $app->get('/s3/{from}/{to}', [Gustav\App\Controller\HelloController::class, 's3']);
+}
+$app->post('/', [Gustav\App\Controller\MainController::class, 'post']);
 
 $app->run();
