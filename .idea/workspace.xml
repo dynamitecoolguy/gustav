@@ -2,19 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="42a86106-9ee1-482e-8a8e-7d4cde83786b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/code/app/src/Controller/MainController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/app/src/Dispatcher.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/app/src/DispatcherInterface.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/app/test/Controller/MainControllerTest.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.phpunit.result.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.phpunit.result.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/public/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/public/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Config/ConfigLoader.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Config/ConfigLoader.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Model/FlatBuffers/DataChunk.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/FlatBuffers/DataChunk.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Model/FlatBuffers/gustavDataModel.fbs" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/FlatBuffers/gustavDataModel.fbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Model/ModelClassMap.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/ModelClassMap.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Model/ModelInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/ModelInterface.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Model/ModelSerializer.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/ModelSerializer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/test/Model/ModelTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/Model/ModelTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compose/web_app/settings-local.yml" beforeDir="false" afterPath="$PROJECT_DIR$/compose/web_app/settings-local.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/AppContainerBuilder.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/AppContainerBuilder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/Controller/MainController.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Controller/MainController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/Dispatcher.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Dispatcher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/test/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/test/BaseContainerBuilderTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/BaseContainerBuilderTest.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,7 +146,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="ToolWindowCoverage.ShowToolbar" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/code/common/src/Model" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/code/app/src" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="php.override.implement.member.chooser.php.doc" value="NONE" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -160,6 +156,13 @@
     <property name="settings.editor.splitter.proportion" value="0.28125" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/code/app/src" />
+      <recent name="$PROJECT_DIR$/code/common/src/Model" />
+      <recent name="$PROJECT_DIR$/code/common/test/Log" />
+      <recent name="$PROJECT_DIR$/code/common/src/Log" />
+      <recent name="$PROJECT_DIR$/code/common/src/Config" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/code/flatbuffers/example/php" />
       <recent name="$PROJECT_DIR$/code/flatbuffers/example/idl" />
@@ -167,19 +170,8 @@
       <recent name="$PROJECT_DIR$/code/common/src/Data" />
       <recent name="$PROJECT_DIR$/code/mgr/src/Config" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/code/common/src/Model" />
-      <recent name="$PROJECT_DIR$/code/common/test/Log" />
-      <recent name="$PROJECT_DIR$/code/common/src/Log" />
-      <recent name="$PROJECT_DIR$/code/common/src/Config" />
-      <recent name="$PROJECT_DIR$/code/mgr/src/Controller" />
-    </key>
   </component>
   <component name="RunManager" selected="PHPUnit.phpunit">
-    <configuration name="Log" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
-      <TestRunner directory="$PROJECT_DIR$/code/common/src/Log" />
-      <method v="2" />
-    </configuration>
     <configuration name="phpunit" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
       <CommandLine parameters="-dapc.enable_cli=1" />
       <TestRunner configuration_file="$PROJECT_DIR$/phpunit.xml" scope="XML" options="--exclude-group use_aws" />
@@ -202,13 +194,7 @@
     <list>
       <item itemvalue="Docker.docker-compose build" />
       <item itemvalue="PHPUnit.phpunit" />
-      <item itemvalue="PHPUnit.Log" />
     </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="PHPUnit.Log" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="ServiceViewManager">
     <option name="viewStates">
@@ -219,6 +205,15 @@
               <path>
                 <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
                 <item name="root:MariaDB - userdb@localhost" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              </path>
+              <path>
+                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+                <item name="root:MariaDB - userdb@localhost" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              </path>
+              <path>
+                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+                <item name="root:MariaDB - userdb@localhost" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+                <item name="com.intellij.database.console.session.MessageBusSession@598fd044" type="9fbbdea:ServiceModel$ServiceNode" />
               </path>
             </expand>
             <select />
@@ -265,7 +260,7 @@
       <workItem from="1575246402650" duration="2695000" />
       <workItem from="1575249864470" duration="3304000" />
       <workItem from="1575256131050" duration="16883000" />
-      <workItem from="1575332142662" duration="11448000" />
+      <workItem from="1575332142662" duration="20088000" />
     </task>
     <task id="LOCAL-00001" summary="* http://mgr.localhost/phpinfo.phpが表示できるところまで&#10;* [BUG] https://mgr.localhostがPR_END_OF_FILEエラーになる">
       <created>1573204290729</created>
@@ -428,7 +423,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575335418974</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="binaryによるdispatcher機構を追加">
+      <created>1575344955222</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1575344955222</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -471,7 +473,8 @@
     <MESSAGE value="delete" />
     <MESSAGE value="Ranking処理の追加&#10;flatbuffersのサンプルを別ディレクトリに移動" />
     <MESSAGE value="MariaDBのオプション変更&#10;docker-hubのrevision更新" />
-    <option name="LAST_COMMIT_MESSAGE" value="MariaDBのオプション変更&#10;docker-hubのrevision更新" />
+    <MESSAGE value="binaryによるdispatcher機構を追加" />
+    <option name="LAST_COMMIT_MESSAGE" value="binaryによるdispatcher機構を追加" />
   </component>
   <component name="WindowStateProjectService">
     <state x="580" y="166" width="800" height="677" key="#Project_Structure" timestamp="1575249622191">
@@ -482,18 +485,18 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="580" y="166" width="800" height="677" key="#SQL_Dialects/51.27.1869.958@51.27.1869.958" timestamp="1575252179878" />
-    <state x="580" y="166" width="800" height="677" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1575334438618">
+    <state x="580" y="166" width="983" height="677" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1575352592742">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="580" y="166" width="800" height="677" key="#com.intellij.execution.impl.EditConfigurationsDialog/51.27.1869.958@51.27.1869.958" timestamp="1575334438618" />
+    <state x="580" y="166" width="983" height="677" key="#com.intellij.execution.impl.EditConfigurationsDialog/51.27.1869.958@51.27.1869.958" timestamp="1575352592742" />
     <state x="654" y="300" width="653" height="410" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1575277661057">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="654" y="300" width="653" height="410" key="#com.intellij.fileTypes.FileTypeChooser/51.27.1869.958@51.27.1869.958" timestamp="1575277661057" />
-    <state x="769" y="182" width="422" height="645" key="#com.intellij.ide.util.MemberChooser" timestamp="1575259296065">
+    <state x="769" y="182" width="422" height="645" key="#com.intellij.ide.util.MemberChooser" timestamp="1575354621183">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="769" y="182" width="422" height="645" key="#com.intellij.ide.util.MemberChooser/51.27.1869.958@51.27.1869.958" timestamp="1575259296065" />
+    <state x="769" y="182" width="422" height="645" key="#com.intellij.ide.util.MemberChooser/51.27.1869.958@51.27.1869.958" timestamp="1575354621183" />
     <state x="668" y="225" width="624" height="562" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1575246383108">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -502,10 +505,10 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="718" y="251" width="524" height="508" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/51.27.1869.958@51.27.1869.958" timestamp="1575250669942" />
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1575344887946">
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1575344955072">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1575344887946" />
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1575344955072" />
     <state x="151" y="125" width="1669" height="760" key="DiffContextDialog" timestamp="1575249911192">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -514,38 +517,38 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="763" y="262" width="424" height="484" key="FileChooserDialogImpl/51.27.1869.958@51.27.1869.958" timestamp="1575252175535" />
-    <state width="1811" height="241" key="GridCell.Tab.0.bottom" timestamp="1575344871884">
+    <state width="1811" height="241" key="GridCell.Tab.0.bottom" timestamp="1575358515929">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575344871884" />
-    <state width="1811" height="241" key="GridCell.Tab.0.center" timestamp="1575344871882">
+    <state width="1811" height="241" key="GridCell.Tab.0.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575358515929" />
+    <state width="1811" height="241" key="GridCell.Tab.0.center" timestamp="1575358515926">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.center/51.27.1869.958@51.27.1869.958" timestamp="1575344871882" />
-    <state width="1811" height="241" key="GridCell.Tab.0.left" timestamp="1575344871881">
+    <state width="1811" height="241" key="GridCell.Tab.0.center/51.27.1869.958@51.27.1869.958" timestamp="1575358515926" />
+    <state width="1811" height="241" key="GridCell.Tab.0.left" timestamp="1575358515924">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.left/51.27.1869.958@51.27.1869.958" timestamp="1575344871881" />
-    <state width="1811" height="241" key="GridCell.Tab.0.right" timestamp="1575344871883">
+    <state width="1811" height="241" key="GridCell.Tab.0.left/51.27.1869.958@51.27.1869.958" timestamp="1575358515924" />
+    <state width="1811" height="241" key="GridCell.Tab.0.right" timestamp="1575358515927">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.right/51.27.1869.958@51.27.1869.958" timestamp="1575344871883" />
-    <state width="1811" height="278" key="GridCell.Tab.1.bottom" timestamp="1575344417900">
+    <state width="1811" height="241" key="GridCell.Tab.0.right/51.27.1869.958@51.27.1869.958" timestamp="1575358515927" />
+    <state width="1811" height="278" key="GridCell.Tab.1.bottom" timestamp="1575358490877">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="278" key="GridCell.Tab.1.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575344417900" />
-    <state width="1811" height="278" key="GridCell.Tab.1.center" timestamp="1575344417899">
+    <state width="1811" height="278" key="GridCell.Tab.1.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575358490877" />
+    <state width="1811" height="278" key="GridCell.Tab.1.center" timestamp="1575358490876">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="278" key="GridCell.Tab.1.center/51.27.1869.958@51.27.1869.958" timestamp="1575344417899" />
-    <state width="1811" height="278" key="GridCell.Tab.1.left" timestamp="1575344417898">
+    <state width="1811" height="278" key="GridCell.Tab.1.center/51.27.1869.958@51.27.1869.958" timestamp="1575358490876" />
+    <state width="1811" height="278" key="GridCell.Tab.1.left" timestamp="1575358490875">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="278" key="GridCell.Tab.1.left/51.27.1869.958@51.27.1869.958" timestamp="1575344417898" />
-    <state width="1811" height="278" key="GridCell.Tab.1.right" timestamp="1575344417899">
+    <state width="1811" height="278" key="GridCell.Tab.1.left/51.27.1869.958@51.27.1869.958" timestamp="1575358490875" />
+    <state width="1811" height="278" key="GridCell.Tab.1.right" timestamp="1575358490876">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="278" key="GridCell.Tab.1.right/51.27.1869.958@51.27.1869.958" timestamp="1575344417899" />
+    <state width="1811" height="278" key="GridCell.Tab.1.right/51.27.1869.958@51.27.1869.958" timestamp="1575358490876" />
     <state width="1811" height="278" key="GridCell.Tab.2.bottom" timestamp="1575344300189">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -562,18 +565,18 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state width="1811" height="278" key="GridCell.Tab.2.right/51.27.1869.958@51.27.1869.958" timestamp="1575344300189" />
-    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog" timestamp="1575339770526">
+    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog" timestamp="1575351758075">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog/51.27.1869.958@51.27.1869.958" timestamp="1575339770526" />
+    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog/51.27.1869.958@51.27.1869.958" timestamp="1575351758075" />
     <state x="598" y="139" key="SettingsEditor" timestamp="1575014205656">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="598" y="139" key="SettingsEditor/51.27.1869.958@51.27.1869.958" timestamp="1575014205656" />
-    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1575335637159">
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1575344956996">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1575335637159" />
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1575344956996" />
     <state x="772" y="242" width="416" height="526" key="VcsDiffUtil.ChangesDialog" timestamp="1575335626328">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -591,29 +594,14 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/code/app/public/index.php</url>
-          <line>28</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/code/app/src/Controller/MainController.php</url>
-          <line>22</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/code/common/test/Model/ModelTest.php</url>
-          <line>34</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/code/common/test/Model/ModelTest.php</url>
-          <line>36</line>
-          <option name="timeStamp" value="17" />
+          <url>file://$PROJECT_DIR$/code/app/test/Controller/MainControllerTest.php</url>
+          <line>88</line>
+          <option name="timeStamp" value="23" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/gustav@phpunit.xml" NAME="phpunit Coverage Results" MODIFIED="1575274879306" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="PhpCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/gustav@phpunit.xml" NAME="phpunit Coverage Results" MODIFIED="1575358490843" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="PhpCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

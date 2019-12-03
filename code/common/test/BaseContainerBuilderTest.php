@@ -27,7 +27,7 @@ class BaseContainerBuilderTest extends TestCase
     /**
      * @beforeClass
      */
-    public static function beforeClass(): void
+    public static function createConfig(): void
     {
         self::$tempFilePath = tempnam('/tmp', 'configloadertest');
 
@@ -81,7 +81,7 @@ __EOF__
     /**
      * @afterClass
      */
-    public static function afterClass(): void
+    public static function destroyConfig(): void
     {
         unlink(self::$tempFilePath);
     }
