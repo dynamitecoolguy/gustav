@@ -9,31 +9,20 @@ use Gustav\Common\Exception\ModelException;
 class ModelClassMap
 {
     /**
-     * @var ?string[]
+     * 識別子 -> ModelInterfaceのクラス名
+     * @var string[]
      */
-    private static $chunkIdToModelClassMap = null;
-
-    /**
-     * @var array
-     */
-    protected static $initialClassMap = [
-        // Hogehoge::chunkId() => Hogehoge::class
-    ];
+    private static $chunkIdToModelClassMap = [];
 
     /**
      * モデルのクラスを登録する
+     * @param string $chunkId
      * @param string $objectClass ModelInterfaceを実装したクラスのクラス名
      * @throws ModelException
      */
-    public static function registerModel(string $objectClass): void
+    public static function registerModel(string $chunkId, string $objectClass): void
     {
-        static::checkDefault();
-        if (!is_subclass_of($objectClass, ModelInterface::class)) {
-            throw new ModelException("${objectClass} is not subclass of ModelInterface");
-        }
-
-        $chunkId = call_user_func([$objectClass, 'chunkId']);
-
+        // 重複チェック (同じクラス名の場合は無視する)
         if (isset(self::$chunkIdToModelClassMap[$chunkId])
             && self::$chunkIdToModelClassMap[$chunkId] !== $objectClass)
         {
@@ -52,20 +41,14 @@ class ModelClassMap
      */
     public static function findModelClass(string $chunkId): string
     {
-        static::checkDefault();
-        if (isset(self::$chunkIdToModelClassMap[$chunkId])) {
-            return self::$chunkIdToModelClassMap[$chunkId];
+        if (!isset(self::$chunkIdToModelClassMap[$chunkId])) {
+            throw new ModelException("Not found for chunkId(${chunkId})");
         }
-        throw new ModelException("Not found for chunkId(${chunkId})");
-    }
+        $objectClass = self::$chunkIdToModelClassMap[$chunkId];
+        if (!is_subclass_of($objectClass, ModelInterface::class)) {
+            throw new ModelException("${objectClass} is not subclass of ModelInterface");
+        }
 
-    /**
-     * chunkIdToModelClassMapにinitialClassMapがセットされていなければセットする
-     */
-    protected static function checkDefault()
-    {
-        if (is_null(self::$chunkIdToModelClassMap)) {
-            self::$chunkIdToModelClassMap = self::$initialClassMap;
-        }
+        return $objectClass;
     }
 }

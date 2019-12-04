@@ -34,7 +34,7 @@ class MainControllerTest extends TestCase
         $autoloader = require __DIR__ . '/../../../vendor/autoload.php';
         $autoloader->addPsr4('', __DIR__ . '/../../../flatbuffers/example/php');              // flatbuffers/php
 
-        ModelClassMap::registerModel(Monster::class);
+        ModelClassMap::registerModel(Monster::chunkId(), Monster::class);
     }
 
     private static $tempFilePath;

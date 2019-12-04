@@ -26,7 +26,7 @@ class ModelTest extends TestCase
      */
     public function singleMonster()
     {
-        ModelClassMap::registerModel(Monster::class);
+        ModelClassMap::registerModel(Monster::chunkId(), Monster::class);
 
         $monster = new Monster();
         $monster->name = 'single';
@@ -52,7 +52,7 @@ class ModelTest extends TestCase
      */
     public function tripleMonster()
     {
-        ModelClassMap::registerModel(Monster::class);
+        ModelClassMap::registerModel(Monster::chunkId(), Monster::class);
 
         $monster1 = new Monster();
         $monster1->name = 'gaia';
@@ -94,7 +94,7 @@ class ModelTest extends TestCase
      */
     public function empty()
     {
-        ModelClassMap::registerModel(Monster::class);
+        ModelClassMap::registerModel(Monster::chunkId(), Monster::class);
 
         $stream = ModelSerializer::serialize([]);
 
@@ -112,19 +112,8 @@ class ModelTest extends TestCase
     {
         $this->expectException(ModelException::class);
 
-        ModelClassMap::registerModel(Monster::class);
-        ModelClassMap::registerModel(DuplicatedChunkIdModel::class);
-    }
-
-    /**
-     * @test
-     * @throws ModelException
-     */
-    public function registerFailed()
-    {
-        $this->expectException(ModelException::class);
-
-        ModelClassMap::registerModel(ModelTest::class);
+        ModelClassMap::registerModel(Monster::chunkId(), Monster::class);
+        ModelClassMap::registerModel(DuplicatedChunkIdModel::chunkId(), DuplicatedChunkIdModel::class);
     }
 
     /**
@@ -144,8 +133,8 @@ class ModelTest extends TestCase
      */
     public function deserializeFailed()
     {
-        ModelClassMap::registerModel(Monster::class);
-        ModelClassMap::registerModel(AnotherMonster::class);
+        ModelClassMap::registerModel(Monster::chunkId(), Monster::class);
+        ModelClassMap::registerModel(AnotherMonster::chunkId(), AnotherMonster::class);
 
         $this->expectException(ModelException::class);
 
