@@ -4,20 +4,20 @@
 namespace Gustav\Common\Model;
 
 use Google\FlatBuffers\FlatbufferBuilder;
-use MyGame\Sample\Weapon as FBWeapon;
+use MyGame\Sample\Weapon;
 
-class Weapon implements ModelSerializable
+class WeaponModel implements ModelSerializable
 {
     public $name;
     public $damage;
 
     /**
-     * @param FBWeapon $weapon
-     * @return Weapon
+     * @param Weapon $weapon
+     * @return WeaponModel
      */
-    public static function convertFromTable(FBWeapon $weapon): Weapon
+    public static function convertFromTable(Weapon $weapon): WeaponModel
     {
-        $self = new Weapon();
+        $self = new WeaponModel();
         $self->name = $weapon->getName();
         $self->damage = $weapon->getDamage();
 
@@ -30,7 +30,6 @@ class Weapon implements ModelSerializable
     public function serialize(FlatbufferBuilder &$builder): int
     {
         $name = $builder->createString($this->name);
-        return FBWeapon::createWeapon($builder, $name, $this->damage);
+        return Weapon::createWeapon($builder, $name, $this->damage);
     }
-
 }

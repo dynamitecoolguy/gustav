@@ -26,21 +26,23 @@ class ModelTest extends TestCase
      */
     public function singleMonster()
     {
-        ModelClassMap::registerModel(Monster::chunkId(), Monster::class);
+        ModelClassMap::registerModel('MON', MonsterModel::class);
 
-        $monster = new Monster();
+        $monster = new MonsterModel();
         $monster->name = 'single';
         $monster->hp = 123;
 
-        $stream = ModelSerializer::serialize([['req', $monster]]);
+        $stream = ModelSerializer::serialize([[1, 'req', $monster]]);
 
         $result = ModelSerializer::deserialize($stream);
 
         $this->assertIsArray($result);
 
-        $requestId = $result[0][0];
-        $resultMonster = $result[0][1];
+        $version = $result[0][0];
+        $requestId = $result[0][1];
+        $resultMonster = $result[0][2];
 
+        $this->assertEquals(1, $version);
         $this->assertEquals('req', $requestId);
         $this->assertFalse($monster === $resultMonster);
         $this->assertEquals('single', $resultMonster->name);
@@ -52,33 +54,41 @@ class ModelTest extends TestCase
      */
     public function tripleMonster()
     {
-        ModelClassMap::registerModel(Monster::chunkId(), Monster::class);
+        ModelClassMap::registerModel('MON', MonsterModel::class);
 
-        $monster1 = new Monster();
+        $monster1 = new MonsterModel();
         $monster1->name = 'gaia';
         $monster1->hp = 111;
 
-        $monster2 = new Monster();
+        $monster2 = new MonsterModel();
         $monster2->name = 'ortega';
         $monster2->hp = 222;
 
-        $monster3 = new Monster();
+        $monster3 = new MonsterModel();
         $monster3->name = 'mash';
         $monster3->hp = 333;
 
-        $stream = ModelSerializer::serialize([['req1', $monster1], ['req2', $monster2], ['req3', $monster3]]);
+        $stream = ModelSerializer::serialize([[1, 'req1', $monster1], [2, 'req2', $monster2], [3, 'req3', $monster3]]);
 
         $result = ModelSerializer::deserialize($stream);
 
         $this->assertIsArray($result);
 
-        $resultMonster1 = $result[0][1];
-        $resultMonster2 = $result[1][1];
-        $resultMonster3 = $result[2][1];
+        $resultMonster1 = $result[0][2];
+        $resultMonster2 = $result[1][2];
+        $resultMonster3 = $result[2][2];
 
-        $resultId1 = $result[0][0];
-        $resultId2 = $result[1][0];
-        $resultId3 = $result[2][0];
+        $resultId1 = $result[0][1];
+        $resultId2 = $result[1][1];
+        $resultId3 = $result[2][1];
+
+        $version1 = $result[0][0];
+        $version2 = $result[1][0];
+        $version3 = $result[2][0];
+
+        $this->assertEquals(1, $version1);
+        $this->assertEquals(2, $version2);
+        $this->assertEquals(3, $version3);
 
         $this->assertEquals('req1', $resultId1);
         $this->assertEquals('req2', $resultId2);
@@ -94,7 +104,7 @@ class ModelTest extends TestCase
      */
     public function empty()
     {
-        ModelClassMap::registerModel(Monster::chunkId(), Monster::class);
+        ModelClassMap::registerModel('MON', MonsterModel::class);
 
         $stream = ModelSerializer::serialize([]);
 
@@ -112,8 +122,8 @@ class ModelTest extends TestCase
     {
         $this->expectException(ModelException::class);
 
-        ModelClassMap::registerModel(Monster::chunkId(), Monster::class);
-        ModelClassMap::registerModel(DuplicatedChunkIdModel::chunkId(), DuplicatedChunkIdModel::class);
+        ModelClassMap::registerModel('MON', MonsterModel::class);
+        ModelClassMap::registerModel('MON', DuplicatedChunkIdModel::class);
     }
 
     /**
@@ -133,31 +143,28 @@ class ModelTest extends TestCase
      */
     public function deserializeFailed()
     {
-        ModelClassMap::registerModel(Monster::chunkId(), Monster::class);
-        ModelClassMap::registerModel(AnotherMonster::chunkId(), AnotherMonster::class);
+        ModelClassMap::registerModel('MON', MonsterModel::class);
+        ModelClassMap::registerModel('MON2', AnotherMonsterModel::class);
 
         $this->expectException(ModelException::class);
 
-        $monster = new AnotherMonster();
+        $monster = new AnotherMonsterModel();
         $monster->name = 'noone';
         $monster->hp = 0;
 
-        $stream = ModelSerializer::serialize([['req', $monster]]);
+        $stream = ModelSerializer::serialize([[0, 'req', $monster]]);
         ModelSerializer::deserialize($stream);
     }
 }
 
 class DuplicatedChunkIdModel implements ModelInterface
 {
-    public static function chunkId(): string { return 'MON'; }
-    public static function formatVersion(): int { return 1; }
     public function serialize(FlatbufferBuilder &$builder): int {return $builder->offset(); }
     public static function deserialize(int $version, ByteBuffer $buffer): ModelInterface { return null;}
 }
 
-class AnotherMonster extends Monster
+class AnotherMonsterModel extends MonsterModel
 {
-    public static function chunkId(): string { return 'MON2'; }
     public static function deserialize(int $version, ByteBuffer $buffer): ModelInterface {
         throw new \Exception();
     }

@@ -38,6 +38,7 @@ class ModelSerializer
     /**
      * @param array $objectList   [[string, ModelInterface]]
      * @return string
+     * @throws ModelException
      */
     public static function serialize(array $objectList): string
     {
@@ -48,10 +49,10 @@ class ModelSerializer
         $chunkList = [];
 
         // DataChunkのリストを作成する
-        foreach ($objectList as [$requestId, $object]) {
+        foreach ($objectList as [$version, $requestId, $object]) {
             /** @var ModelInterface $object */
 
-            $chunkId = $object->chunkId();
+            $chunkId = ModelClassMap::findChunkId(get_class($object));
             if (!isset($chunkIdMap[$chunkId])) {
                 $chunkIdMap[$chunkId] = $builder->createString($chunkId);
             }
@@ -60,7 +61,7 @@ class ModelSerializer
             $chunkList[] = DataChunk::createDataChunk(
                 $builder,
                 $chunkIdMap[$chunkId],                                                  // id
-                $object->formatVersion(),                                               // version
+                $version,
                 $requestIdPos,                                                          // requestId
                 DataChunk::createContentVector($builder, self::serializeModel($object)) // content
             );
@@ -113,7 +114,7 @@ class ModelSerializer
                 throw new ModelException('Deserialize Error Reason:' . $e->getMessage(), 0, $e);
             }
 
-            $objectList[] = [$requestId, $object];
+            $objectList[] = [$version, $requestId, $object];
         }
 
         return $objectList;

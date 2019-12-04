@@ -12,25 +12,32 @@ class ModelClassMap
      * 識別子 -> ModelInterfaceのクラス名
      * @var string[]
      */
-    private static $chunkIdToModelClassMap = [];
+    private static $chunkIdToModel = [];
+
+    /**
+     * ModelInterfaceのクラス名 -> 識別子
+     * @var string[]
+     */
+    private static $modelToChunkId = [];
 
     /**
      * モデルのクラスを登録する
      * @param string $chunkId
-     * @param string $objectClass ModelInterfaceを実装したクラスのクラス名
+     * @param string $model ModelInterfaceを実装したクラスのクラス名
      * @throws ModelException
      */
-    public static function registerModel(string $chunkId, string $objectClass): void
+    public static function registerModel(string $chunkId, string $model): void
     {
         // 重複チェック (同じクラス名の場合は無視する)
-        if (isset(self::$chunkIdToModelClassMap[$chunkId])
-            && self::$chunkIdToModelClassMap[$chunkId] !== $objectClass)
+        if (isset(self::$chunkIdToModel[$chunkId])
+            && self::$chunkIdToModel[$chunkId] !== $model)
         {
-            $anotherObjectClass = self::$chunkIdToModelClassMap[$chunkId];
-            throw new ModelException("${objectClass}'s chunkId is already used by ${anotherObjectClass}");
+            $anotherObjectClass = self::$chunkIdToModel[$chunkId];
+            throw new ModelException("${model}'s chunkId is already used by ${anotherObjectClass}");
         }
 
-        self::$chunkIdToModelClassMap[$chunkId] = $objectClass;
+        self::$chunkIdToModel[$chunkId] = $model;
+        self::$modelToChunkId[$model] = $chunkId;
     }
 
     /**
@@ -41,14 +48,28 @@ class ModelClassMap
      */
     public static function findModelClass(string $chunkId): string
     {
-        if (!isset(self::$chunkIdToModelClassMap[$chunkId])) {
+        if (!isset(self::$chunkIdToModel[$chunkId])) {
             throw new ModelException("Not found for chunkId(${chunkId})");
         }
-        $objectClass = self::$chunkIdToModelClassMap[$chunkId];
-        if (!is_subclass_of($objectClass, ModelInterface::class)) {
-            throw new ModelException("${objectClass} is not subclass of ModelInterface");
+        $model = self::$chunkIdToModel[$chunkId];
+        if (!is_subclass_of($model, ModelInterface::class)) {
+            throw new ModelException("${model} is not subclass of ModelInterface");
         }
 
-        return $objectClass;
+        return $model;
+    }
+
+    /**
+     * クラスに対応する識別コードを返す
+     * @param string $model モデルのクラス名
+     * @return string 識別コード
+     * @throws ModelException
+     */
+    public static function findChunkId(string $model): string
+    {
+        if (!isset(self::$modelToChunkId[$model])) {
+            throw new ModelException("Not found for model(${model})");
+        }
+        return self::$modelToChunkId[$model];
     }
 }

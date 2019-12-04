@@ -12,7 +12,7 @@ use Gustav\Common\Config\ConfigLoader;
 $autoloader = require __DIR__ . '/../../vendor/autoload.php';
 $autoloader->addPsr4('Gustav\\App\\', __DIR__ . '/../src');               // app/src
 $autoloader->addPsr4('Gustav\\Common\\', __DIR__ . '/../../common/src');  // common/src
-$autoloader->addPsr4('', __DIR__ . '/../../flatbuffers/php');             // flatbuffers/php
+$autoloader->addPsr4('Gustav\\DX\\', __DIR__ . '/../../flatbuffers/php');             // flatbuffers/php
 
 // Set currentTime
 Time::now();

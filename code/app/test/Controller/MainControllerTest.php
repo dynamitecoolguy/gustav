@@ -13,7 +13,7 @@ use Gustav\Common\Config\ConfigLoader;
 use Gustav\Common\Model\ModelClassMap;
 use Gustav\Common\Model\ModelInterface;
 use Gustav\Common\Model\ModelSerializer;
-use Gustav\Common\Model\Monster;
+use Gustav\Common\Model\MonsterModel;
 use Gustav\Common\Operation\BinaryEncryptorInterface;
 use GuzzleHttp\Psr7\BufferStream;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +34,7 @@ class MainControllerTest extends TestCase
         $autoloader = require __DIR__ . '/../../../vendor/autoload.php';
         $autoloader->addPsr4('', __DIR__ . '/../../../flatbuffers/example/php');              // flatbuffers/php
 
-        ModelClassMap::registerModel(Monster::chunkId(), Monster::class);
+        ModelClassMap::registerModel('MON', MonsterModel::class);
     }
 
     private static $tempFilePath;
@@ -95,26 +95,27 @@ __EOF__
         $outputArray = ModelSerializer::deserialize($encryptor->decrypt($outputData));
 
         // 確認
-        $this->assertEquals('req1', $outputArray[0][0]);
-        $this->assertEquals('gaia', $outputArray[0][1]->name);
-        $this->assertEquals(11, $outputArray[0][1]->hp);
+        $this->assertEquals(1, $outputArray[0][0]);
+        $this->assertEquals('req1', $outputArray[0][1]);
+        $this->assertEquals('gaia', $outputArray[0][2]->name);
+        $this->assertEquals(11, $outputArray[0][2]->hp);
     }
 
     private function getInputData(Container $container)
     {
-        $monster1 = new Monster();
+        $monster1 = new MonsterModel();
         $monster1->name = 'gaia';
         $monster1->hp = 111;
 
-        $monster2 = new Monster();
+        $monster2 = new MonsterModel();
         $monster2->name = 'ortega';
         $monster2->hp = 222;
 
-        $monster3 = new Monster();
+        $monster3 = new MonsterModel();
         $monster3->name = 'mash';
         $monster3->hp = 333;
 
-        $stream = ModelSerializer::serialize([['req1', $monster1], ['req2', $monster2], ['req3', $monster3]]);
+        $stream = ModelSerializer::serialize([[1, 'req1', $monster1], [1, 'req2', $monster2], [1, 'req3', $monster3]]);
 
         $encryptor = $container->get(BinaryEncryptorInterface::class);
         return $encryptor->encrypt($stream);
@@ -131,9 +132,9 @@ class DummyServerRequestInterface extends Request
 
 class DummyDispatcher implements DispatcherInterface
 {
-    public function dispatch(Container $container, ModelInterface $request): ?ModelInterface
+    public function dispatch(int $version, Container $container, ModelInterface $request): ?ModelInterface
     {
-        if ($request instanceof Monster) {
+        if ($request instanceof MonsterModel) {
             $request->hp -= 100;
         }
         return $request;

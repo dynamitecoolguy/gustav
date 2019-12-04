@@ -5,13 +5,11 @@ namespace Gustav\App\Controller;
 
 
 use DI\Container;
-use Gustav\App\Dispatcher;
 use Gustav\App\DispatcherInterface;
 use Gustav\Common\Model\ModelSerializer;
 use Gustav\Common\Operation\BinaryEncryptorInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Polyfill\Util\Binary;
 
 class MainController
 {
@@ -32,11 +30,11 @@ class MainController
         // デシリアライズ
         $resultList = [];
         $requestObjectList = ModelSerializer::deserialize($decrypted);
-        foreach ($requestObjectList as [$requestId, $requestObject]) {
+        foreach ($requestObjectList as [$version, $requestId, $requestObject]) {
             // リクエストオブジェクト毎に処理
-            $result = $dispatcher->dispatch($container, $requestObject);
+            $result = $dispatcher->dispatch($version, $container, $requestObject);
             if (!is_null($result)) {
-                $resultList[] = [$requestId, $result];
+                $resultList[] = [$version, $requestId, $result];
             }
         }
 
