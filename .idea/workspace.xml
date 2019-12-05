@@ -5,30 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="42a86106-9ee1-482e-8a8e-7d4cde83786b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/code/app/src/Logic/AbstractExecutor.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/app/test/.gitkeep" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/common/src/BaseDispatcher.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/common/src/Processor.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/common/test/BaseDispatcherTest.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/app/test/AppContainerBuilderTest.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/app/test/AppDispatcherTest.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/app/test/Model/RegistrationModelTest.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.phpunit.result.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.phpunit.result.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/app/src/AppContainerBuilder.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/AppContainerBuilder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/Controller/MainController.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Controller/MainController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/Dispatcher.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/AppDispatcher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/DispatcherInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/DispatcherInterface.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/Logic/ExecutorInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Logic/ExecutorInterface.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/Logic/RegistrationExecutor.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Logic/RegistrationExecutor.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/test/Controller/MainControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/ProcessorTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/BaseContainerBuilder.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/BaseContainerBuilder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Config/ApplicationConfig.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Config/ApplicationConfig.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Config/LocalSsmObject.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/Config/LocalSsmObject.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Config/SsmObject.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Config/SsmObject.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Exception/GustavException.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Exception/GustavException.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Log/FluentLoggerEntity.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Log/FluentLoggerEntity.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Model/ModelClassMap.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/ModelClassMap.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/Model/RegistrationModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Model/RegistrationModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/src/BaseDispatcher.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/BaseDispatcher.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/common/src/Model/ModelSerializer.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/ModelSerializer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/test/BaseContainerBuilderTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/BaseContainerBuilderTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/test/Model/ModelTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/Model/ModelTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/test/BaseDispatcherTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/BaseDispatcherTest.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -267,7 +253,7 @@
       <workItem from="1575256131050" duration="16883000" />
       <workItem from="1575332142662" duration="20898000" />
       <workItem from="1575418657265" duration="2749000" />
-      <workItem from="1575506750847" duration="10860000" />
+      <workItem from="1575506750847" duration="14775000" />
     </task>
     <task id="LOCAL-00001" summary="* http://mgr.localhost/phpinfo.phpが表示できるところまで&#10;* [BUG] https://mgr.localhostがPR_END_OF_FILEエラーになる">
       <created>1573204290729</created>
@@ -451,7 +437,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575431419129</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Dispatcher周りを整理">
+      <created>1575532624593</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1575532624593</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -472,7 +465,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="RELOAD_CONTEXT" value="false" />
-    <MESSAGE value="* 原型まで" />
     <MESSAGE value="* 名前解決のキャッシュ処理を追加" />
     <MESSAGE value="* PHPUnit用モジュールの追加" />
     <MESSAGE value="* PHPUnitをDockerコンテナではなく外部から実行するように変更" />
@@ -497,7 +489,8 @@
     <MESSAGE value="binaryによるdispatcher機構を追加" />
     <MESSAGE value="Dispatcherのインターフェイス化" />
     <MESSAGE value="ModelとExecutorを整理" />
-    <option name="LAST_COMMIT_MESSAGE" value="ModelとExecutorを整理" />
+    <MESSAGE value="Dispatcher周りを整理" />
+    <option name="LAST_COMMIT_MESSAGE" value="Dispatcher周りを整理" />
   </component>
   <component name="WindowStateProjectService">
     <state x="580" y="166" width="800" height="677" key="#Project_Structure" timestamp="1575249622191">
@@ -544,10 +537,10 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="716" y="331" width="528" height="348" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/51.27.1869.958@51.27.1869.958" timestamp="1575531820472" />
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1575431418892">
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1575532624317">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1575431418892" />
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1575532624317" />
     <state x="151" y="125" width="1669" height="760" key="DiffContextDialog" timestamp="1575249911192">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -556,38 +549,38 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="763" y="262" width="424" height="484" key="FileChooserDialogImpl/51.27.1869.958@51.27.1869.958" timestamp="1575252175535" />
-    <state width="1811" height="241" key="GridCell.Tab.0.bottom" timestamp="1575531799589">
+    <state width="1811" height="241" key="GridCell.Tab.0.bottom" timestamp="1575536590263">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575531799589" />
-    <state width="1811" height="241" key="GridCell.Tab.0.center" timestamp="1575531799587">
+    <state width="1811" height="241" key="GridCell.Tab.0.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575536590263" />
+    <state width="1811" height="241" key="GridCell.Tab.0.center" timestamp="1575536590261">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.center/51.27.1869.958@51.27.1869.958" timestamp="1575531799587" />
-    <state width="1811" height="241" key="GridCell.Tab.0.left" timestamp="1575531799586">
+    <state width="1811" height="241" key="GridCell.Tab.0.center/51.27.1869.958@51.27.1869.958" timestamp="1575536590261" />
+    <state width="1811" height="241" key="GridCell.Tab.0.left" timestamp="1575536590260">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.left/51.27.1869.958@51.27.1869.958" timestamp="1575531799586" />
-    <state width="1811" height="241" key="GridCell.Tab.0.right" timestamp="1575531799588">
+    <state width="1811" height="241" key="GridCell.Tab.0.left/51.27.1869.958@51.27.1869.958" timestamp="1575536590260" />
+    <state width="1811" height="241" key="GridCell.Tab.0.right" timestamp="1575536590262">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.right/51.27.1869.958@51.27.1869.958" timestamp="1575531799588" />
-    <state width="1811" height="278" key="GridCell.Tab.1.bottom" timestamp="1575528761217">
+    <state width="1811" height="241" key="GridCell.Tab.0.right/51.27.1869.958@51.27.1869.958" timestamp="1575536590262" />
+    <state width="1811" height="278" key="GridCell.Tab.1.bottom" timestamp="1575536462457">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="278" key="GridCell.Tab.1.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575528761217" />
-    <state width="1811" height="278" key="GridCell.Tab.1.center" timestamp="1575528761216">
+    <state width="1811" height="278" key="GridCell.Tab.1.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575536462457" />
+    <state width="1811" height="278" key="GridCell.Tab.1.center" timestamp="1575536462456">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="278" key="GridCell.Tab.1.center/51.27.1869.958@51.27.1869.958" timestamp="1575528761216" />
-    <state width="1811" height="278" key="GridCell.Tab.1.left" timestamp="1575528761216">
+    <state width="1811" height="278" key="GridCell.Tab.1.center/51.27.1869.958@51.27.1869.958" timestamp="1575536462456" />
+    <state width="1811" height="278" key="GridCell.Tab.1.left" timestamp="1575536462455">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="278" key="GridCell.Tab.1.left/51.27.1869.958@51.27.1869.958" timestamp="1575528761216" />
-    <state width="1811" height="278" key="GridCell.Tab.1.right" timestamp="1575528761217">
+    <state width="1811" height="278" key="GridCell.Tab.1.left/51.27.1869.958@51.27.1869.958" timestamp="1575536462455" />
+    <state width="1811" height="278" key="GridCell.Tab.1.right" timestamp="1575536462456">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="278" key="GridCell.Tab.1.right/51.27.1869.958@51.27.1869.958" timestamp="1575528761217" />
+    <state width="1811" height="278" key="GridCell.Tab.1.right/51.27.1869.958@51.27.1869.958" timestamp="1575536462456" />
     <state width="1811" height="278" key="GridCell.Tab.2.bottom" timestamp="1575344300189">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -604,10 +597,10 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state width="1811" height="278" key="GridCell.Tab.2.right/51.27.1869.958@51.27.1869.958" timestamp="1575344300189" />
-    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog" timestamp="1575527802946">
+    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog" timestamp="1575535583479">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog/51.27.1869.958@51.27.1869.958" timestamp="1575527802946" />
+    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog/51.27.1869.958@51.27.1869.958" timestamp="1575535583479" />
     <state x="598" y="139" key="SettingsEditor" timestamp="1575014205656">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -642,10 +635,15 @@
           <line>116</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/code/app/test/Model/RegistrationModelTest.php</url>
+          <line>30</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/gustav@phpunit.xml" NAME="phpunit Coverage Results" MODIFIED="1575529161624" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="PhpCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/gustav@phpunit.xml" NAME="phpunit Coverage Results" MODIFIED="1575536576694" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="PhpCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

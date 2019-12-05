@@ -36,6 +36,11 @@ class BaseDispatcherTest extends TestCase
         $resultModel = $dispatcher->dispatch(1, $container, $dummyModel);
 
         $this->assertEquals($resultModel, $dummyModel);
+        $dispatchTable = DummyBaseDispatcher::getDispatchTable();
+        $this->assertEquals(
+            [DummyBaseDispatcherModel::class => DummyBaseDispatcherExecutor::class],
+            $dispatchTable
+        );
     }
 }
 

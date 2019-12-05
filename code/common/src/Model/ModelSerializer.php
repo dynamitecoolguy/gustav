@@ -36,7 +36,7 @@ class ModelSerializer
     const INITIAL_MODEL_BUFFER_SIZE = 512;
 
     /**
-     * @param array $objectList   [[string, ModelInterface]]
+     * @param array $objectList   [[version(int), requestId(string), object(ModelInterface)]]
      * @return string
      * @throws ModelException
      */
@@ -80,7 +80,7 @@ class ModelSerializer
 
     /**
      * @param string $stream
-     * @return ModelInterface[]
+     * @return array  [[version(int), requestId(string), object(ModelInterface)]]
      * @throws ModelException
      */
     public static function deserialize(string $stream): array

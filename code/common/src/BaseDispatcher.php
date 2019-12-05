@@ -54,6 +54,14 @@ class BaseDispatcher implements DispatcherInterface
     }
 
     /**
+     * @return array
+     */
+    public static function getDispatchTable(): array
+    {
+        return self::$dispatchTable;
+    }
+
+    /**
      * BaseDispatcher constructor.
      */
     public function __construct()

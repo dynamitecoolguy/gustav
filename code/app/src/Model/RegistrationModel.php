@@ -58,10 +58,11 @@ class RegistrationModel implements ModelInterface
      */
     public function serialize(FlatbufferBuilder &$builder): int
     {
+        $campaignCode = $builder->createString($this->campaignCode);
         Registration::startRegistration($builder);
         Registration::addUserId($builder, $this->userId);
         Registration::addOpenId($builder, $this->openId);
-        Registration::addCampaignCode($builder, $builder->createString($this->campaignCode));
+        Registration::addCampaignCode($builder, $campaignCode);
         return Registration::endRegistration($builder);
     }
 

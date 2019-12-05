@@ -21,11 +21,10 @@ class AppContainerBuilder extends BaseContainerBuilder
      */
     protected function getDefinitions(ApplicationConfigInterface $config): array
     {
-        return parent::getDefinitions($config) +
-            [
-                DispatcherInterface::class => function (): DispatcherInterface {
-                    return new AppDispatcher();
-                }
-            ];
+        $definitions = parent::getDefinitions($config);
+        $definitions[DispatcherInterface::class] = function (): DispatcherInterface {
+            return new AppDispatcher();
+        };
+        return $definitions;
     }
 }
