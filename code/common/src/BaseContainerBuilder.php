@@ -20,6 +20,7 @@ use Gustav\Common\Exception\ConfigException;
 use Gustav\Common\Log\DataLoggerFluent;
 use Gustav\Common\Log\DataLoggerInterface;
 use Gustav\Common\Log\DataLoggerSqs;
+use Gustav\Common\Network\NameResolver;
 use Gustav\Common\Operation\BinaryEncryptor;
 use Gustav\Common\Operation\BinaryEncryptorInterface;
 use PDO;
@@ -27,8 +28,6 @@ use DI\Container;
 use DI\ContainerBuilder;
 use Redis;
 
-use Gustav\Common\Network\NameResolver;
-use Gustav\Common\Config\ApplicationConfig;
 
 /**
  * Class BaseContainerBuilder
@@ -40,10 +39,10 @@ class BaseContainerBuilder extends ContainerBuilder
 
     /**
      * BaseContainerBuilder constructor.
-     * @param ApplicationConfig $config
+     * @param ApplicationConfigInterface $config
      * @param string $containerClass
      */
-    public function __construct(ApplicationConfig $config, string $containerClass = Container::class)
+    public function __construct(ApplicationConfigInterface $config, string $containerClass = Container::class)
     {
         parent::__construct($containerClass);
 
@@ -55,10 +54,10 @@ class BaseContainerBuilder extends ContainerBuilder
 
     /**
      * デフォルトの定義
-     * @param ApplicationConfig $config
+     * @param ApplicationConfigInterface $config
      * @return array 定義
      */
-    protected function getDefinitions(ApplicationConfig $config): array
+    protected function getDefinitions(ApplicationConfigInterface $config): array
     {
         return [
             ApplicationConfigInterface::class  => $config,
@@ -69,7 +68,9 @@ class BaseContainerBuilder extends ContainerBuilder
             S3Interface::class => $this->getS3Function(),
             SqsInterface::class => $this->getSqsFunction(),
             BinaryEncryptorInterface::class => $this->getBinaryEncryptorFunction(),
-            DataLoggerInterface::class => $this->getDataLoggerFunction()
+            DataLoggerInterface::class => $this->getDataLoggerFunction(),
+            DispatcherInterface::class => $this->getDispatcherFunction()
+
         ];
     }
 
@@ -103,7 +104,7 @@ class BaseContainerBuilder extends ContainerBuilder
     }
 
     /**
-     * PDO(PostgreSQL)を取得するためのFunction
+     * PDO(PgSQL)を取得するためのFunction
      * @return callable
      */
     protected function getPgSQLFunction(): callable
@@ -243,6 +244,18 @@ class BaseContainerBuilder extends ContainerBuilder
                 return DataLoggerSqs::getInstance($sqsI->getClient(), $queueUrl);
             }
             throw new ConfigException("logger.type is unknown type(${loggerType}");
+        };
+    }
+
+    /**
+     * Gustav\Common\DispatcherInterfaceを返すためのFunction
+     * @return callable
+     */
+    protected function getDispatcherFunction(): callable
+    {
+        return function (): DispatcherInterface
+        {
+            return new BaseDispatcher();
         };
     }
 

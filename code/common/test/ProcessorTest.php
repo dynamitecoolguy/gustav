@@ -1,29 +1,21 @@
 <?php
 
 
-namespace Gustav\App\Controller;
+namespace Gustav\Common;
+
 
 use Composer\Autoload\ClassLoader;
 use DI\Container;
-use Fig\Http\Message\StatusCodeInterface;
-use Gustav\App\AppContainerBuilder;
-use Gustav\App\DispatcherInterface;
-use Gustav\Common\Config\ApplicationConfig;
-use Gustav\Common\Config\ConfigLoader;
+use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\Model\ModelClassMap;
 use Gustav\Common\Model\ModelInterface;
 use Gustav\Common\Model\ModelSerializer;
 use Gustav\Common\Model\MonsterModel;
 use Gustav\Common\Operation\BinaryEncryptorInterface;
-use GuzzleHttp\Psr7\BufferStream;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\StreamInterface;
-use Slim\Psr7\Headers;
-use Slim\Psr7\Request;
-use Slim\Psr7\Response;
-use Slim\Psr7\Uri;
 
-class MainControllerTest extends TestCase
+
+class ProcessorTest extends TestCase
 {
     /**
      * @beforeClass
@@ -31,40 +23,14 @@ class MainControllerTest extends TestCase
     public static function setAutoLoader()
     {
         /** @var ClassLoader $autoloader */
-        $autoloader = require __DIR__ . '/../../../vendor/autoload.php';
-        $autoloader->addPsr4('', __DIR__ . '/../../../flatbuffers/example/php');              // flatbuffers/php
+        $autoloader = require __DIR__ . '/../../vendor/autoload.php';
+        $autoloader->addPsr4('', __DIR__ . '/../../flatbuffers/example/php');              // flatbuffers/php
 
+        ModelClassMap::resetMap();
         ModelClassMap::registerModel('MON', MonsterModel::class);
     }
 
     private static $tempFilePath;
-
-    /**
-     * @beforeClass
-     */
-    public static function createConfig(): void
-    {
-        self::$tempFilePath = tempnam('/tmp', 'configloadertest');
-
-        $fd = fopen(self::$tempFilePath, 'w');
-        fwrite($fd, <<<'__EOF__'
-mysql:
-  host: localhost:13306
-  dbname: userdb
-  user: scott
-  password: tiger
-__EOF__
-        );
-        fclose($fd);
-    }
-
-    /**
-     * @afterClass
-     */
-    public static function destroyConfig(): void
-    {
-        unlink(self::$tempFilePath);
-    }
 
     /**
      * @test
@@ -72,24 +38,21 @@ __EOF__
     public function main()
     {
         // getContainer
-        $config = new ApplicationConfig(new ConfigLoader(self::$tempFilePath));
-        $builder = new DummyContainerBuilder($config);
+        $builder = new DummyContainerBuilder(
+            new class implements ApplicationConfigInterface {
+                public function getValue(string $category, string $key, ?string $default = null): string
+                {
+                    return 'dummy';
+                }
+            }
+        );
         $container = $builder->build();
 
         // input data
         $inputData = $this->getInputData($container);
 
-        // 準備
-        $stream = new BufferStream();
-        $stream->write($inputData);
-        $request = new DummyServerRequestInterface($stream);
-
-        // POST
-        $controller = new MainController();
-        $response = new Response(StatusCodeInterface::STATUS_OK, null, new BufferStream());
-        $response = $controller->post($request, $container, $response);
-
-        $outputData = $response->getBody()->getContents();
+        // Processing
+        $outputData = Processor::process($inputData, $container);
 
         $encryptor = $container->get(BinaryEncryptorInterface::class);
         $outputArray = ModelSerializer::deserialize($encryptor->decrypt($outputData));
@@ -122,14 +85,6 @@ __EOF__
     }
 }
 
-class DummyServerRequestInterface extends Request
-{
-    public function __construct(StreamInterface $body)
-    {
-        parent::__construct('get', new Uri('http', 'localhost'), new Headers(), [], [], $body, []);
-    }
-}
-
 class DummyDispatcher implements DispatcherInterface
 {
     public function dispatch(int $version, Container $container, ModelInterface $request): ?ModelInterface
@@ -141,9 +96,9 @@ class DummyDispatcher implements DispatcherInterface
     }
 }
 
-class DummyContainerBuilder extends AppContainerBuilder
+class DummyContainerBuilder extends BaseContainerBuilder
 {
-    protected function getDefinitions(ApplicationConfig $config): array
+    protected function getDefinitions(ApplicationConfigInterface $config): array
     {
         $definitions = parent::getDefinitions($config);
         $definitions[DispatcherInterface::class] = new DummyDispatcher();

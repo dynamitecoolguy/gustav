@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Gustav\App;
+namespace Gustav\Common;
 
 
 use DI\Container;

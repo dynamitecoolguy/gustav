@@ -72,4 +72,13 @@ class ModelClassMap
         }
         return self::$modelToChunkId[$model];
     }
+
+    /**
+     * マップのリセット
+     */
+    public static function resetMap(): void
+    {
+        self::$modelToChunkId = [];
+        self::$chunkIdToModel = [];
+    }
 }

@@ -5,24 +5,27 @@ namespace Gustav\App;
 
 
 use Gustav\Common\BaseContainerBuilder;
-use Gustav\Common\Config\ApplicationConfig;
+use Gustav\Common\Config\ApplicationConfigInterface;
+use Gustav\Common\DispatcherInterface;
 
 /**
- * Class MgrContainerBuilder
+ * Class AppContainerBuilder
  * @package Gustav\App
  */
 class AppContainerBuilder extends BaseContainerBuilder
 {
     /**
      * common側の設定に、app用の設定を追加
-     * @param ApplicationConfig $config
+     * @param ApplicationConfigInterface $config
      * @return array
      */
-    protected function getDefinitions(ApplicationConfig $config): array
+    protected function getDefinitions(ApplicationConfigInterface $config): array
     {
         return parent::getDefinitions($config) +
             [
-                DispatcherInterface::class => new Dispatcher()
+                DispatcherInterface::class => function (): DispatcherInterface {
+                    return new AppDispatcher();
+                }
             ];
     }
 }

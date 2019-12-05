@@ -8,7 +8,6 @@ use Aws\Exception\AwsException;
 use Aws\Sdk;
 use Aws\Ssm\SsmClient;
 use Gustav\Common\Exception\ConfigException;
-use Gustav\Common\Network\NameResolver;
 
 class SsmObject implements SsmObjectInterface
 {
@@ -19,7 +18,7 @@ class SsmObject implements SsmObjectInterface
     const DEFAULT_REGION = 'ap-northeast-1';
 
     /**
-     * ssm:getparametersで取得できる最大数
+     * ssm:getParametersで取得できる最大数
      */
     const SSM_GET_PARAMETERS_MAX = 10;
 

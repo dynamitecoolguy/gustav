@@ -26,6 +26,7 @@ class ModelTest extends TestCase
      */
     public function singleMonster()
     {
+        ModelClassMap::resetMap();
         ModelClassMap::registerModel('MON', MonsterModel::class);
 
         $monster = new MonsterModel();
@@ -54,6 +55,7 @@ class ModelTest extends TestCase
      */
     public function tripleMonster()
     {
+        ModelClassMap::resetMap();
         ModelClassMap::registerModel('MON', MonsterModel::class);
 
         $monster1 = new MonsterModel();
@@ -104,6 +106,7 @@ class ModelTest extends TestCase
      */
     public function empty()
     {
+        ModelClassMap::resetMap();
         ModelClassMap::registerModel('MON', MonsterModel::class);
 
         $stream = ModelSerializer::serialize([]);
@@ -122,6 +125,7 @@ class ModelTest extends TestCase
     {
         $this->expectException(ModelException::class);
 
+        ModelClassMap::resetMap();
         ModelClassMap::registerModel('MON', MonsterModel::class);
         ModelClassMap::registerModel('MON', DuplicatedChunkIdModel::class);
     }
@@ -143,6 +147,7 @@ class ModelTest extends TestCase
      */
     public function deserializeFailed()
     {
+        ModelClassMap::resetMap();
         ModelClassMap::registerModel('MON', MonsterModel::class);
         ModelClassMap::registerModel('MON2', AnotherMonsterModel::class);
 

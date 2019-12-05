@@ -23,7 +23,7 @@ class ApplicationConfig implements ApplicationConfigInterface
     /**
      * @var ConfigLoader
      */
-    private $configLoader = null;
+    private $configLoader;
 
     /**
      * @var array

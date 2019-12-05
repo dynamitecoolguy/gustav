@@ -3,9 +3,9 @@
 
 namespace Gustav\Common\Model;
 
+use Exception;
 use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
-
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\FlatBuffers\DataChunk;
 use Gustav\Common\Model\FlatBuffers\DataModel;
@@ -110,7 +110,7 @@ class ModelSerializer
                 if (!($object instanceof ModelInterface)) {
                     throw new ModelException('Deserialize result is not instanceof ModelInterface');
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 throw new ModelException('Deserialize Error Reason:' . $e->getMessage(), 0, $e);
             }
 

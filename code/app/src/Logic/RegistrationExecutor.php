@@ -9,7 +9,7 @@ use Gustav\App\Model\RegistrationModel;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\ModelInterface;
 
-class RegistrationExecutor implements ExecutorInterface
+class RegistrationExecutor extends AbstractExecutor
 {
     /**
      * @param int            $version       // フォーマットバージョン

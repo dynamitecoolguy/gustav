@@ -8,7 +8,7 @@ use Fluent\Logger\Entity;
 
 class FluentLoggerEntity extends Entity
 {
-    /* @var float w/microtime */
+    /* @var float w/microTime */
     private $microTime;
 
     /**

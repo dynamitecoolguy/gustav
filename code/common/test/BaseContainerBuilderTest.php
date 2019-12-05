@@ -233,4 +233,17 @@ __EOF__
 
         $this->assertInstanceOf(DataLoggerInterface::class, $logger);
     }
+
+    /**
+     * @test
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function getDispatcher(): void
+    {
+        $container = $this->getContainer();
+        $dispatcher = $container->get(DispatcherInterface::class);
+
+        $this->assertInstanceOf(DispatcherInterface::class, $dispatcher);
+    }
 }
