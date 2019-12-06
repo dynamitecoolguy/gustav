@@ -6,7 +6,7 @@ namespace Gustav\App\Model;
 
 use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
-use Gustav\Common\Model\ModelInterface;
+use Gustav\Common\Model\FlatBuffers\ModelInterface;
 
 use Gustav\DX\Registration as Registration;
 

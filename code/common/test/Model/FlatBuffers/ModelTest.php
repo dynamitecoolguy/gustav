@@ -1,12 +1,13 @@
 <?php
 
 
-namespace Gustav\Common\Model;
+namespace Gustav\Common\Model\FlatBuffers;
 
 use Composer\Autoload\ClassLoader;
 use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
 use Gustav\Common\Exception\ModelException;
+use Gustav\Common\Model\ModelClassMap;
 use PHPUnit\Framework\TestCase;
 
 class ModelTest extends TestCase
@@ -17,8 +18,8 @@ class ModelTest extends TestCase
     public static function setAutoLoader()
     {
         /** @var ClassLoader $autoloader */
-        $autoloader = require __DIR__ . '/../../../vendor/autoload.php';
-        $autoloader->addPsr4('', __DIR__ . '/../../../flatbuffers/example/php');              // flatbuffers/php
+        $autoloader = require __DIR__ . '/../../../../vendor/autoload.php';
+        $autoloader->addPsr4('', __DIR__ . '/../../../../flatbuffers/example/php');              // flatbuffers/php
     }
 
     /**

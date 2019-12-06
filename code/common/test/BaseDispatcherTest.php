@@ -9,7 +9,7 @@ use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\Logic\ExecutorInterface;
-use Gustav\Common\Model\ModelInterface;
+use Gustav\Common\Model\FlatBuffers\ModelInterface;
 use PHPUnit\Framework\TestCase;
 
 class BaseDispatcherTest extends TestCase

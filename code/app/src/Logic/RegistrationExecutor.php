@@ -7,7 +7,7 @@ namespace Gustav\App\Logic;
 use DI\Container;
 use Gustav\App\Model\RegistrationModel;
 use Gustav\Common\Exception\ModelException;
-use Gustav\Common\Model\ModelInterface;
+use Gustav\Common\Model\FlatBuffers\ModelInterface;
 
 class RegistrationExecutor extends AbstractExecutor
 {

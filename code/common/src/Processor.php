@@ -7,9 +7,13 @@ use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Gustav\Common\Exception\ModelException;
-use Gustav\Common\Model\ModelSerializer;
+use Gustav\Common\Model\FlatBuffers\ModelSerializer;
 use Gustav\Common\Operation\BinaryEncryptorInterface;
 
+/**
+ * Class Processor
+ * @package Gustav\Common
+ */
 class Processor
 {
     /**

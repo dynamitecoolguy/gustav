@@ -1,14 +1,13 @@
 <?php
 
 
-namespace Gustav\Common\Model;
+namespace Gustav\Common\Model\FlatBuffers;
 
 use Exception;
 use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
 use Gustav\Common\Exception\ModelException;
-use Gustav\Common\Model\FlatBuffers\DataChunk;
-use Gustav\Common\Model\FlatBuffers\DataModel;
+use Gustav\Common\Model\ModelClassMap;
 
 /**
  * Class ModelSerializer

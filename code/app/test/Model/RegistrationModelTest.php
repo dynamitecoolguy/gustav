@@ -3,8 +3,9 @@
 
 namespace Gustav\App\Model;
 
-use Google\FlatBuffers\FlatbufferBuilder;
-use Gustav\Common\Model\ModelSerializer;
+use Composer\Autoload\ClassLoader;
+use Gustav\Common\Exception\ModelException;
+use Gustav\Common\Model\FlatBuffers\ModelSerializer;
 use PHPUnit\Framework\TestCase;
 
 class RegistrationModelTest extends TestCase
@@ -21,7 +22,7 @@ class RegistrationModelTest extends TestCase
 
     /**
      * @test
-     * @throws \Gustav\Common\Exception\ModelException
+     * @throws ModelException
      */
     public function encodeAndDecode()
     {

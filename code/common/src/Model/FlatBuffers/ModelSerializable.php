@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Gustav\Common\Model;
+namespace Gustav\Common\Model\FlatBuffers;
 
 
 use Google\FlatBuffers\FlatbufferBuilder;

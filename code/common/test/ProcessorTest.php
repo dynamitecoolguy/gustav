@@ -7,10 +7,10 @@ namespace Gustav\Common;
 use Composer\Autoload\ClassLoader;
 use DI\Container;
 use Gustav\Common\Config\ApplicationConfigInterface;
+use Gustav\Common\Model\FlatBuffers\MonsterModel;
 use Gustav\Common\Model\ModelClassMap;
-use Gustav\Common\Model\ModelInterface;
-use Gustav\Common\Model\ModelSerializer;
-use Gustav\Common\Model\MonsterModel;
+use Gustav\Common\Model\FlatBuffers\ModelInterface;
+use Gustav\Common\Model\FlatBuffers\ModelSerializer;
 use Gustav\Common\Operation\BinaryEncryptorInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -19,6 +19,7 @@ class ProcessorTest extends TestCase
 {
     /**
      * @beforeClass
+     * @throws Exception\ModelException
      */
     public static function setAutoLoader()
     {
@@ -30,10 +31,9 @@ class ProcessorTest extends TestCase
         ModelClassMap::registerModel('MON', MonsterModel::class);
     }
 
-    private static $tempFilePath;
-
     /**
      * @test
+     * @throws \Exception
      */
     public function main()
     {

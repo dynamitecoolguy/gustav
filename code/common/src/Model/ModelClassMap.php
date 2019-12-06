@@ -51,12 +51,7 @@ class ModelClassMap
         if (!isset(self::$chunkIdToModel[$chunkId])) {
             throw new ModelException("Not found for chunkId(${chunkId})");
         }
-        $model = self::$chunkIdToModel[$chunkId];
-        if (!is_subclass_of($model, ModelInterface::class)) {
-            throw new ModelException("${model} is not subclass of ModelInterface");
-        }
-
-        return $model;
+        return self::$chunkIdToModel[$chunkId];
     }
 
     /**
