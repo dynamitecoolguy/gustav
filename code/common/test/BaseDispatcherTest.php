@@ -5,11 +5,9 @@ namespace Gustav\Common;
 
 
 use DI\Container;
-use Google\FlatBuffers\ByteBuffer;
-use Google\FlatBuffers\FlatbufferBuilder;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\Logic\ExecutorInterface;
-use Gustav\Common\Model\FlatBuffers\ModelInterface;
+use Gustav\Common\Model\ModelInterface;
 use PHPUnit\Framework\TestCase;
 
 class BaseDispatcherTest extends TestCase
@@ -58,8 +56,6 @@ class DummyBaseDispatcher extends BaseDispatcher
 
 class DummyBaseDispatcherModel implements ModelInterface
 {
-    public static function deserialize(int $version, ByteBuffer $buffer): ModelInterface {}
-    public function serialize(FlatbufferBuilder &$builder): int { return 0; }
 }
 
 class DummyBaseDispatcherExecutor implements ExecutorInterface

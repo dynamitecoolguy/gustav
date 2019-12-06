@@ -5,7 +5,7 @@ namespace Gustav\App\Model;
 
 use Composer\Autoload\ClassLoader;
 use Gustav\Common\Exception\ModelException;
-use Gustav\Common\Model\FlatBuffers\ModelSerializer;
+use Gustav\Common\Model\FlatBuffers\FlatBuffersSerializer;
 use PHPUnit\Framework\TestCase;
 
 class RegistrationModelTest extends TestCase
@@ -29,12 +29,14 @@ class RegistrationModelTest extends TestCase
         $register1 = new RegistrationModel(1, 101, '');
         $register2 = new RegistrationModel(2, 102, 'hoge');
 
-        $stream = ModelSerializer::serialize([
+        $serializer = new FlatBuffersSerializer();
+
+        $stream = $serializer->serialize([
             [1, 'req1', $register1],
             [1, 'req2', $register2]
         ]);
 
-        $result = ModelSerializer::deserialize($stream);
+        $result = $serializer->deserialize($stream);
 
         $this->assertEquals(1, $result[0][2]->getUserId());
         $this->assertEquals(102, $result[1][2]->getOpenId());

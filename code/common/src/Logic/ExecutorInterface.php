@@ -5,7 +5,7 @@ namespace Gustav\Common\Logic;
 
 
 use DI\Container;
-use Gustav\Common\Model\FlatBuffers\ModelInterface;
+use Gustav\Common\Model\ModelInterface;
 
 /**
  * Interface ExecutorInterface

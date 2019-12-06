@@ -63,7 +63,7 @@ class FlatBuffersTest extends TestCase
 
         $pos = Vec3::createVec3($builder, 1.0, 2.0, 3.0);
 
-        Monster::startMonster($builder);;
+        Monster::startMonster($builder);
         Monster::addPos($builder, $pos);
         Monster::addHp($builder, $hp);
         Monster::addName($builder, $names['Orc']);

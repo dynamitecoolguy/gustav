@@ -7,7 +7,7 @@ use DI\Container;
 use Gustav\Common\Logic\ExecutorInterface;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\ModelClassMap;
-use Gustav\Common\Model\FlatBuffers\ModelInterface;
+use Gustav\Common\Model\ModelInterface;
 
 class BaseDispatcher implements DispatcherInterface
 {

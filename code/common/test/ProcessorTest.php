@@ -9,8 +9,8 @@ use DI\Container;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\Model\FlatBuffers\MonsterModel;
 use Gustav\Common\Model\ModelClassMap;
-use Gustav\Common\Model\FlatBuffers\ModelInterface;
-use Gustav\Common\Model\FlatBuffers\ModelSerializer;
+use Gustav\Common\Model\ModelInterface;
+use Gustav\Common\Model\ModelSerializerInterface;
 use Gustav\Common\Operation\BinaryEncryptorInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -55,7 +55,8 @@ class ProcessorTest extends TestCase
         $outputData = Processor::process($inputData, $container);
 
         $encryptor = $container->get(BinaryEncryptorInterface::class);
-        $outputArray = ModelSerializer::deserialize($encryptor->decrypt($outputData));
+        $serializer = $container->get(ModelSerializerInterface::class);
+        $outputArray = $serializer->deserialize($encryptor->decrypt($outputData));
 
         // 確認
         $this->assertEquals(1, $outputArray[0][0]);
@@ -78,7 +79,8 @@ class ProcessorTest extends TestCase
         $monster3->name = 'mash';
         $monster3->hp = 333;
 
-        $stream = ModelSerializer::serialize([[1, 'req1', $monster1], [1, 'req2', $monster2], [1, 'req3', $monster3]]);
+        $serializer = $container->get(ModelSerializerInterface::class);
+        $stream = $serializer->serialize([[1, 'req1', $monster1], [1, 'req2', $monster2], [1, 'req3', $monster3]]);
 
         $encryptor = $container->get(BinaryEncryptorInterface::class);
         return $encryptor->encrypt($stream);

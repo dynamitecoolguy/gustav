@@ -2,7 +2,6 @@
 
 namespace Gustav\App\Controller;
 
-use Aws\DynamoDb\DynamoDbClient;
 use Gustav\Common\Adapter\DynamoDbInterface;
 use Gustav\Common\Adapter\PgSQLInterface;
 use Gustav\Common\Adapter\RedisInterface;

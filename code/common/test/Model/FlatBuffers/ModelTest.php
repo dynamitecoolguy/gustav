@@ -8,6 +8,7 @@ use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\ModelClassMap;
+use Gustav\Common\Model\ModelInterface;
 use PHPUnit\Framework\TestCase;
 
 class ModelTest extends TestCase
@@ -34,9 +35,11 @@ class ModelTest extends TestCase
         $monster->name = 'single';
         $monster->hp = 123;
 
-        $stream = ModelSerializer::serialize([[1, 'req', $monster]]);
+        $serializer = new FlatBuffersSerializer();
 
-        $result = ModelSerializer::deserialize($stream);
+        $stream = $serializer->serialize([[1, 'req', $monster]]);
+
+        $result = $serializer->deserialize($stream);
 
         $this->assertIsArray($result);
 
@@ -71,9 +74,9 @@ class ModelTest extends TestCase
         $monster3->name = 'mash';
         $monster3->hp = 333;
 
-        $stream = ModelSerializer::serialize([[1, 'req1', $monster1], [2, 'req2', $monster2], [3, 'req3', $monster3]]);
-
-        $result = ModelSerializer::deserialize($stream);
+        $serializer = new FlatBuffersSerializer();
+        $stream = $serializer->serialize([[1, 'req1', $monster1], [2, 'req2', $monster2], [3, 'req3', $monster3]]);
+        $result = $serializer->deserialize($stream);
 
         $this->assertIsArray($result);
 
@@ -110,9 +113,9 @@ class ModelTest extends TestCase
         ModelClassMap::resetMap();
         ModelClassMap::registerModel('MON', MonsterModel::class);
 
-        $stream = ModelSerializer::serialize([]);
-
-        $result = ModelSerializer::deserialize($stream);
+        $serializer = new FlatBuffersSerializer();
+        $stream = $serializer->serialize([]);
+        $result = $serializer->deserialize($stream);
 
         $this->assertIsArray($result);
         $this->assertEquals(0, sizeof($result));
@@ -158,20 +161,17 @@ class ModelTest extends TestCase
         $monster->name = 'noone';
         $monster->hp = 0;
 
-        $stream = ModelSerializer::serialize([[0, 'req', $monster]]);
-        ModelSerializer::deserialize($stream);
+        $serializer = new FlatBuffersSerializer();
+        $stream = $serializer->serialize([[0, 'req', $monster]]);
+        $serializer->deserialize($stream);
     }
 }
 
-class DuplicatedChunkIdModel implements ModelInterface
-{
-    public function serialize(FlatbufferBuilder &$builder): int {return $builder->offset(); }
-    public static function deserialize(int $version, ByteBuffer $buffer): ModelInterface { return null;}
-}
+class DuplicatedChunkIdModel implements ModelInterface {}
 
 class AnotherMonsterModel extends MonsterModel
 {
-    public static function deserialize(int $version, ByteBuffer $buffer): ModelInterface {
+    public static function deserialize(int $version, ByteBuffer $buffer): FlatBuffersInterface {
         throw new \Exception();
     }
 

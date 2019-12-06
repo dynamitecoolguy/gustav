@@ -4,20 +4,21 @@
 namespace Gustav\Common\Model\FlatBuffers;
 
 use Google\FlatBuffers\FlatbufferBuilder;
+use Gustav\Common\Model\ModelInterface;
 use MyGame\Sample\Weapon;
 
-class WeaponModel implements ModelSerializable
+class WeaponFlatBuffers implements FlatBuffersSerializable, ModelInterface
 {
     public $name;
     public $damage;
 
     /**
      * @param Weapon $weapon
-     * @return WeaponModel
+     * @return WeaponFlatBuffers
      */
-    public static function convertFromTable(Weapon $weapon): WeaponModel
+    public static function convertFromTable(Weapon $weapon): WeaponFlatBuffers
     {
-        $self = new WeaponModel();
+        $self = new WeaponFlatBuffers();
         $self->name = $weapon->getName();
         $self->damage = $weapon->getDamage();
 

@@ -6,13 +6,14 @@ namespace Gustav\Common\Model\FlatBuffers;
 
 use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
+use Gustav\Common\Model\ModelInterface;
 use MyGame\Sample\Color;
 use MyGame\Sample\Equipment;
 use MyGame\Sample\Monster;
 use MyGame\Sample\Vec3;
 use MyGame\Sample\Weapon;
 
-class MonsterModel implements ModelInterface
+class MonsterModel implements FlatBuffersInterface, ModelInterface
 {
     // ひとまず名前とHPだけ
 
@@ -29,11 +30,11 @@ class MonsterModel implements ModelInterface
         // 名前登録
         $name = $builder->createString($this->name);
 
-        $sword = new WeaponModel();
+        $sword = new WeaponFlatBuffers();
         $sword->name = 'Sword';
         $sword->damage = 3;
 
-        $axe = new WeaponModel();
+        $axe = new WeaponFlatBuffers();
         $axe->name = 'Axe';
         $axe->damage = 5;
 
@@ -49,7 +50,7 @@ class MonsterModel implements ModelInterface
         $pos = Vec3::createVec3($builder, 1.0, 2.0, 3.0);
 
         // Monsterの登録
-        Monster::startMonster($builder);;
+        Monster::startMonster($builder);
         Monster::addPos($builder, $pos);
         Monster::addHp($builder, $this->hp);
         Monster::addName($builder, $name);
@@ -65,9 +66,9 @@ class MonsterModel implements ModelInterface
      * デシリアル化
      * @param int $version
      * @param ByteBuffer $buffer
-     * @return ModelInterface
+     * @return FlatBuffersInterface
      */
-    public static function deserialize(int $version, ByteBuffer $buffer): ModelInterface
+    public static function deserialize(int $version, ByteBuffer $buffer): FlatBuffersInterface
     {
         $monster = Monster::getRootAsMonster($buffer);
 
@@ -76,7 +77,7 @@ class MonsterModel implements ModelInterface
         $self->hp = $monster->getHp();
 
         $weapon = $monster->getEquipped(new Weapon());
-        $equipped = WeaponModel::convertFromTable($weapon);
+        $equipped = WeaponFlatBuffers::convertFromTable($weapon);
         $equipped->name = $weapon->getName();
         $equipped->damage = $weapon->getDamage();
 

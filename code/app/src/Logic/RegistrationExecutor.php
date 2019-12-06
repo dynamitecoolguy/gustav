@@ -7,7 +7,7 @@ namespace Gustav\App\Logic;
 use DI\Container;
 use Gustav\App\Model\RegistrationModel;
 use Gustav\Common\Exception\ModelException;
-use Gustav\Common\Model\FlatBuffers\ModelInterface;
+use Gustav\Common\Model\ModelInterface;
 
 class RegistrationExecutor extends AbstractExecutor
 {
@@ -25,5 +25,6 @@ class RegistrationExecutor extends AbstractExecutor
         }
         $campaignCode = $request->getCampaignCode();
         // TODO: Implement execute() method.
+        return null;
     }
 }

@@ -8,9 +8,10 @@ use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\ModelClassMap;
+use Gustav\Common\Model\ModelSerializerInterface;
 
 /**
- * Class ModelSerializer
+ * Class FlatBuffersSerializer
  * @package Gustav\Common\Model
  *
  * table DataChunk {
@@ -22,7 +23,7 @@ use Gustav\Common\Model\ModelClassMap;
  *   chunk: [DataChunk];
  * }
  */
-class ModelSerializer
+class FlatBuffersSerializer implements ModelSerializerInterface
 {
     /**
      * 全体バッファの初期サイズ
@@ -35,11 +36,11 @@ class ModelSerializer
     const INITIAL_MODEL_BUFFER_SIZE = 512;
 
     /**
-     * @param array $objectList   [[version(int), requestId(string), object(ModelInterface)]]
+     * @param array $objectList   [[version(int), requestId(string), object(FlatBuffersInterface)]]
      * @return string
      * @throws ModelException
      */
-    public static function serialize(array $objectList): string
+    public function serialize(array $objectList): string
     {
         $builder = new FlatbufferBuilder(self::INITIAL_TOTAL_BUFFER_SIZE);
 
@@ -49,7 +50,7 @@ class ModelSerializer
 
         // DataChunkのリストを作成する
         foreach ($objectList as [$version, $requestId, $object]) {
-            /** @var ModelInterface $object */
+            /** @var FlatBuffersInterface $object */
 
             $chunkId = ModelClassMap::findChunkId(get_class($object));
             if (!isset($chunkIdMap[$chunkId])) {
@@ -79,10 +80,10 @@ class ModelSerializer
 
     /**
      * @param string $stream
-     * @return array  [[version(int), requestId(string), object(ModelInterface)]]
+     * @return array  [[version(int), requestId(string), object(FlatBuffersInterface)]]
      * @throws ModelException
      */
-    public static function deserialize(string $stream): array
+    public function deserialize(string $stream): array
     {
         // 結果
         $objectList = [];
@@ -104,10 +105,10 @@ class ModelSerializer
             $className = ModelClassMap::findModelClass($chunkId);
 
             try {
-                // ModelInterface::deserialize(int $version, ByteBuffer $buffer): ModelInterfaceの呼び出し
+                // FlatBuffersInterface::deserialize(int $version, ByteBuffer $buffer): ModelInterfaceの呼び出し
                 $object = call_user_func([$className, 'deserialize'], $version, ByteBuffer::wrap($content));
-                if (!($object instanceof ModelInterface)) {
-                    throw new ModelException('Deserialize result is not instanceof ModelInterface');
+                if (!($object instanceof FlatBuffersInterface)) {
+                    throw new ModelException('Deserialize result is not instanceof FlatBuffersInterface');
                 }
             } catch (Exception $e) {
                 throw new ModelException('Deserialize Error Reason:' . $e->getMessage(), 0, $e);
@@ -121,10 +122,10 @@ class ModelSerializer
 
     /**
      * オブジェクトをバイナリ化する
-     * @param ModelInterface $object
+     * @param FlatBuffersInterface $object
      * @return int[]
      */
-    protected static function serializeModel(ModelInterface $object): array
+    protected static function serializeModel(FlatBuffersInterface $object): array
     {
         $builder = new FlatbufferBuilder(self::INITIAL_MODEL_BUFFER_SIZE);
 

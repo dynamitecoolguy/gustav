@@ -7,16 +7,16 @@ namespace Gustav\Common\Model\FlatBuffers;
 use Google\FlatBuffers\ByteBuffer;
 
 /**
- * Interface ModelInterface
+ * Interface FlatBuffersInterface
  * @package Gustav\Common\Model
  */
-interface ModelInterface extends ModelSerializable
+interface FlatBuffersInterface extends FlatBuffersSerializable
 {
     /**
      * デシリアル化
      * @param int $version
      * @param ByteBuffer $buffer
-     * @return ModelInterface
+     * @return FlatBuffersInterface
      */
-    public static function deserialize(int $version, ByteBuffer $buffer): ModelInterface;
+    public static function deserialize(int $version, ByteBuffer $buffer): FlatBuffersInterface;
 }

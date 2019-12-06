@@ -6,8 +6,9 @@ namespace Gustav\App\Model;
 
 use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
-use Gustav\Common\Model\FlatBuffers\ModelInterface;
+use Gustav\Common\Model\FlatBuffers\FlatBuffersInterface;
 
+use Gustav\Common\Model\ModelInterface;
 use Gustav\DX\Registration as Registration;
 
 /**
@@ -15,7 +16,7 @@ use Gustav\DX\Registration as Registration;
  * Class RegistrationModel
  * @package Gustav\App\Model
  */
-class RegistrationModel implements ModelInterface
+class RegistrationModel implements FlatBuffersInterface, ModelInterface
 {
     private $userId;
 
@@ -26,9 +27,9 @@ class RegistrationModel implements ModelInterface
     /**
      * @param int $version
      * @param ByteBuffer $buffer
-     * @return ModelInterface
+     * @return FlatBuffersInterface
      */
-    public static function deserialize(int $version, ByteBuffer $buffer): ModelInterface
+    public static function deserialize(int $version, ByteBuffer $buffer): FlatBuffersInterface
     {
         $registration = Registration::getRootAsRegistration($buffer);
 
@@ -45,7 +46,7 @@ class RegistrationModel implements ModelInterface
      * @param int $openId
      * @param string $campaignCode
      */
-    public function __construct(int $userId, int $openId, string $campaignCode)
+    public function __construct(int $userId = 0, int $openId = 0, string $campaignCode = '')
     {
         $this->userId = $userId;
         $this->openId = $openId;

@@ -7,10 +7,10 @@ namespace Gustav\Common\Model\FlatBuffers;
 use Google\FlatBuffers\FlatbufferBuilder;
 
 /**
- * Interface ModelSerializable
+ * Interface FlatBuffersSerializable
  * @package Gustav\Common\Model
  */
-interface ModelSerializable
+interface FlatBuffersSerializable
 {
     /**
      * シリアル化

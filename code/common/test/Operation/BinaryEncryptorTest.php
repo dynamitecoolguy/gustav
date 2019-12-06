@@ -54,7 +54,7 @@ class BinaryEncryptorTest extends TestCase
         $this->expectException(FormatException::class);
 
         $encryptor = new BinaryEncryptor();
-        $decrypted = $encryptor->decrypt('hogehoge');
+        $encryptor->decrypt('hogehoge');
     }
 
     /**

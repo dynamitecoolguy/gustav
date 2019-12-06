@@ -5,25 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="42a86106-9ee1-482e-8a8e-7d4cde83786b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/compose/web_mgr/settings-local.yml.secret" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/common/src/Model/ModelInterface.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/common/src/Model/ModelSerializerInterface.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/gustav.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/gustav.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.phpunit.result.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.phpunit.result.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/public/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/public/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Config/ApplicationConfig.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Config/ApplicationConfig.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Config/ConfigLoader.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Config/ConfigLoader.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Config/SsmObject.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Config/SsmObjectInterface.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/test/BaseContainerBuilderTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/BaseContainerBuilderTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/test/Config/ApplicationConfigTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/Config/ApplicationConfigTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/test/Config/ConfigLoaderTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/Config/ConfigLoaderTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/test/Config/LocalSsmObject.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/test/Config/SsmObjectTest.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/mgr/public/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/mgr/public/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compose/web_app/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/compose/web_app/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compose/web_app/settings-local.yml.secret" beforeDir="false" afterPath="$PROJECT_DIR$/compose/web_app/settings-local.yml.secret" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compose/web_mgr/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/compose/web_mgr/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/credentials/credentials.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/Controller/HelloController.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Controller/HelloController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/Logic/RegistrationExecutor.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Logic/RegistrationExecutor.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/Model/RegistrationModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Model/RegistrationModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/test/Model/RegistrationModelTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/test/Model/RegistrationModelTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/src/BaseContainerBuilder.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/BaseContainerBuilder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/src/BaseDispatcher.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/BaseDispatcher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/src/DispatcherInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/DispatcherInterface.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/src/Logic/ExecutorInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Logic/ExecutorInterface.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/src/Model/FlatBuffers/ModelInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/FlatBuffers/FlatBuffersInterface.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/src/Model/FlatBuffers/ModelSerializable.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/FlatBuffers/FlatBuffersSerializable.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/src/Model/FlatBuffers/ModelSerializer.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/FlatBuffers/FlatBuffersSerializer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/src/Processor.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Processor.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/test/BaseDispatcherTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/BaseDispatcherTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/test/FlatBuffersTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/FlatBuffersTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/test/Model/FlatBuffers/ModelTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/Model/FlatBuffers/ModelTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/test/Model/FlatBuffers/MonsterModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/Model/FlatBuffers/MonsterModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/test/Model/FlatBuffers/WeaponModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/Model/FlatBuffers/WeaponFlatBuffers.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/test/Operation/BinaryEncryptorTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/Operation/BinaryEncryptorTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/test/ProcessorTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/ProcessorTest.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -263,7 +268,7 @@
       <workItem from="1575332142662" duration="20898000" />
       <workItem from="1575418657265" duration="2749000" />
       <workItem from="1575506750847" duration="14837000" />
-      <workItem from="1575598554808" duration="10139000" />
+      <workItem from="1575598554808" duration="14993000" />
     </task>
     <task id="LOCAL-00001" summary="* http://mgr.localhost/phpinfo.phpが表示できるところまで&#10;* [BUG] https://mgr.localhostがPR_END_OF_FILEエラーになる">
       <created>1573204290729</created>
@@ -482,7 +487,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575609333399</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="configloader周りをgit-crypt使用前提にし、構造をシンプルに変更">
+      <created>1575615649687</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1575615649687</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -503,7 +515,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="RELOAD_CONTEXT" value="false" />
-    <MESSAGE value="SSM周りをremake" />
     <MESSAGE value="index.phpなどのパッケージを変更していなかったので修正" />
     <MESSAGE value="ControllerのDI周りを少し整理" />
     <MESSAGE value="Mgrの方をAppに合わせて修正" />
@@ -528,7 +539,8 @@
     <MESSAGE value="ModelクラスでFlatBuffers用処理をサブモジュールに移動" />
     <MESSAGE value="aws-sdk更新&#10;git-cryptテスト" />
     <MESSAGE value="del gpg" />
-    <option name="LAST_COMMIT_MESSAGE" value="del gpg" />
+    <MESSAGE value="configloader周りをgit-crypt使用前提にし、構造をシンプルに変更" />
+    <option name="LAST_COMMIT_MESSAGE" value="configloader周りをgit-crypt使用前提にし、構造をシンプルに変更" />
   </component>
   <component name="WindowStateProjectService">
     <state x="580" y="166" width="800" height="677" key="#Project_Structure" timestamp="1575249622191">
@@ -555,10 +567,10 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="668" y="225" width="624" height="562" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/51.27.1869.958@51.27.1869.958" timestamp="1575246383108" />
-    <state x="609" y="27" width="734" height="958" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1575517360243">
+    <state x="609" y="27" width="734" height="958" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1575620791024">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="609" y="27" width="734" height="958" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/51.27.1869.958@51.27.1869.958" timestamp="1575517360243" />
+    <state x="609" y="27" width="734" height="958" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/51.27.1869.958@51.27.1869.958" timestamp="1575620791024" />
     <state x="718" y="251" width="524" height="508" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1575250669942">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -571,14 +583,14 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="582" y="27" width="797" height="958" key="#com.jetbrains.php.refactoring.move.namespace.PhpMoveRelatedNamespacesDialog/51.27.1869.958@51.27.1869.958" timestamp="1575515693507" />
-    <state x="716" y="331" width="528" height="348" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1575531820472">
+    <state x="716" y="331" width="528" height="348" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1575617978266">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="716" y="331" width="528" height="348" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/51.27.1869.958@51.27.1869.958" timestamp="1575531820472" />
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1575609333214">
+    <state x="716" y="331" width="528" height="348" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/51.27.1869.958@51.27.1869.958" timestamp="1575617978266" />
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1575615649522">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1575609333214" />
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1575615649522" />
     <state x="151" y="125" width="1669" height="760" key="DiffContextDialog" timestamp="1575609785581">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -587,22 +599,22 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="763" y="262" width="424" height="484" key="FileChooserDialogImpl/51.27.1869.958@51.27.1869.958" timestamp="1575252175535" />
-    <state width="1811" height="241" key="GridCell.Tab.0.bottom" timestamp="1575615490111">
+    <state width="1811" height="241" key="GridCell.Tab.0.bottom" timestamp="1575621601203">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575615490111" />
-    <state width="1811" height="241" key="GridCell.Tab.0.center" timestamp="1575615490109">
+    <state width="1811" height="241" key="GridCell.Tab.0.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575621601203" />
+    <state width="1811" height="241" key="GridCell.Tab.0.center" timestamp="1575621601201">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.center/51.27.1869.958@51.27.1869.958" timestamp="1575615490109" />
-    <state width="1811" height="241" key="GridCell.Tab.0.left" timestamp="1575615490109">
+    <state width="1811" height="241" key="GridCell.Tab.0.center/51.27.1869.958@51.27.1869.958" timestamp="1575621601201" />
+    <state width="1811" height="241" key="GridCell.Tab.0.left" timestamp="1575621601200">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.left/51.27.1869.958@51.27.1869.958" timestamp="1575615490109" />
-    <state width="1811" height="241" key="GridCell.Tab.0.right" timestamp="1575615490110">
+    <state width="1811" height="241" key="GridCell.Tab.0.left/51.27.1869.958@51.27.1869.958" timestamp="1575621601200" />
+    <state width="1811" height="241" key="GridCell.Tab.0.right" timestamp="1575621601202">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.right/51.27.1869.958@51.27.1869.958" timestamp="1575615490110" />
+    <state width="1811" height="241" key="GridCell.Tab.0.right/51.27.1869.958@51.27.1869.958" timestamp="1575621601202" />
     <state width="1811" height="278" key="GridCell.Tab.1.bottom" timestamp="1575615353161">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -635,18 +647,18 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state width="1811" height="278" key="GridCell.Tab.2.right/51.27.1869.958@51.27.1869.958" timestamp="1575344300189" />
-    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog" timestamp="1575535583479">
+    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog" timestamp="1575620774245">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog/51.27.1869.958@51.27.1869.958" timestamp="1575535583479" />
+    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog/51.27.1869.958@51.27.1869.958" timestamp="1575620774245" />
     <state x="598" y="139" key="SettingsEditor" timestamp="1575014205656">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="598" y="139" key="SettingsEditor/51.27.1869.958@51.27.1869.958" timestamp="1575014205656" />
-    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1575609334853">
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1575615651467">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1575609334853" />
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1575615651467" />
     <state x="772" y="242" width="416" height="526" key="VcsDiffUtil.ChangesDialog" timestamp="1575362718686">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -673,10 +685,15 @@
           <line>116</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/code/app/test/AppContainerBuilderTest.php</url>
+          <line>5</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/gustav@phpunit.xml" NAME="phpunit Coverage Results" MODIFIED="1575615484016" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="PhpCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/gustav@phpunit.xml" NAME="phpunit Coverage Results" MODIFIED="1575621507012" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="PhpCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

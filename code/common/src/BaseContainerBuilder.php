@@ -20,6 +20,8 @@ use Gustav\Common\Exception\ConfigException;
 use Gustav\Common\Log\DataLoggerFluent;
 use Gustav\Common\Log\DataLoggerInterface;
 use Gustav\Common\Log\DataLoggerSqs;
+use Gustav\Common\Model\FlatBuffers\FlatBuffersSerializer;
+use Gustav\Common\Model\ModelSerializerInterface;
 use Gustav\Common\Network\NameResolver;
 use Gustav\Common\Operation\BinaryEncryptor;
 use Gustav\Common\Operation\BinaryEncryptorInterface;
@@ -69,8 +71,8 @@ class BaseContainerBuilder extends ContainerBuilder
             SqsInterface::class => $this->getSqsFunction(),
             BinaryEncryptorInterface::class => $this->getBinaryEncryptorFunction(),
             DataLoggerInterface::class => $this->getDataLoggerFunction(),
-            DispatcherInterface::class => $this->getDispatcherFunction()
-
+            DispatcherInterface::class => $this->getDispatcherFunction(),
+            ModelSerializerInterface::class => $this->getModelSerializerFunction()
         ];
     }
 
@@ -256,6 +258,18 @@ class BaseContainerBuilder extends ContainerBuilder
         return function (): DispatcherInterface
         {
             return new BaseDispatcher();
+        };
+    }
+
+    /**
+     * Gustav\Common\ModelSerializerInterfaceを返すためのFunction
+     * @return callable
+     */
+    protected function getModelSerializerFunction(): callable
+    {
+        return function (): ModelSerializerInterface
+        {
+            return new FlatBuffersSerializer();
         };
     }
 
