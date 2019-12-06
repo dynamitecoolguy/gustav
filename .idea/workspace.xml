@@ -5,24 +5,77 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="42a86106-9ee1-482e-8a8e-7d4cde83786b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/.changes/3.124.0" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/.changes/3.125.0" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/.changes/3.126.0" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/.changes/3.127.0" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/AccessAnalyzer/AccessAnalyzerClient.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/AccessAnalyzer/Exception/AccessAnalyzerException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/Arn/AccessPointArn.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/Arn/Arn.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/Arn/ArnInterface.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/Arn/ArnParser.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/Arn/Exception/InvalidArnException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/Arn/ResourceTypeAndIdTrait.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/Arn/S3/AccessPointArn.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/AugmentedAIRuntime/AugmentedAIRuntimeClient.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/AugmentedAIRuntime/Exception/AugmentedAIRuntimeException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/CodeGuruProfiler/CodeGuruProfilerClient.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/CodeGuruProfiler/Exception/CodeGuruProfilerException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/CodeGuruReviewer/CodeGuruReviewerClient.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/CodeGuruReviewer/Exception/CodeGuruReviewerException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/ComputeOptimizer/ComputeOptimizerClient.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/ComputeOptimizer/Exception/ComputeOptimizerException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/EBS/EBSClient.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/EBS/Exception/EBSException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/Exception/InvalidRegionException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/FraudDetector/Exception/FraudDetectorException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/FraudDetector/FraudDetectorClient.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/NetworkManager/Exception/NetworkManagerException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/NetworkManager/NetworkManagerClient.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/Outposts/Exception/OutpostsException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/Outposts/OutpostsClient.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/S3/BucketEndpointArnMiddleware.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/S3/UseArnRegion/Configuration.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/S3/UseArnRegion/ConfigurationInterface.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/S3/UseArnRegion/ConfigurationProvider.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/S3/UseArnRegion/Exception/ConfigurationException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/Schemas/Exception/SchemasException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/Schemas/SchemasClient.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/accessanalyzer/2019-11-01/api-2.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/accessanalyzer/2019-11-01/paginators-1.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/codeguru-reviewer/2019-09-19/api-2.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/codeguru-reviewer/2019-09-19/paginators-1.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/codeguruprofiler/2019-07-18/api-2.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/codeguruprofiler/2019-07-18/paginators-1.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/compute-optimizer/2019-11-01/api-2.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/compute-optimizer/2019-11-01/paginators-1.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/ebs/2019-11-02/api-2.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/ebs/2019-11-02/paginators-1.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/frauddetector/2019-11-15/api-2.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/frauddetector/2019-11-15/paginators-1.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/imagebuilder/2019-12-02/api-2.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/imagebuilder/2019-12-02/paginators-1.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/kendra/2019-02-03/api-2.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/kendra/2019-02-03/paginators-1.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/networkmanager/2019-07-05/api-2.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/networkmanager/2019-07-05/paginators-1.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/outposts/2019-12-03/api-2.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/outposts/2019-12-03/paginators-1.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/rekognition/2016-06-27/waiters-2.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/sagemaker-a2i-runtime/2019-11-07/api-2.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/sagemaker-a2i-runtime/2019-11-07/paginators-1.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/schemas/2019-12-02/api-2.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/schemas/2019-12-02/paginators-1.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/data/schemas/2019-12-02/waiters-2.json.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/imagebuilder/Exception/imagebuilderException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/imagebuilder/imagebuilderClient.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/kendra/Exception/kendraException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/vendor/aws/aws-sdk-php/src/kendra/kendraClient.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/compose/web_app/settings-local.yml.secret" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gustav.gpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.phpunit.result.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.phpunit.result.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/Logic/RegistrationExecutor.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Logic/RegistrationExecutor.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/Model/RegistrationModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Model/RegistrationModel.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/test/Model/RegistrationModelTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/test/Model/RegistrationModelTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/BaseDispatcher.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/BaseDispatcher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/DispatcherInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/DispatcherInterface.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Logic/ExecutorInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Logic/ExecutorInterface.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Model/ModelClassMap.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/ModelClassMap.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Model/ModelInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/FlatBuffers/ModelInterface.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Model/ModelSerializable.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/FlatBuffers/ModelSerializable.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Model/ModelSerializer.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/FlatBuffers/ModelSerializer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Processor.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Processor.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/test/BaseDispatcherTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/BaseDispatcherTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/test/Model/ModelTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/Model/FlatBuffers/ModelTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/test/Model/MonsterModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/Model/FlatBuffers/MonsterModel.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/test/Model/WeaponModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/Model/FlatBuffers/WeaponModel.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/test/ProcessorTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/ProcessorTest.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -262,7 +315,7 @@
       <workItem from="1575332142662" duration="20898000" />
       <workItem from="1575418657265" duration="2749000" />
       <workItem from="1575506750847" duration="14837000" />
-      <workItem from="1575598554808" duration="2295000" />
+      <workItem from="1575598554808" duration="4925000" />
     </task>
     <task id="LOCAL-00001" summary="* http://mgr.localhost/phpinfo.phpが表示できるところまで&#10;* [BUG] https://mgr.localhostがPR_END_OF_FILEエラーになる">
       <created>1573204290729</created>
@@ -460,7 +513,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575536617503</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="ModelクラスでFlatBuffers用処理をサブモジュールに移動">
+      <created>1575601147150</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1575601147150</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -481,7 +541,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="RELOAD_CONTEXT" value="false" />
-    <MESSAGE value="* PHPUnit用モジュールの追加" />
     <MESSAGE value="* PHPUnitをDockerコンテナではなく外部から実行するように変更" />
     <MESSAGE value="Config設定周りの整理とテスト追加" />
     <MESSAGE value="SSM周りをremake" />
@@ -506,7 +565,8 @@
     <MESSAGE value="ModelとExecutorを整理" />
     <MESSAGE value="Dispatcher周りを整理" />
     <MESSAGE value="App側のテスト追加" />
-    <option name="LAST_COMMIT_MESSAGE" value="App側のテスト追加" />
+    <MESSAGE value="ModelクラスでFlatBuffers用処理をサブモジュールに移動" />
+    <option name="LAST_COMMIT_MESSAGE" value="ModelクラスでFlatBuffers用処理をサブモジュールに移動" />
   </component>
   <component name="WindowStateProjectService">
     <state x="580" y="166" width="800" height="677" key="#Project_Structure" timestamp="1575249622191">
@@ -521,10 +581,10 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="580" y="166" width="983" height="677" key="#com.intellij.execution.impl.EditConfigurationsDialog/51.27.1869.958@51.27.1869.958" timestamp="1575352592742" />
-    <state x="654" y="300" width="653" height="410" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1575529153928">
+    <state x="654" y="300" width="992" height="410" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1575604508309">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="654" y="300" width="653" height="410" key="#com.intellij.fileTypes.FileTypeChooser/51.27.1869.958@51.27.1869.958" timestamp="1575529153928" />
+    <state x="654" y="300" width="992" height="410" key="#com.intellij.fileTypes.FileTypeChooser/51.27.1869.958@51.27.1869.958" timestamp="1575604508309" />
     <state x="769" y="182" width="454" height="645" key="#com.intellij.ide.util.MemberChooser" timestamp="1575363516119">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -553,10 +613,10 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="716" y="331" width="528" height="348" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/51.27.1869.958@51.27.1869.958" timestamp="1575531820472" />
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1575536617375">
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1575601146939">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1575536617375" />
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1575601146939" />
     <state x="151" y="125" width="1669" height="760" key="DiffContextDialog" timestamp="1575249911192">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -621,18 +681,18 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="598" y="139" key="SettingsEditor/51.27.1869.958@51.27.1869.958" timestamp="1575014205656" />
-    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1575536619502">
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1575601149611">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1575536619502" />
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1575601149611" />
     <state x="772" y="242" width="416" height="526" key="VcsDiffUtil.ChangesDialog" timestamp="1575362718686">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="772" y="242" width="416" height="526" key="VcsDiffUtil.ChangesDialog/51.27.1869.958@51.27.1869.958" timestamp="1575362718686" />
-    <state x="610" y="187" width="751" height="636" key="find.popup" timestamp="1575600482542">
+    <state x="610" y="187" width="751" height="636" key="find.popup" timestamp="1575601202990">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="610" y="187" width="751" height="636" key="find.popup/51.27.1869.958@51.27.1869.958" timestamp="1575600482542" />
+    <state x="610" y="187" width="751" height="636" key="find.popup/51.27.1869.958@51.27.1869.958" timestamp="1575601202990" />
     <state x="732" y="282" key="git4idea.merge.GitMergeDialog" timestamp="1575362728329">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
