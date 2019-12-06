@@ -33,20 +33,17 @@ class BaseContainerBuilderTest extends TestCase
 
         $fd = fopen(self::$tempFilePath, 'w');
         fwrite($fd, <<<'__EOF__'
-ssm:
-  class: Gustav\Common\Config\LocalSsmObject
-
 mysql:
   host: localhost:13306
   dbname: userdb
-  user: $$MYSQL_USER$$
-  password: $$MYSQL_PASSWORD$$
+  user: scott
+  password: tiger
 
 pgsql:
   host: localhost:15432
   dbname: logdb
-  user: $$PGSQL_USER$$
-  password: $$PGSQL_PASSWORD$$
+  user: scott
+  password: tiger
 
 redis:
   host: localhost:16379
@@ -54,16 +51,15 @@ redis:
 dynamodb:
   endpoint: http://localhost:18000
   region: ap-northeast-1
-  key: $$DYNAMODB_ACCESS_KEY$$
-  secret: $$DYNAMODB_SECRET$$
+  key: dummy
+  secret: dummy
   table: hogehoge
 
 storage:
   endpoint: http://localhost:19000
   region: ap-northeast-1
-  key: $$STORAGE_ACCESS_KEY$$
-  secret: $$STORAGE_SECRET$$
-  bucket: $$STORAGE_BUCKET$$
+  key: s3accesskey
+  secret: s3secretkey
 
 sqs:
   endpoint: http://localhost:19000

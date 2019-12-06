@@ -1,3 +1,1 @@
-/credentials/*
-!/credentials/credentials.txt
 /.phpunit.result.cache

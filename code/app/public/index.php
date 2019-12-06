@@ -17,7 +17,7 @@ $autoloader->addPsr4('Gustav\\DX\\', __DIR__ . '/../../flatbuffers/php');       
 // Set currentTime
 Time::now();
 
-$loader = new ConfigLoader('/usr/local/etc/gustav/settings.yml');
+$loader = new ConfigLoader('/usr/local/etc/gustav/settings.yml', '/usr/local/etc/gustav/settings-secret.yml');
 $config = new ApplicationConfig($loader);
 
 $containerBuilder = new ContainerBuilder($config);

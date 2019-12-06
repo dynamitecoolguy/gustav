@@ -66,18 +66,7 @@ class ApplicationConfig implements ApplicationConfigInterface
         }
 
         // config fileから値を取得する
-        $value = $this->configLoader->getConfig($category, $key, $default);
-
-        // SSMによる置換を行う必要がある値か?
-        if (strpos($value, '$$') !== false
-            && preg_match('/^(.*)\$\$(.*)\$\$(.*)$/', $value, $matches) // $$KEY_NAME$$?
-        ) {
-            // 置換する
-            $replaced = $this->configLoader->replaceVariable($matches[2]);
-            $result = $matches[1] . $replaced . $matches[3];
-        } else {
-            $result = $value;
-        }
+        $result = $this->configLoader->getConfig($category, $key, $default);
 
         // キャッシュする
         if (!apcu_exists($categoryKey)) {

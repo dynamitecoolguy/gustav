@@ -58,6 +58,7 @@ COPY compose/web_mgr/supervisord.conf /etc/supervisord.conf
 
 # settings
 COPY compose/web_mgr/settings-${environment}.yml /usr/local/etc/gustav/settings.yml
+COPY compose/web_app/settings-${environment}.yml.secret /usr/local/etc/gustav/settings-secret.yml
 
 # PHP
 COPY compose/web_mgr/php.ini /etc/php7/conf.d/config.ini
@@ -78,8 +79,6 @@ RUN deluser nginx \
     && addgroup -g 1000 -S www-data \
     && adduser -u 1000 -D -S -G www-data www-data \
     && adduser -u 1001 -D -S -G www-data nginx
-
-COPY credentials /usr/local/etc/gustav/credentials
 
 EXPOSE 3128
 

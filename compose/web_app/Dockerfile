@@ -58,6 +58,7 @@ COPY compose/web_app/supervisord.conf /etc/supervisord.conf
 
 # settings
 COPY compose/web_app/settings-${environment}.yml /usr/local/etc/gustav/settings.yml
+COPY compose/web_app/settings-${environment}.yml.secret /usr/local/etc/gustav/settings-secret.yml
 
 # PHP
 COPY compose/web_app/php.ini /etc/php7/conf.d/config.ini
@@ -81,7 +82,6 @@ RUN deluser nginx \
 
 #COPY src/hoge /var/www/hoge
 #COPY src/vendor /var/www/vendor
-COPY credentials /usr/local/etc/gustav/credentials
 
 EXPOSE 3128
 
