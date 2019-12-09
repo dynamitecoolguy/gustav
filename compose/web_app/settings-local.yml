@@ -37,6 +37,9 @@ logger:
   type: fluent
   host: fluentd:24224
 
+serializer:
+  type: json
+
 #logger:
 #  type: sqs
 #  queue: http://sqs:9324/queue/hoge_queue

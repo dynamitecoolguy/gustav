@@ -22,6 +22,8 @@ use Gustav\Common\Log\DataLoggerInterface;
 use Gustav\Common\Log\DataLoggerSqs;
 use Gustav\Common\Model\FlatBuffers\FlatBuffersSerializer;
 use Gustav\Common\Model\ModelSerializerInterface;
+use Gustav\Common\Model\Primitive\JsonSerializer;
+use Gustav\Common\Model\Primitive\MessagePackSerializer;
 use Gustav\Common\Network\NameResolver;
 use Gustav\Common\Operation\BinaryEncryptor;
 use Gustav\Common\Operation\BinaryEncryptorInterface;
@@ -235,7 +237,7 @@ class BaseContainerBuilder extends ContainerBuilder
     {
         return function (ApplicationConfigInterface $config, Container $container): DataLoggerInterface
         {
-            $loggerType = $config->getValue('logger', 'type');
+            $loggerType = strtolower($config->getValue('logger', 'type'));
 
             if ($loggerType == 'fluent') {
                 list($host, $port) = $this->resolveHostAndPort($config->getValue('logger', 'host'));
@@ -245,7 +247,7 @@ class BaseContainerBuilder extends ContainerBuilder
                 $queueUrl = $config->getValue('logger', 'queue');
                 return DataLoggerSqs::getInstance($sqsI->getClient(), $queueUrl);
             }
-            throw new ConfigException("logger.type is unknown type(${loggerType}");
+            throw new ConfigException("logger.type is unknown type(${loggerType})");
         };
     }
 
@@ -267,9 +269,18 @@ class BaseContainerBuilder extends ContainerBuilder
      */
     protected function getModelSerializerFunction(): callable
     {
-        return function (): ModelSerializerInterface
+        return function (ApplicationConfigInterface $config): ModelSerializerInterface
         {
-            return new FlatBuffersSerializer();
+            $serializerType = strtolower($config->getValue('serializer', 'type'));
+
+            if ($serializerType == 'flatbuffers') {
+                return new FlatBuffersSerializer();
+            } elseif ($serializerType == 'json') {
+                return new JsonSerializer();
+            } elseif ($serializerType == 'msgpack' || $serializerType == 'messagepack') {
+                return new MessagePackSerializer();
+            }
+            throw new ConfigException("serializer.type is unknown type(${serializerType})");
         };
     }
 

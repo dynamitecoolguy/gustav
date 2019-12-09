@@ -42,6 +42,9 @@ class ProcessorTest extends TestCase
             new class implements ApplicationConfigInterface {
                 public function getValue(string $category, string $key, ?string $default = null): string
                 {
+                    if ($category == 'serializer' && $key == 'type') {
+                        return 'flatbuffers';
+                    }
                     return 'dummy';
                 }
             }
