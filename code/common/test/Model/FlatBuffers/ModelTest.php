@@ -5,10 +5,10 @@ namespace Gustav\Common\Model\FlatBuffers;
 
 use Composer\Autoload\ClassLoader;
 use Google\FlatBuffers\ByteBuffer;
-use Google\FlatBuffers\FlatbufferBuilder;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\ModelClassMap;
 use Gustav\Common\Model\ModelInterface;
+use Gustav\Common\Model\MonsterModel;
 use PHPUnit\Framework\TestCase;
 
 class ModelTest extends TestCase
@@ -171,7 +171,7 @@ class DuplicatedChunkIdModel implements ModelInterface {}
 
 class AnotherMonsterModel extends MonsterModel
 {
-    public static function deserialize(int $version, ByteBuffer $buffer): FlatBuffersInterface {
+    public static function deserializeFlatBuffers(int $version, ByteBuffer $buffer): FlatBuffersSerializable {
         throw new \Exception();
     }
 

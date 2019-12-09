@@ -4,6 +4,7 @@
 namespace Gustav\Common\Model\FlatBuffers;
 
 
+use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
 
 /**
@@ -13,9 +14,17 @@ use Google\FlatBuffers\FlatbufferBuilder;
 interface FlatBuffersSerializable
 {
     /**
+     * デシリアル化
+     * @param int $version
+     * @param ByteBuffer $buffer
+     * @return FlatBuffersSerializable
+     */
+    public static function deserializeFlatBuffers(int $version, ByteBuffer $buffer): FlatBuffersSerializable;
+
+    /**
      * シリアル化
      * @param FlatbufferBuilder $builder
      * @return int table_offset
      */
-    public function serialize(FlatbufferBuilder &$builder): int;
+    public function serializeFlatBuffers(FlatbufferBuilder &$builder): int;
 }

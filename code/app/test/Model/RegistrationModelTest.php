@@ -6,6 +6,9 @@ namespace Gustav\App\Model;
 use Composer\Autoload\ClassLoader;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\FlatBuffers\FlatBuffersSerializer;
+use Gustav\Common\Model\ModelSerializerInterface;
+use Gustav\Common\Model\Primitive\JsonSerializer;
+use Gustav\Common\Model\Primitive\MessagePackSerializer;
 use PHPUnit\Framework\TestCase;
 
 class RegistrationModelTest extends TestCase
@@ -21,15 +24,12 @@ class RegistrationModelTest extends TestCase
     }
 
     /**
-     * @test
-     * @throws ModelException
+     * @param ModelSerializerInterface $serializer
      */
-    public function encodeAndDecode()
+    private function encodeAndDecodeBody(ModelSerializerInterface $serializer)
     {
         $register1 = new RegistrationModel(1, 101, '');
         $register2 = new RegistrationModel(2, 102, 'hoge');
-
-        $serializer = new FlatBuffersSerializer();
 
         $stream = $serializer->serialize([
             [1, 'req1', $register1],
@@ -42,6 +42,31 @@ class RegistrationModelTest extends TestCase
         $this->assertEquals(102, $result[1][2]->getOpenId());
         $this->assertEquals('', $result[0][2]->getCampaignCode());
         $this->assertEquals('hoge', $result[1][2]->getCampaignCode());
+    }
+
+    /**
+     * @test
+     * @throws ModelException
+     */
+    public function encodeAndDecodeFlatBuffers()
+    {
+        $this->encodeAndDecodeBody(new FlatBuffersSerializer());
+    }
+
+    /**
+     * @test
+     */
+    public function encodeAndDecodeJson()
+    {
+        $this->encodeAndDecodeBody(new JsonSerializer());
+    }
+
+    /**
+     * @test
+     */
+    public function encodeAndDecodeMessagePack()
+    {
+        $this->encodeAndDecodeBody(new MessagePackSerializer());
     }
 
     /**

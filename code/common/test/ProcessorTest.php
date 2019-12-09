@@ -7,10 +7,10 @@ namespace Gustav\Common;
 use Composer\Autoload\ClassLoader;
 use DI\Container;
 use Gustav\Common\Config\ApplicationConfigInterface;
-use Gustav\Common\Model\FlatBuffers\MonsterModel;
 use Gustav\Common\Model\ModelClassMap;
 use Gustav\Common\Model\ModelInterface;
 use Gustav\Common\Model\ModelSerializerInterface;
+use Gustav\Common\Model\MonsterModel;
 use Gustav\Common\Operation\BinaryEncryptorInterface;
 use PHPUnit\Framework\TestCase;
 

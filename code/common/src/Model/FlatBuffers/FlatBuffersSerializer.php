@@ -36,7 +36,7 @@ class FlatBuffersSerializer implements ModelSerializerInterface
     const INITIAL_MODEL_BUFFER_SIZE = 512;
 
     /**
-     * @param array $objectList   [[version(int), requestId(string), object(FlatBuffersInterface)]]
+     * @param array $objectList   [[version(int), requestId(string), object(FlatBuffersSerializable)]]
      * @return string
      * @throws ModelException
      */
@@ -50,7 +50,7 @@ class FlatBuffersSerializer implements ModelSerializerInterface
 
         // DataChunkのリストを作成する
         foreach ($objectList as [$version, $requestId, $object]) {
-            /** @var FlatBuffersInterface $object */
+            /** @var FlatBuffersSerializable $object */
 
             $chunkId = ModelClassMap::findChunkId(get_class($object));
             if (!isset($chunkIdMap[$chunkId])) {
@@ -80,7 +80,7 @@ class FlatBuffersSerializer implements ModelSerializerInterface
 
     /**
      * @param string $stream
-     * @return array  [[version(int), requestId(string), object(FlatBuffersInterface)]]
+     * @return array  [[version(int), requestId(string), object(FlatBuffersSerializable)]]
      * @throws ModelException
      */
     public function deserialize(string $stream): array
@@ -105,10 +105,10 @@ class FlatBuffersSerializer implements ModelSerializerInterface
             $className = ModelClassMap::findModelClass($chunkId);
 
             try {
-                // FlatBuffersInterface::deserialize(int $version, ByteBuffer $buffer): ModelInterfaceの呼び出し
-                $object = call_user_func([$className, 'deserialize'], $version, ByteBuffer::wrap($content));
-                if (!($object instanceof FlatBuffersInterface)) {
-                    throw new ModelException('Deserialize result is not instanceof FlatBuffersInterface');
+                // FlatBuffersSerializable::deserialize(int $version, ByteBuffer $buffer): ModelInterfaceの呼び出し
+                $object = call_user_func([$className, 'deserializeFlatBuffers'], $version, ByteBuffer::wrap($content));
+                if (!($object instanceof FlatBuffersSerializable)) {
+                    throw new ModelException('Deserialize result is not instanceof FlatBuffersSerializable');
                 }
             } catch (Exception $e) {
                 throw new ModelException('Deserialize Error Reason:' . $e->getMessage(), 0, $e);
@@ -122,14 +122,14 @@ class FlatBuffersSerializer implements ModelSerializerInterface
 
     /**
      * オブジェクトをバイナリ化する
-     * @param FlatBuffersInterface $object
+     * @param FlatBuffersSerializable $object
      * @return int[]
      */
-    protected static function serializeModel(FlatBuffersInterface $object): array
+    protected static function serializeModel(FlatBuffersSerializable $object): array
     {
         $builder = new FlatbufferBuilder(self::INITIAL_MODEL_BUFFER_SIZE);
 
-        $pos = $object->serialize($builder);
+        $pos = $object->serializeFlatBuffers($builder);
         $builder->finish($pos);
 
         return array_values(unpack('C*', $builder->sizedByteArray()));

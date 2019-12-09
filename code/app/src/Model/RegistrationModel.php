@@ -6,9 +6,10 @@ namespace Gustav\App\Model;
 
 use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
-use Gustav\Common\Model\FlatBuffers\FlatBuffersInterface;
+use Gustav\Common\Model\FlatBuffers\FlatBuffersSerializable;
 
 use Gustav\Common\Model\ModelInterface;
+use Gustav\Common\Model\Primitive\PrimitiveSerializable;
 use Gustav\DX\Registration as Registration;
 
 /**
@@ -16,7 +17,7 @@ use Gustav\DX\Registration as Registration;
  * Class RegistrationModel
  * @package Gustav\App\Model
  */
-class RegistrationModel implements FlatBuffersInterface, ModelInterface
+class RegistrationModel implements FlatBuffersSerializable, PrimitiveSerializable, ModelInterface
 {
     private $userId;
 
@@ -27,9 +28,9 @@ class RegistrationModel implements FlatBuffersInterface, ModelInterface
     /**
      * @param int $version
      * @param ByteBuffer $buffer
-     * @return FlatBuffersInterface
+     * @return FlatBuffersSerializable
      */
-    public static function deserialize(int $version, ByteBuffer $buffer): FlatBuffersInterface
+    public static function deserializeFlatBuffers(int $version, ByteBuffer $buffer): FlatBuffersSerializable
     {
         $registration = Registration::getRootAsRegistration($buffer);
 
@@ -38,6 +39,17 @@ class RegistrationModel implements FlatBuffersInterface, ModelInterface
             (int)$registration->getOpenId(),
             $registration->getCampaignCode()
         );
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public static function deserializePrimitive(int $version, array $primitives): PrimitiveSerializable
+    {
+        $self = new static();
+        list($self->userId, $self->openId, $self->campaignCode) = $primitives;
+        return $self;
     }
 
     /**
@@ -57,7 +69,7 @@ class RegistrationModel implements FlatBuffersInterface, ModelInterface
      * @param FlatbufferBuilder $builder
      * @return int
      */
-    public function serialize(FlatbufferBuilder &$builder): int
+    public function serializeFlatBuffers(FlatbufferBuilder &$builder): int
     {
         $campaignCode = $builder->createString($this->campaignCode);
         Registration::startRegistration($builder);
@@ -67,6 +79,13 @@ class RegistrationModel implements FlatBuffersInterface, ModelInterface
         return Registration::endRegistration($builder);
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function serializePrimitive(): array
+    {
+        return [$this->userId, $this->openId, $this->campaignCode];
+    }
     /**
      * @return int
      */
