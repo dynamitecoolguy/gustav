@@ -1,0 +1,11 @@
+namespace Gustav.DX;
+
+/// ユーザ登録(Input/Output)
+table Identification {
+  user_id: int;           // (Input/Output) ユーザID
+  open_id: string;        // (Output)       公開用ID
+  campaign_code: string;  // (Input/Output) キャンペーンコード
+}
+
+root_type Identification;
+

@@ -10,14 +10,14 @@ use Gustav\Common\Model\FlatBuffers\FlatBuffersSerializable;
 
 use Gustav\Common\Model\ModelInterface;
 use Gustav\Common\Model\Primitive\PrimitiveSerializable;
-use Gustav\DX\Registration as Registration;
+use Gustav\DX\Identification;
 
 /**
  * 登録
- * Class RegistrationModel
+ * Class IdentificationModel
  * @package Gustav\App\Model
  */
-class RegistrationModel implements FlatBuffersSerializable, PrimitiveSerializable, ModelInterface
+class IdentificationModel implements FlatBuffersSerializable, PrimitiveSerializable, ModelInterface
 {
     /** @var int 内部用ユーザID */
     private $userId;
@@ -35,12 +35,12 @@ class RegistrationModel implements FlatBuffersSerializable, PrimitiveSerializabl
      */
     public static function deserializeFlatBuffers(int $version, ByteBuffer $buffer): FlatBuffersSerializable
     {
-        $registration = Registration::getRootAsRegistration($buffer);
+        $identification = Identification::getRootAsIdentification($buffer);
 
-        return new RegistrationModel(
-            $registration->getUserId(),
-            $registration->getOpenId(),
-            $registration->getCampaignCode()
+        return new IdentificationModel(
+            $identification->getUserId(),
+            $identification->getOpenId(),
+            $identification->getCampaignCode()
         );
     }
 
@@ -56,7 +56,7 @@ class RegistrationModel implements FlatBuffersSerializable, PrimitiveSerializabl
     }
 
     /**
-     * RegistrationModel constructor.
+     * IdentificationModel constructor.
      * @param int $userId
      * @param string $openId
      * @param string $campaignCode
@@ -76,11 +76,11 @@ class RegistrationModel implements FlatBuffersSerializable, PrimitiveSerializabl
     {
         $campaignCode = $builder->createString($this->campaignCode);
         $openId = $builder->createString($this->openId);
-        Registration::startRegistration($builder);
-        Registration::addUserId($builder, $this->userId);
-        Registration::addOpenId($builder, $openId);
-        Registration::addCampaignCode($builder, $campaignCode);
-        return Registration::endRegistration($builder);
+        Identification::startIdentification($builder);
+        Identification::addUserId($builder, $this->userId);
+        Identification::addOpenId($builder, $openId);
+        Identification::addCampaignCode($builder, $campaignCode);
+        return Identification::endIdentification($builder);
     }
 
     /**

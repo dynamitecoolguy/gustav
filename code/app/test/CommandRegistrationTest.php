@@ -5,7 +5,7 @@ namespace Gustav\App;
 
 use Composer\Autoload\ClassLoader;
 use DI\Container;
-use Gustav\App\Model\RegistrationModel;
+use Gustav\App\Model\IdentificationModel;
 use Gustav\Common\Config\ApplicationConfig;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\ModelInterface;
@@ -68,7 +68,7 @@ class CommandRegistrationTest extends TestCase
      */
     public function registration(): void
     {
-        $request = new RegistrationModel(0, 0, 'hogehoge');
+        $request = new IdentificationModel(0, 0, 'hogehoge');
         $result = self::$dispatcher->dispatch(1, self::$container, $request);
 
         $this->assertTrue(true);

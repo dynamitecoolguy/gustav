@@ -5,16 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="42a86106-9ee1-482e-8a8e-7d4cde83786b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/code/common/src/Adapter/MySQLMasterInterface.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/common/src/Exception/DatabaseException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/flatbuffers/idl/transfer_code.fbs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/flatbuffers/php/Gustav/DX/TransferCode.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.phpunit.result.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.phpunit.result.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/AppDispatcher.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/AppDispatcher.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/app/src/Logic/AbstractExecutor.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Logic/AbstractExecutor.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/Logic/RegistrationExecutor.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Logic/RegistrationExecutor.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Adapter/MySQLAdapter.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Adapter/MySQLAdapter.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/BaseContainerBuilder.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/BaseContainerBuilder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/test/BaseContainerBuilderTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/BaseContainerBuilderTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compose/web_app/settings-local.yml" beforeDir="false" afterPath="$PROJECT_DIR$/compose/web_app/settings-local.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/Logic/RegistrationExecutor.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Logic/UserRegistration.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/Model/RegistrationModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Model/IdentificationModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/test/AppDispatcherTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/test/AppDispatcherTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/test/CommandRegistrationTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/test/CommandRegistrationTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/test/Model/RegistrationModelTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/test/Model/IdentificationModelTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/flatbuffers/idl/registration.fbs" beforeDir="false" afterPath="$PROJECT_DIR$/code/flatbuffers/idl/identification.fbs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/flatbuffers/php/Gustav/DX/Registration.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/flatbuffers/php/Gustav/DX/Identification.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compose/mysql/init.d/01createtable.sql" beforeDir="false" afterPath="$PROJECT_DIR$/compose/mysql/init.d/01createtable.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -157,7 +161,7 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
     <property name="settings.editor.splitter.proportion" value="0.28125" />
   </component>
   <component name="RecentsManager">
@@ -259,7 +263,7 @@
       <workItem from="1575851800648" duration="10535000" />
       <workItem from="1575868532749" duration="11300000" />
       <workItem from="1575937315581" duration="8917000" />
-      <workItem from="1575949160152" duration="7688000" />
+      <workItem from="1575949160152" duration="12553000" />
     </task>
     <task id="LOCAL-00001" summary="* http://mgr.localhost/phpinfo.phpが表示できるところまで&#10;* [BUG] https://mgr.localhostがPR_END_OF_FILEエラーになる">
       <created>1573204290729</created>
@@ -520,7 +524,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575944237723</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="MySQLのmaster/slaveに対応。&#10;DB関連の便利メソッドの追加">
+      <created>1575961784049</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1575961784049</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -541,7 +552,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="RELOAD_CONTEXT" value="false" />
-    <MESSAGE value="fluent/loggerのcomposerへの追加" />
     <MESSAGE value="fluentd loggerの追加&#10;Gustav/Common/DataをGustav/Common/Operationに変更&#10;Time::now()の追加" />
     <MESSAGE value="M系列処理を追加" />
     <MESSAGE value="sqsインターフェースを追加&#10;dynamodbのDockerfileを追加 (将来的にカスタマイズできるように)&#10;Configでデフォルト値を指定可能なように変更" />
@@ -566,7 +576,8 @@
     <MESSAGE value="serializerを設定可能項目に" />
     <MESSAGE value="composer update" />
     <MESSAGE value="openid取得処理の追加" />
-    <option name="LAST_COMMIT_MESSAGE" value="openid取得処理の追加" />
+    <MESSAGE value="MySQLのmaster/slaveに対応。&#10;DB関連の便利メソッドの追加" />
+    <option name="LAST_COMMIT_MESSAGE" value="MySQLのmaster/slaveに対応。&#10;DB関連の便利メソッドの追加" />
   </component>
   <component name="WindowStateProjectService">
     <state x="580" y="166" width="800" height="677" key="#Project_Structure" timestamp="1575249622191">
@@ -593,10 +604,10 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="668" y="225" width="624" height="562" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/51.27.1869.958@51.27.1869.958" timestamp="1575851779722" />
-    <state x="609" y="27" width="734" height="958" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1575943913357">
+    <state x="609" y="27" width="734" height="958" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1575963504223">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="609" y="27" width="734" height="958" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/51.27.1869.958@51.27.1869.958" timestamp="1575943913357" />
+    <state x="609" y="27" width="734" height="958" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/51.27.1869.958@51.27.1869.958" timestamp="1575963504223" />
     <state x="718" y="251" width="524" height="508" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1575250669942">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -613,10 +624,10 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="716" y="331" width="528" height="348" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/51.27.1869.958@51.27.1869.958" timestamp="1575617978266" />
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1575944237552">
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1575961783840">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1575944237552" />
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1575961783840" />
     <state x="151" y="125" width="1669" height="760" key="DiffContextDialog" timestamp="1575858633724">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -677,14 +688,14 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog/51.27.1869.958@51.27.1869.958" timestamp="1575959692320" />
-    <state x="598" y="139" key="SettingsEditor" timestamp="1575014205656">
+    <state x="598" y="139" key="SettingsEditor" timestamp="1575968586771">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="598" y="139" key="SettingsEditor/51.27.1869.958@51.27.1869.958" timestamp="1575014205656" />
-    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1575944241497">
+    <state x="598" y="139" key="SettingsEditor/51.27.1869.958@51.27.1869.958" timestamp="1575968586771" />
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1575961791503">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1575944241497" />
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1575961791503" />
     <state x="772" y="242" width="416" height="526" key="VcsDiffUtil.ChangesDialog" timestamp="1575362718686">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -749,18 +760,18 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="151" y="125" width="1669" height="760" key="dock-window-9/51.27.1869.958@51.27.1869.958" timestamp="1575868493214" />
-    <state x="610" y="187" width="914" height="724" key="find.popup" timestamp="1575961466408">
+    <state x="610" y="187" width="914" height="724" key="find.popup" timestamp="1575963529163">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="610" y="187" width="914" height="724" key="find.popup/51.27.1869.958@51.27.1869.958" timestamp="1575961466408" />
+    <state x="610" y="187" width="914" height="724" key="find.popup/51.27.1869.958@51.27.1869.958" timestamp="1575963529163" />
     <state x="732" y="282" key="git4idea.merge.GitMergeDialog" timestamp="1575362728329">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="732" y="282" key="git4idea.merge.GitMergeDialog/51.27.1869.958@51.27.1869.958" timestamp="1575362728329" />
-    <state x="649" y="228" key="run.anything.popup" timestamp="1575858209861">
+    <state x="649" y="228" key="run.anything.popup" timestamp="1575963400717">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="649" y="228" key="run.anything.popup/51.27.1869.958@51.27.1869.958" timestamp="1575858209861" />
+    <state x="649" y="228" key="run.anything.popup/51.27.1869.958@51.27.1869.958" timestamp="1575963400717" />
     <state x="648" y="234" width="672" height="678" key="search.everywhere.popup" timestamp="1575956740174">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -780,7 +791,7 @@
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/code/app/src/Logic/RegistrationExecutor.php</url>
+          <url>file://$PROJECT_DIR$/code/app/src/Logic/UserRegistration.php</url>
           <line>29</line>
           <option name="timeStamp" value="36" />
         </line-breakpoint>

@@ -1,0 +1,11 @@
+namespace Gustav.DX;
+
+/// データ移管
+table TransferCode {
+  user_id: int;           // (Input/Output)  ユーザID
+  transfer_code: string;  // (Output)        移管コード
+  password: string;       // (Input)         パスワード
+}
+
+root_type TransferCode;
+

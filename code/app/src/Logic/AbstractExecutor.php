@@ -4,9 +4,8 @@
 namespace Gustav\App\Logic;
 
 use DI\Container;
-use DI\DependencyException;
-use DI\NotFoundException;
 use Gustav\Common\Adapter\MySQLAdapter;
+use Gustav\Common\Adapter\MySQLInterface;
 use Gustav\Common\Adapter\MySQLMasterInterface;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Logic\ExecutorInterface;

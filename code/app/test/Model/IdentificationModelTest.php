@@ -11,7 +11,7 @@ use Gustav\Common\Model\Primitive\JsonSerializer;
 use Gustav\Common\Model\Primitive\MessagePackSerializer;
 use PHPUnit\Framework\TestCase;
 
-class RegistrationModelTest extends TestCase
+class IdentificationModelTest extends TestCase
 {
     /**
      * @beforeClass
@@ -28,8 +28,8 @@ class RegistrationModelTest extends TestCase
      */
     private function encodeAndDecodeBody(ModelSerializerInterface $serializer)
     {
-        $register1 = new RegistrationModel(1, '101', '');
-        $register2 = new RegistrationModel(2, '102', 'hoge');
+        $register1 = new IdentificationModel(1, '101', '');
+        $register2 = new IdentificationModel(2, '102', 'hoge');
 
         $stream = $serializer->serialize([
             [1, 'req1', $register1],
@@ -74,7 +74,7 @@ class RegistrationModelTest extends TestCase
      */
     public function getterAndSetter()
     {
-        $r = new RegistrationModel(3, 103, '333');
+        $r = new IdentificationModel(3, 103, '333');
 
         $r->setUserId(4);
         $r->setOpenId('104');

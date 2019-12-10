@@ -4,8 +4,8 @@
 namespace Gustav\App;
 
 use Gustav\Common\BaseDispatcher;
-use Gustav\App\Logic\RegistrationExecutor;
-use Gustav\App\Model\RegistrationModel;
+use Gustav\App\Logic\UserRegistration;
+use Gustav\App\Model\IdentificationModel;
 
 class AppDispatcher extends BaseDispatcher
 {
@@ -16,7 +16,7 @@ class AppDispatcher extends BaseDispatcher
     protected static function getModelAndExecutor(): array
     {
         return [
-            ['REG', RegistrationModel::class, RegistrationExecutor::class]
+            ['REG', IdentificationModel::class, UserRegistration::class]
         ];
     }
 }

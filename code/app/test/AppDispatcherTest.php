@@ -3,8 +3,8 @@
 
 namespace Gustav\App;
 
-use Gustav\App\Logic\RegistrationExecutor;
-use Gustav\App\Model\RegistrationModel;
+use Gustav\App\Logic\UserRegistration;
+use Gustav\App\Model\IdentificationModel;
 use PHPUnit\Framework\TestCase;
 
 class AppDispatcherTest extends TestCase
@@ -19,6 +19,6 @@ class AppDispatcherTest extends TestCase
 
         $dispatchTable = $dispatcher->getDispatchTable();
 
-        $this->assertEquals(RegistrationExecutor::class, $dispatchTable[RegistrationModel::class]);
+        $this->assertEquals(UserRegistration::class, $dispatchTable[IdentificationModel::class]);
     }
 }

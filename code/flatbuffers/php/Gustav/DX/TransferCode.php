@@ -8,23 +8,23 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// ユーザ登録(Input/Output)
-class Registration extends Table
+/// データ移管
+class TransferCode extends Table
 {
     /**
      * @param ByteBuffer $bb
-     * @return Registration
+     * @return TransferCode
      */
-    public static function getRootAsRegistration(ByteBuffer $bb)
+    public static function getRootAsTransferCode(ByteBuffer $bb)
     {
-        $obj = new Registration();
+        $obj = new TransferCode();
         return ($obj->init($bb->getInt($bb->getPosition()) + $bb->getPosition(), $bb));
     }
 
     /**
      * @param int $_i offset
      * @param ByteBuffer $_bb
-     * @return Registration
+     * @return TransferCode
      **/
     public function init($_i, ByteBuffer $_bb)
     {
@@ -42,13 +42,13 @@ class Registration extends Table
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
-    public function getOpenId()
+    public function getTransferCode()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getCampaignCode()
+    public function getPassword()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
@@ -58,21 +58,21 @@ class Registration extends Table
      * @param FlatBufferBuilder $builder
      * @return void
      */
-    public static function startRegistration(FlatBufferBuilder $builder)
+    public static function startTransferCode(FlatBufferBuilder $builder)
     {
         $builder->StartObject(3);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @return Registration
+     * @return TransferCode
      */
-    public static function createRegistration(FlatBufferBuilder $builder, $user_id, $open_id, $campaign_code)
+    public static function createTransferCode(FlatBufferBuilder $builder, $user_id, $transfer_code, $password)
     {
         $builder->startObject(3);
         self::addUserId($builder, $user_id);
-        self::addOpenId($builder, $open_id);
-        self::addCampaignCode($builder, $campaign_code);
+        self::addTransferCode($builder, $transfer_code);
+        self::addPassword($builder, $password);
         $o = $builder->endObject();
         return $o;
     }
@@ -92,9 +92,9 @@ class Registration extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addOpenId(FlatBufferBuilder $builder, $openId)
+    public static function addTransferCode(FlatBufferBuilder $builder, $transferCode)
     {
-        $builder->addOffsetX(1, $openId, 0);
+        $builder->addOffsetX(1, $transferCode, 0);
     }
 
     /**
@@ -102,22 +102,22 @@ class Registration extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addCampaignCode(FlatBufferBuilder $builder, $campaignCode)
+    public static function addPassword(FlatBufferBuilder $builder, $password)
     {
-        $builder->addOffsetX(2, $campaignCode, 0);
+        $builder->addOffsetX(2, $password, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return int table offset
      */
-    public static function endRegistration(FlatBufferBuilder $builder)
+    public static function endTransferCode(FlatBufferBuilder $builder)
     {
         $o = $builder->endObject();
         return $o;
     }
 
-    public static function finishRegistrationBuffer(FlatBufferBuilder $builder, $offset)
+    public static function finishTransferCodeBuffer(FlatBufferBuilder $builder, $offset)
     {
         $builder->finish($offset);
     }
