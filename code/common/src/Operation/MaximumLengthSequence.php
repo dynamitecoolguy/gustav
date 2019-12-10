@@ -80,7 +80,7 @@ class MaximumLengthSequence
      */
     public function __construct(int $index, int $presetIndex = -1, int $presetValue = -1)
     {
-        if ($presetIndex === -1 || $presetValue === -1) {
+        if ($presetIndex === -1 || $presetValue === -1 || $presetIndex > $index) {
             $this->pPos = 0;
             $this->qPos = self::$p - self::$q;
             $this->sequence = self::$initValue;

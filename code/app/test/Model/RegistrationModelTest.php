@@ -28,8 +28,8 @@ class RegistrationModelTest extends TestCase
      */
     private function encodeAndDecodeBody(ModelSerializerInterface $serializer)
     {
-        $register1 = new RegistrationModel(1, 101, '');
-        $register2 = new RegistrationModel(2, 102, 'hoge');
+        $register1 = new RegistrationModel(1, '101', '');
+        $register2 = new RegistrationModel(2, '102', 'hoge');
 
         $stream = $serializer->serialize([
             [1, 'req1', $register1],
@@ -39,7 +39,7 @@ class RegistrationModelTest extends TestCase
         $result = $serializer->deserialize($stream);
 
         $this->assertEquals(1, $result[0][2]->getUserId());
-        $this->assertEquals(102, $result[1][2]->getOpenId());
+        $this->assertEquals('102', $result[1][2]->getOpenId());
         $this->assertEquals('', $result[0][2]->getCampaignCode());
         $this->assertEquals('hoge', $result[1][2]->getCampaignCode());
     }
@@ -77,11 +77,11 @@ class RegistrationModelTest extends TestCase
         $r = new RegistrationModel(3, 103, '333');
 
         $r->setUserId(4);
-        $r->setOpenId(104);
+        $r->setOpenId('104');
         $r->setCampaignCode('444');
 
         $this->assertEquals(4, $r->getUserId());
-        $this->assertEquals(104, $r->getOpenId());
+        $this->assertEquals('104', $r->getOpenId());
         $this->assertEquals('444', $r->getCampaignCode());
     }
 }

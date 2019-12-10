@@ -10,9 +10,11 @@
       <w>hoge</w>
       <w>hogehoge</w>
       <w>igbinary</w>
+      <w>inited</w>
       <w>msgpack</w>
       <w>pgsql</w>
       <w>shasum</w>
+      <w>tetratridecimal</w>
       <w>xmlwriter</w>
     </words>
   </dictionary>

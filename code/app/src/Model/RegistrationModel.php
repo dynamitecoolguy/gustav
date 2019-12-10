@@ -19,10 +19,13 @@ use Gustav\DX\Registration as Registration;
  */
 class RegistrationModel implements FlatBuffersSerializable, PrimitiveSerializable, ModelInterface
 {
+    /** @var int 内部用ユーザID */
     private $userId;
 
+    /** @var string 公開用ID */
     private $openId;
 
+    /** @var string キャンペーンコード */
     private $campaignCode;
 
     /**
@@ -36,7 +39,7 @@ class RegistrationModel implements FlatBuffersSerializable, PrimitiveSerializabl
 
         return new RegistrationModel(
             $registration->getUserId(),
-            (int)$registration->getOpenId(),
+            $registration->getOpenId(),
             $registration->getCampaignCode()
         );
     }
@@ -55,10 +58,10 @@ class RegistrationModel implements FlatBuffersSerializable, PrimitiveSerializabl
     /**
      * RegistrationModel constructor.
      * @param int $userId
-     * @param int $openId
+     * @param string $openId
      * @param string $campaignCode
      */
-    public function __construct(int $userId = 0, int $openId = 0, string $campaignCode = '')
+    public function __construct(int $userId = 0, string $openId = '', string $campaignCode = '')
     {
         $this->userId = $userId;
         $this->openId = $openId;
@@ -72,9 +75,10 @@ class RegistrationModel implements FlatBuffersSerializable, PrimitiveSerializabl
     public function serializeFlatBuffers(FlatbufferBuilder &$builder): int
     {
         $campaignCode = $builder->createString($this->campaignCode);
+        $openId = $builder->createString($this->openId);
         Registration::startRegistration($builder);
         Registration::addUserId($builder, $this->userId);
-        Registration::addOpenId($builder, $this->openId);
+        Registration::addOpenId($builder, $openId);
         Registration::addCampaignCode($builder, $campaignCode);
         return Registration::endRegistration($builder);
     }
@@ -103,17 +107,17 @@ class RegistrationModel implements FlatBuffersSerializable, PrimitiveSerializabl
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getOpenId(): int
+    public function getOpenId(): string
     {
         return $this->openId;
     }
 
     /**
-     * @param int $openId
+     * @param string $openId
      */
-    public function setOpenId(int $openId): void
+    public function setOpenId(string $openId): void
     {
         $this->openId = $openId;
     }

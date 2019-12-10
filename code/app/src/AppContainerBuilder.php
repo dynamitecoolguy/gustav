@@ -4,6 +4,10 @@
 namespace Gustav\App;
 
 
+use DI\Container;
+use Gustav\App\Operation\RedisKeys;
+use Gustav\Common\Adapter\RedisAdapter;
+use Gustav\Common\Adapter\RedisInterface;
 use Gustav\Common\BaseContainerBuilder;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\DispatcherInterface;
@@ -21,10 +25,14 @@ class AppContainerBuilder extends BaseContainerBuilder
      */
     protected function getDefinitions(ApplicationConfigInterface $config): array
     {
-        $definitions = parent::getDefinitions($config);
-        $definitions[DispatcherInterface::class] = function (): DispatcherInterface {
-            return new AppDispatcher();
-        };
-        return $definitions;
+        return array_merge(
+            parent::getDefinitions($config),
+            [
+                // Dispatcherをapp側のものに上書き
+                DispatcherInterface::class => function (): DispatcherInterface {
+                    return new AppDispatcher();
+                }
+            ]
+        );
     }
 }

@@ -42,13 +42,10 @@ class Registration extends Table
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
-    /**
-     * @return long
-     */
     public function getOpenId()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     public function getCampaignCode()
@@ -92,12 +89,12 @@ class Registration extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param long
+     * @param StringOffset
      * @return void
      */
     public static function addOpenId(FlatBufferBuilder $builder, $openId)
     {
-        $builder->addLongX(1, $openId, 0);
+        $builder->addOffsetX(1, $openId, 0);
     }
 
     /**
