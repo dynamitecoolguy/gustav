@@ -7,7 +7,9 @@ use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Gustav\Common\Adapter\DynamoDbInterface;
+use Gustav\Common\Adapter\MySQLAdapter;
 use Gustav\Common\Adapter\MySQLInterface;
+use Gustav\Common\Adapter\MySQLMasterInterface;
 use Gustav\Common\Adapter\PgSQLInterface;
 use Gustav\Common\Adapter\RedisInterface;
 use Gustav\Common\Adapter\S3Interface;
@@ -34,6 +36,7 @@ class BaseContainerBuilderTest extends TestCase
         $fd = fopen(self::$tempFilePath, 'w');
         fwrite($fd, <<<'__EOF__'
 mysql:
+  hostm: localhost:13306
   host: localhost:13306
   dbname: userdb
   user: scott
@@ -114,12 +117,18 @@ __EOF__
     {
         $container = $this->getContainer();
         $mysqli = $container->get(MySQLInterface::class);
+        $this->assertInstanceOf(MySQLAdapter::class, $mysqli);
         $pdo = $mysqli->getPDO();
+        $this->assertFalse($mysqli->forMaster());
 
         $statement = $pdo->query('SELECT 1');
         $row = $statement->fetch();
 
         $this->assertEquals(1, $row[1]);
+
+        $masterMysqli = $container->get(MySQLMasterInterface::class);
+        $this->assertInstanceOf(MySQLAdapter::class, $masterMysqli);
+        $this->assertTrue($masterMysqli->forMaster());
     }
 
     /**

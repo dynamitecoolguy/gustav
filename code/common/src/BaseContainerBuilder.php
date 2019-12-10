@@ -7,6 +7,7 @@ use Gustav\Common\Adapter\DynamoDbAdapter;
 use Gustav\Common\Adapter\DynamoDbInterface;
 use Gustav\Common\Adapter\MySQLAdapter;
 use Gustav\Common\Adapter\MySQLInterface;
+use Gustav\Common\Adapter\MySQLMasterInterface;
 use Gustav\Common\Adapter\PgSQLAdapter;
 use Gustav\Common\Adapter\PgSQLInterface;
 use Gustav\Common\Adapter\RedisAdapter;
@@ -65,7 +66,8 @@ class BaseContainerBuilder extends ContainerBuilder
     {
         return [
             ApplicationConfigInterface::class  => $config,
-            MySQLInterface::class => $this->getMySQLFunction(),
+            MySQLInterface::class => $this->getMySQLFunction(false),
+            MySQLMasterInterface::class => $this->getMySQLFunction(true),
             PgSQLInterface::class => $this->getPgSQLFunction(),
             RedisInterface::class => $this->getRedisFunction(),
             DynamoDbInterface::class => $this->getDynamoDbFunction(),
@@ -80,13 +82,15 @@ class BaseContainerBuilder extends ContainerBuilder
 
     /**
      * PDO(MySQL)を取得するためのFunction
+     * @param bool $forMaster
      * @return callable
      */
-    protected function getMySQLFunction(): callable
+    protected function getMySQLFunction(bool $forMaster): callable
     {
-        return function (ApplicationConfigInterface $config): MySQLInterface
+        return function (ApplicationConfigInterface $config) use ($forMaster): MySQLInterface
         {
-            list($host, $port) = $this->resolveHostAndPort($config->getValue('mysql', 'host'));
+            $hostKey = $forMaster ? 'hostm' : 'host';
+            list($host, $port) = $this->resolveHostAndPort($config->getValue('mysql', $hostKey));
             $dsn = 'mysql:host=' . $host . ';dbname=' . $config->getValue('mysql', 'dbname');
             if ($port !== false) {
                 $dsn .= ';port=' . $port;
@@ -102,7 +106,8 @@ class BaseContainerBuilder extends ContainerBuilder
                     $config->getValue('mysql', 'user'),
                     $config->getValue('mysql', 'password'),
                     $options
-                )
+                ),
+                $forMaster
             );
         };
     }

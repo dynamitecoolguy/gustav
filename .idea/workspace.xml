@@ -5,19 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="42a86106-9ee1-482e-8a8e-7d4cde83786b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/code/app/test/CommandRegistrationTest.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/app/test/LocalConfigLoader.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/common/src/Exception/NobodyExpectedException.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/gustav.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/gustav.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/common/src/Adapter/MySQLMasterInterface.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/common/src/Exception/DatabaseException.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.phpunit.result.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.phpunit.result.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/AppContainerBuilder.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/AppContainerBuilder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/Model/RegistrationModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Model/RegistrationModel.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/test/Model/RegistrationModelTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/test/Model/RegistrationModelTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Adapter/RedisAdapter.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Adapter/RedisAdapter.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Operation/MaximumLengthSequence.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Operation/MaximumLengthSequence.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/flatbuffers/idl/registration.fbs" beforeDir="false" afterPath="$PROJECT_DIR$/code/flatbuffers/idl/registration.fbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/flatbuffers/php/Gustav/DX/Registration.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/flatbuffers/php/Gustav/DX/Registration.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/Logic/AbstractExecutor.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Logic/AbstractExecutor.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/Logic/RegistrationExecutor.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Logic/RegistrationExecutor.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/src/Adapter/MySQLAdapter.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Adapter/MySQLAdapter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/src/BaseContainerBuilder.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/BaseContainerBuilder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/common/test/BaseContainerBuilderTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/test/BaseContainerBuilderTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compose/web_app/settings-local.yml" beforeDir="false" afterPath="$PROJECT_DIR$/compose/web_app/settings-local.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -153,7 +150,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="ToolWindowCoverage.ShowToolbar" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/code/common/test/Model/Primitive" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/code/common/src/Adapter" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="php.override.implement.member.chooser.php.doc" value="NONE" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -164,19 +161,19 @@
     <property name="settings.editor.splitter.proportion" value="0.28125" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/code/common/test/Model/Primitive" />
-      <recent name="$PROJECT_DIR$/code/common/src/Model/Primitive" />
-      <recent name="$PROJECT_DIR$/code/common/src" />
-      <recent name="$PROJECT_DIR$/code/app/src" />
-      <recent name="$PROJECT_DIR$/code/common/src/Model" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/code/app/src" />
       <recent name="$PROJECT_DIR$/code/common/test/Model" />
       <recent name="$PROJECT_DIR$/code/common/src/Model/Primitive" />
       <recent name="$PROJECT_DIR$/code/common/test/Model/FlatBuffers" />
       <recent name="$PROJECT_DIR$/code/common/src/Model/FlatBuffers" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/code/common/src/Adapter" />
+      <recent name="$PROJECT_DIR$/code/common/test/Model/Primitive" />
+      <recent name="$PROJECT_DIR$/code/common/src/Model/Primitive" />
+      <recent name="$PROJECT_DIR$/code/common/src" />
+      <recent name="$PROJECT_DIR$/code/app/src" />
     </key>
   </component>
   <component name="RunManager" selected="PHPUnit.phpunit">
@@ -261,7 +258,8 @@
       <workItem from="1575851768976" duration="15000" />
       <workItem from="1575851800648" duration="10535000" />
       <workItem from="1575868532749" duration="11300000" />
-      <workItem from="1575937315581" duration="5638000" />
+      <workItem from="1575937315581" duration="8917000" />
+      <workItem from="1575949160152" duration="7688000" />
     </task>
     <task id="LOCAL-00001" summary="* http://mgr.localhost/phpinfo.phpが表示できるところまで&#10;* [BUG] https://mgr.localhostがPR_END_OF_FILEエラーになる">
       <created>1573204290729</created>
@@ -515,7 +513,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575862425088</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="openid取得処理の追加">
+      <created>1575944237723</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1575944237723</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -536,7 +541,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="RELOAD_CONTEXT" value="false" />
-    <MESSAGE value="Binaryの暗号復号クラスの追加" />
     <MESSAGE value="fluent/loggerのcomposerへの追加" />
     <MESSAGE value="fluentd loggerの追加&#10;Gustav/Common/DataをGustav/Common/Operationに変更&#10;Time::now()の追加" />
     <MESSAGE value="M系列処理を追加" />
@@ -561,7 +565,8 @@
     <MESSAGE value="モデル化にjson/msgpackを追加" />
     <MESSAGE value="serializerを設定可能項目に" />
     <MESSAGE value="composer update" />
-    <option name="LAST_COMMIT_MESSAGE" value="composer update" />
+    <MESSAGE value="openid取得処理の追加" />
+    <option name="LAST_COMMIT_MESSAGE" value="openid取得処理の追加" />
   </component>
   <component name="WindowStateProjectService">
     <state x="580" y="166" width="800" height="677" key="#Project_Structure" timestamp="1575249622191">
@@ -608,10 +613,10 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="716" y="331" width="528" height="348" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/51.27.1869.958@51.27.1869.958" timestamp="1575617978266" />
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1575862424447">
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1575944237552">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1575862424447" />
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1575944237552" />
     <state x="151" y="125" width="1669" height="760" key="DiffContextDialog" timestamp="1575858633724">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -620,38 +625,38 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="763" y="262" width="424" height="484" key="FileChooserDialogImpl/51.27.1869.958@51.27.1869.958" timestamp="1575252175535" />
-    <state width="1811" height="241" key="GridCell.Tab.0.bottom" timestamp="1575944156360">
+    <state width="1811" height="241" key="GridCell.Tab.0.bottom" timestamp="1575961732820">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575944156360" />
-    <state width="1811" height="241" key="GridCell.Tab.0.center" timestamp="1575944156355">
+    <state width="1811" height="241" key="GridCell.Tab.0.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575961732820" />
+    <state width="1811" height="241" key="GridCell.Tab.0.center" timestamp="1575961732819">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.center/51.27.1869.958@51.27.1869.958" timestamp="1575944156355" />
-    <state width="1811" height="241" key="GridCell.Tab.0.left" timestamp="1575944156354">
+    <state width="1811" height="241" key="GridCell.Tab.0.center/51.27.1869.958@51.27.1869.958" timestamp="1575961732819" />
+    <state width="1811" height="241" key="GridCell.Tab.0.left" timestamp="1575961732818">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.left/51.27.1869.958@51.27.1869.958" timestamp="1575944156354" />
-    <state width="1811" height="241" key="GridCell.Tab.0.right" timestamp="1575944156356">
+    <state width="1811" height="241" key="GridCell.Tab.0.left/51.27.1869.958@51.27.1869.958" timestamp="1575961732818" />
+    <state width="1811" height="241" key="GridCell.Tab.0.right" timestamp="1575961732819">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.right/51.27.1869.958@51.27.1869.958" timestamp="1575944156356" />
-    <state width="1811" height="278" key="GridCell.Tab.1.bottom" timestamp="1575943571072">
+    <state width="1811" height="241" key="GridCell.Tab.0.right/51.27.1869.958@51.27.1869.958" timestamp="1575961732819" />
+    <state width="1811" height="278" key="GridCell.Tab.1.bottom" timestamp="1575961535583">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="278" key="GridCell.Tab.1.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575943571072" />
-    <state width="1811" height="278" key="GridCell.Tab.1.center" timestamp="1575943571072">
+    <state width="1811" height="278" key="GridCell.Tab.1.bottom/51.27.1869.958@51.27.1869.958" timestamp="1575961535583" />
+    <state width="1811" height="278" key="GridCell.Tab.1.center" timestamp="1575961535582">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="278" key="GridCell.Tab.1.center/51.27.1869.958@51.27.1869.958" timestamp="1575943571072" />
-    <state width="1811" height="278" key="GridCell.Tab.1.left" timestamp="1575943571072">
+    <state width="1811" height="278" key="GridCell.Tab.1.center/51.27.1869.958@51.27.1869.958" timestamp="1575961535582" />
+    <state width="1811" height="278" key="GridCell.Tab.1.left" timestamp="1575961535581">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="278" key="GridCell.Tab.1.left/51.27.1869.958@51.27.1869.958" timestamp="1575943571072" />
-    <state width="1811" height="278" key="GridCell.Tab.1.right" timestamp="1575943571072">
+    <state width="1811" height="278" key="GridCell.Tab.1.left/51.27.1869.958@51.27.1869.958" timestamp="1575961535581" />
+    <state width="1811" height="278" key="GridCell.Tab.1.right" timestamp="1575961535583">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="278" key="GridCell.Tab.1.right/51.27.1869.958@51.27.1869.958" timestamp="1575943571072" />
+    <state width="1811" height="278" key="GridCell.Tab.1.right/51.27.1869.958@51.27.1869.958" timestamp="1575961535583" />
     <state width="1811" height="278" key="GridCell.Tab.2.bottom" timestamp="1575344300189">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -668,18 +673,18 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state width="1811" height="278" key="GridCell.Tab.2.right/51.27.1869.958@51.27.1869.958" timestamp="1575344300189" />
-    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog" timestamp="1575941564117">
+    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog" timestamp="1575959692320">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog/51.27.1869.958@51.27.1869.958" timestamp="1575941564117" />
+    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog/51.27.1869.958@51.27.1869.958" timestamp="1575959692320" />
     <state x="598" y="139" key="SettingsEditor" timestamp="1575014205656">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="598" y="139" key="SettingsEditor/51.27.1869.958@51.27.1869.958" timestamp="1575014205656" />
-    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1575944206983">
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1575944241497">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1575944206983" />
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1575944241497" />
     <state x="772" y="242" width="416" height="526" key="VcsDiffUtil.ChangesDialog" timestamp="1575362718686">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -744,10 +749,10 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="151" y="125" width="1669" height="760" key="dock-window-9/51.27.1869.958@51.27.1869.958" timestamp="1575868493214" />
-    <state x="610" y="187" width="914" height="724" key="find.popup" timestamp="1575938452212">
+    <state x="610" y="187" width="914" height="724" key="find.popup" timestamp="1575961466408">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="610" y="187" width="914" height="724" key="find.popup/51.27.1869.958@51.27.1869.958" timestamp="1575938452212" />
+    <state x="610" y="187" width="914" height="724" key="find.popup/51.27.1869.958@51.27.1869.958" timestamp="1575961466408" />
     <state x="732" y="282" key="git4idea.merge.GitMergeDialog" timestamp="1575362728329">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -756,6 +761,10 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="649" y="228" key="run.anything.popup/51.27.1869.958@51.27.1869.958" timestamp="1575858209861" />
+    <state x="648" y="234" width="672" height="678" key="search.everywhere.popup" timestamp="1575956740174">
+      <screen x="51" y="27" width="1869" height="958" />
+    </state>
+    <state x="648" y="234" width="672" height="678" key="search.everywhere.popup/51.27.1869.958@51.27.1869.958" timestamp="1575956740174" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -771,14 +780,14 @@
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/code/app/test/Operation/OpenIdConverterTest.php</url>
-          <line>51</line>
-          <option name="timeStamp" value="29" />
+          <url>file://$PROJECT_DIR$/code/app/src/Logic/RegistrationExecutor.php</url>
+          <line>29</line>
+          <option name="timeStamp" value="36" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/gustav@phpunit.xml" NAME="phpunit Coverage Results" MODIFIED="1575944148402" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="PhpCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/gustav@phpunit.xml" NAME="phpunit Coverage Results" MODIFIED="1575961679395" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="PhpCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

@@ -3,6 +3,7 @@ app:
 
 mysql:
   host: mysql
+  hostm: mysql
   dbname: userdb
   user: scott
   password: tiger
