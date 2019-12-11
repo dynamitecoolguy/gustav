@@ -6,6 +6,8 @@ namespace Gustav\Common;
 use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Gustav\Common\Exception\FormatException;
+use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelSerializerInterface;
 use Gustav\Common\Operation\BinaryEncryptorInterface;
@@ -22,7 +24,8 @@ class Processor
      * @return string
      * @throws DependencyException
      * @throws NotFoundException
-     * @throws Exception\ModelException
+     * @throws ModelException
+     * @throws FormatException
      */
     public static function process(string $input, Container $container): string
     {

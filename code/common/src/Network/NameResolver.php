@@ -38,7 +38,7 @@ class NameResolver
     }
 
     /**
-     * 内部キャッシュをクリアします
+     * 内部キャッシュをクリアする
      * @param string $name
      */
     public static function flushCache(string $name): void

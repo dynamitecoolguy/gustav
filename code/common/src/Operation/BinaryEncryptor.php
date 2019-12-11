@@ -6,6 +6,11 @@ namespace Gustav\Common\Operation;
 
 use Gustav\Common\Exception\FormatException;
 
+/**
+ * バイナリー列の暗号化/復号化処理
+ * Class BinaryEncryptor
+ * @package Gustav\Common\Operation
+ */
 class BinaryEncryptor implements BinaryEncryptorInterface
 {
     const HASH_ALGORITHM  = 'sha256';
@@ -13,10 +18,7 @@ class BinaryEncryptor implements BinaryEncryptorInterface
     const OPENSSL_CRYPT_ALGORITHM = 'AES-128-CBC';
 
     /**
-     * データを暗号化する
-     *
-     * @param string $raw 元バイナリ
-     * @return string 暗号化
+     * @inheritDoc
      */
     public function encrypt(string $raw): string
     {
@@ -46,10 +48,7 @@ class BinaryEncryptor implements BinaryEncryptorInterface
     }
 
     /**
-     * 復号化
-     * @param string $packed
-     * @return string
-     * @throws FormatException
+     * @inheritDoc
      */
     public function decrypt(string $packed): string
     {
@@ -87,9 +86,10 @@ class BinaryEncryptor implements BinaryEncryptorInterface
     }
 
     /**
-     * @param string $encrypted
-     * @param string $initialVector
-     * @param string $hash
+     * 暗号化されたデータ、初期ベクタ、検証用ハッシュを結合する
+     * @param string $encrypted     暗号化データ
+     * @param string $initialVector 初期ベクタ
+     * @param string $hash          検証用ハッシュ
      * @return string
      */
     protected function pack(string $encrypted, string $initialVector, string $hash): string
@@ -98,6 +98,7 @@ class BinaryEncryptor implements BinaryEncryptorInterface
     }
 
     /**
+     * pack()メソッドで結合された暗号化されたデータ、初期ベクタ、検証用ハッシュを分割する
      * @param string $packed
      * @return array
      * @throws FormatException

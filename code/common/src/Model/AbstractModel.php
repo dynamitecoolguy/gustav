@@ -8,10 +8,30 @@ use ReflectionException;
 use ReflectionObject;
 use ReflectionProperty;
 
+/**
+ * ModelInterfaceを実装するオブジェクトの基底クラス.
+ * setter/getterの自動化を行っている.
+ *
+ * setHoge/getHoge(or isHoge)が呼び出されたときには以下の処理を行う.
+ *   (1) そのメソッドがあれば、それがそのまま呼び出される
+ *   (2) プロパティhogeがあれば、それに対して読み書きする
+ *   (3) ModelExceptionエラーが発生する
+ *
+ * またコンストラクタでは、['key'=>'value', ....]の引数を受け取ることができる.
+ * このときは、以下のような処理になる.
+ *   (1) メソッドsetKeyがあればそれを呼び出す
+ *   (2) プロパティkeyがあれば、それに値をセットする
+ *   (3) ModelExceptionエラーが発生する
+ *
+ * なお、getHoge/setHogeの形式以外にも、get('hoge'), set('hoge', $value)の形式も使用できる.
+ * Class AbstractModel
+ * @package Gustav\Common\Model
+ */
 class AbstractModel implements ModelInterface
 {
     /**
      * AbstractModel constructor.
+     * クラス説明にあるように、$paramsがnullで無い場合には、パラメータのセットが行われる.
      * @param array|null $params
      * @throws ModelException
      */
@@ -26,7 +46,7 @@ class AbstractModel implements ModelInterface
     }
 
     /**
-     * プロパティのセット
+     * constructor用のプロパティのセット
      * 'hoge'に対して、setHogeがあればそれを呼び、なければ、プロパティ'hoge'をセットする。両方なければエラーになる
      * @param ReflectionObject $ref
      * @param string $key
@@ -59,6 +79,7 @@ class AbstractModel implements ModelInterface
 
     /**
      * Magic setter/getter
+     * setHoge/getHoge用のマジックメソッド. クラスの説明参照
      * @param $name
      * @param $arguments
      * @return mixed
@@ -69,12 +90,17 @@ class AbstractModel implements ModelInterface
         $h = $name[0];
         if ($h === 's' && strpos($name, 'set') === 0) {
             $isSetter = true;
+            $property = lcfirst(substr($name, 3));
         } elseif ($h === 'g' && strpos($name, 'get') === 0) {
             $isSetter = false;
+            $property = lcfirst(substr($name, 3));
+        } elseif ($h === 'i' && strpos($name, 'is') === 0) {
+            $isSetter = false;
+            $property = lcfirst(substr($name, 2));
         } else {
+            // setHoge/getHoge以外の形のメソッドはModelExceptionエラーになる
             throw new ModelException("Method ${name} not exists");
         }
-        $property = lcfirst(substr($name, 3));
         $ref = $this->getReflectionProperty($property);
         if ($isSetter) {
             $ref->setValue($this, $arguments[0]);
@@ -85,6 +111,7 @@ class AbstractModel implements ModelInterface
     }
 
     /**
+     * getHogeではなくget('hoge')のように呼び出すことができる
      * @param string $name
      * @return mixed
      * @throws ModelException
@@ -96,6 +123,7 @@ class AbstractModel implements ModelInterface
     }
 
     /**
+     * setHoge($value)ではなくset('hoge', $value)のように呼び出すことができる
      * @param string $name
      * @param $value
      * @throws ModelException
@@ -107,6 +135,7 @@ class AbstractModel implements ModelInterface
     }
 
     /**
+     * ReflectionPropertyを返す内部メソッド
      * @param string $name
      * @return ReflectionProperty
      * @throws ModelException
@@ -122,7 +151,7 @@ class AbstractModel implements ModelInterface
         } catch (ReflectionException $e) {
             throw new ModelException("Property (${name}) could not be accessed", 0, $e);
         }
-        $p->setAccessible(true);
+        $p->setAccessible(true); // public以外書き込みに失敗するので強制書き込み可能にする
         return $p;
     }
 }

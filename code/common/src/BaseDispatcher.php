@@ -12,6 +12,10 @@ use Gustav\Common\Model\ModelInterface;
 use ReflectionClass;
 use ReflectionException;
 
+/**
+ * Class BaseDispatcher
+ * @package Gustav\Common
+ */
 class BaseDispatcher implements DispatcherInterface
 {
     /**

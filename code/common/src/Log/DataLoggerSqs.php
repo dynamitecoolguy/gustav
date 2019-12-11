@@ -6,6 +6,10 @@ namespace Gustav\Common\Log;
 
 use Aws\Sqs\SqsClient;
 
+/**
+ * Class DataLoggerSqs
+ * @package Gustav\Common\Log
+ */
 class DataLoggerSqs implements DataLoggerInterface
 {
     /**

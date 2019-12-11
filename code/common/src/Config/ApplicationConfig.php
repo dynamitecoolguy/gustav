@@ -5,7 +5,8 @@ namespace Gustav\Common\Config;
 use Gustav\Common\Exception\ConfigException;
 
 /**
- * Class BaseApplicationConfig
+ * Config取得用クラス. 一度読み込んだ設定内容はローカルとAPCUにキャッシュされる。APCU側のキャッシュはPARAMETER_TTL秒の間保持される.
+ * Class ApplicationConfig
  * @package Gustav\Common
  */
 class ApplicationConfig implements ApplicationConfigInterface
@@ -41,13 +42,7 @@ class ApplicationConfig implements ApplicationConfigInterface
     }
 
     /**
-     * 指定されたカテゴリ内のキーの値を取得する
-     * @param string $category
-     * @param string $key
-     * @param string|null $default
-     * @return string
-     * @throws ConfigException
-     * @implements ApplicationConfigInterface
+     * @inheritDoc
      */
     public function getValue(string $category, string $key, ?string $default = null): string
     {

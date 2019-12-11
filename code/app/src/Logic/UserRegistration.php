@@ -13,16 +13,14 @@ use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelInterface;
 
 /**
+ * ユーザ登録処理
  * Class UserRegistration
  * @package Gustav\App\Logic
  */
 class UserRegistration extends AbstractExecutor
 {
     /**
-     * @param Container $container // DI\Container
-     * @param ModelChunk $requestObject // リクエストオブジェクト
-     * @return ModelInterface|null
-     * @throws ModelException
+     * @inheritDoc
      * @throws DatabaseException
      */
     public function execute(Container $container, ModelChunk $requestObject): ?ModelInterface

@@ -3,6 +3,8 @@
 
 namespace Gustav\Common\Operation;
 
+use Gustav\Common\Exception\FormatException;
+
 /**
  * バイナリの暗号化/復号化
  * Interface BinaryEncryptorInterface
@@ -21,6 +23,7 @@ interface BinaryEncryptorInterface
      * 復号化
      * @param string $encoded
      * @return string
+     * @throws FormatException
      */
     public function decrypt(string $encoded): string;
 }

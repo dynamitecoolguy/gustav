@@ -3,7 +3,6 @@
 
 namespace Gustav\App\Model;
 
-
 use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
 use Gustav\Common\Model\AbstractModel;

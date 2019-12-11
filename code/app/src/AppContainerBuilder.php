@@ -8,6 +8,7 @@ use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\DispatcherInterface;
 
 /**
+ * BaseContainerBuilderのDIコンテナの定義を変更する場合は、このクラスのようにdefinitionsメソッドを変更する方法がある
  * Class AppContainerBuilder
  * @package Gustav\App
  */

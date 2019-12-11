@@ -6,6 +6,10 @@ namespace Gustav\Common\Log;
 
 use Fluent\Logger\Entity;
 
+/**
+ * Class FluentLoggerEntity
+ * @package Gustav\Common\Log
+ */
 class FluentLoggerEntity extends Entity
 {
     /* @var float w/microTime */

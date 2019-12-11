@@ -3,7 +3,10 @@
 
 namespace Gustav\Common\Log;
 
-
+/**
+ * Interface DataLoggerInterface
+ * @package Gustav\Common\Log
+ */
 interface DataLoggerInterface
 {
     /**

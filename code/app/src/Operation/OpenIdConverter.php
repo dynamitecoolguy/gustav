@@ -13,7 +13,7 @@ use Gustav\Common\Operation\MaximumLengthSequence;
 use Psr\Container\ContainerExceptionInterface;
 
 /**
- * 公開IDは、1〜8,589,934,591 (2^33 - 1)までの数値を文字列にしたものです
+ * 公開IDは、1〜8,589,934,591 (2^33 - 1)までの数値を文字列にしたものである.
  * Class OpenIdConverter
  * @package Gustav\App\Operation
  */
