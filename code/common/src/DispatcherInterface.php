@@ -5,6 +5,8 @@ namespace Gustav\Common;
 
 
 use DI\Container;
+use Gustav\Common\Exception\ModelException;
+use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelInterface;
 
 /**
@@ -14,10 +16,10 @@ use Gustav\Common\Model\ModelInterface;
 interface DispatcherInterface
 {
     /**
-     * @param int            $version       // フォーマットバージョン
      * @param Container      $container     // DI\Container
-     * @param ModelInterface $request       // リクエストオブジェクト
+     * @param ModelChunk     $request       // リクエストオブジェクト
      * @return ModelInterface|null          // リザルト。必要ない場合はnull
+     * @throws ModelException
      */
-    public function dispatch(int $version, Container $container, ModelInterface $request): ?ModelInterface;
+    public function dispatch(Container $container, ModelChunk $request): ?ModelInterface;
 }

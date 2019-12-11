@@ -7,8 +7,11 @@ use Exception;
 use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
 use Gustav\Common\Exception\ModelException;
+use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelClassMap;
 use Gustav\Common\Model\ModelSerializerInterface;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * Class FlatBuffersSerializer
@@ -36,9 +39,7 @@ class FlatBuffersSerializer implements ModelSerializerInterface
     const INITIAL_MODEL_BUFFER_SIZE = 512;
 
     /**
-     * @param array $objectList   [[version(int), requestId(string), object(FlatBuffersSerializable)]]
-     * @return string
-     * @throws ModelException
+     * @inheritDoc
      */
     public function serialize(array $objectList): string
     {
@@ -49,10 +50,11 @@ class FlatBuffersSerializer implements ModelSerializerInterface
         $chunkList = [];
 
         // DataChunkのリストを作成する
-        foreach ($objectList as [$version, $requestId, $object]) {
-            /** @var FlatBuffersSerializable $object */
+        foreach ($objectList as $object) {
+            $chunkId = $object->getChunkId();
+            $model = $object->getModel(); /** @var FlatBuffersSerializable $model */
+            $requestId = $object->getRequestId();
 
-            $chunkId = ModelClassMap::findChunkId(get_class($object));
             if (!isset($chunkIdMap[$chunkId])) {
                 $chunkIdMap[$chunkId] = $builder->createString($chunkId);
             }
@@ -61,9 +63,9 @@ class FlatBuffersSerializer implements ModelSerializerInterface
             $chunkList[] = DataChunk::createDataChunk(
                 $builder,
                 $chunkIdMap[$chunkId],                                                  // id
-                $version,
+                $object->getVersion(),
                 $requestIdPos,                                                          // requestId
-                DataChunk::createContentVector($builder, self::serializeModel($object)) // content
+                DataChunk::createContentVector($builder, self::serializeModel($model))  // content
             );
         }
 
@@ -79,9 +81,7 @@ class FlatBuffersSerializer implements ModelSerializerInterface
     }
 
     /**
-     * @param string $stream
-     * @return array  [[version(int), requestId(string), object(FlatBuffersSerializable)]]
-     * @throws ModelException
+     * @inheritDoc
      */
     public function deserialize(string $stream): array
     {
@@ -98,23 +98,26 @@ class FlatBuffersSerializer implements ModelSerializerInterface
             $chunk = $dataModel->getChunk($i);
 
             $chunkId = $chunk->getChunkId();
-            $version = $chunk->getVersion();
+            $version = (int)$chunk->getVersion();
             $requestId = $chunk->getRequestId();
             $content = $chunk->getContentBytes();
 
             $className = ModelClassMap::findModelClass($chunkId);
-
             try {
-                // FlatBuffersSerializable::deserialize(int $version, ByteBuffer $buffer): ModelInterfaceの呼び出し
-                $object = call_user_func([$className, 'deserializeFlatBuffers'], $version, ByteBuffer::wrap($content));
-                if (!($object instanceof FlatBuffersSerializable)) {
-                    throw new ModelException('Deserialize result is not instanceof FlatBuffersSerializable');
+                $refClass = new ReflectionClass($className);
+                if (!$refClass->isSubclassOf(FlatBuffersSerializable::class)) {
+                    throw new ModelException("Class(${className} is not instance of FlatBuffersSerializable");
                 }
-            } catch (Exception $e) {
-                throw new ModelException('Deserialize Error Reason:' . $e->getMessage(), 0, $e);
+                $method = $refClass->getMethod('deserializeFlatBuffers');
+                $object = $method->invoke(null, $version, ByteBuffer::wrap($content));
+                if (!($object instanceof FlatBuffersSerializable)) {
+                    throw new ModelException('Deserialize result is not instance of FlatBuffersSerializable');
+                }
+            } catch (ReflectionException $e) {
+                throw new ModelException("Class(${className} could not create ReflectionClass");
             }
 
-            $objectList[] = [$version, $requestId, $object];
+            $objectList[] = new ModelChunk($chunkId, $version, $requestId, $object);
         }
 
         return $objectList;

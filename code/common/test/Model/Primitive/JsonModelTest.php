@@ -4,6 +4,7 @@
 namespace Gustav\Common\Model\Primitive;
 
 use Composer\Autoload\ClassLoader;
+use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelClassMap;
 use Gustav\Common\Model\MonsterModel;
 use PHPUnit\Framework\TestCase;
@@ -33,16 +34,18 @@ class JsonModelTest extends TestCase
 
         $serializer = new JsonSerializer();
 
-        $stream = $serializer->serialize([[1, 'req', $monster]]);
+        $stream = $serializer->serialize([new ModelChunk('MON', 1, 'req', $monster)]);
 
         $result = $serializer->deserialize($stream);
 
         $this->assertIsArray($result);
 
-        $version = $result[0][0];
-        $requestId = $result[0][1];
-        $resultMonster = $result[0][2];
+        $chunkId = $result[0]->getChunkId();
+        $version = $result[0]->getVersion();
+        $requestId = $result[0]->getRequestId();
+        $resultMonster = $result[0]->getModel();
 
+        $this->assertEquals('MON', $chunkId);
         $this->assertEquals(1, $version);
         $this->assertEquals('req', $requestId);
         $this->assertFalse($monster === $resultMonster);

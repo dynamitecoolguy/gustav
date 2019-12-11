@@ -6,6 +6,7 @@ namespace Gustav\App\Model;
 use Composer\Autoload\ClassLoader;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\FlatBuffers\FlatBuffersSerializer;
+use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelSerializerInterface;
 use Gustav\Common\Model\Primitive\JsonSerializer;
 use Gustav\Common\Model\Primitive\MessagePackSerializer;
@@ -40,16 +41,20 @@ class IdentificationModelTest extends TestCase
         ]);
 
         $stream = $serializer->serialize([
-            [1, 'req1', $register1],
-            [1, 'req2', $register2]
+            new ModelChunk('REG', 3, 'req1', $register1),
+            new ModelChunk('REG', 4, 'req2', $register2)
         ]);
 
         $result = $serializer->deserialize($stream);
 
-        $this->assertEquals(1, $result[0][2]->getUserId());
-        $this->assertEquals('102', $result[1][2]->getOpenId());
-        $this->assertEquals('', $result[0][2]->getCampaignCode());
-        $this->assertEquals('hoge', $result[1][2]->getCampaignCode());
+        $this->assertEquals(1, $result[0]->getModel()->getUserId());
+        $this->assertEquals('102', $result[1]->getModel()->getOpenId());
+        $this->assertEquals('', $result[0]->getModel()->getCampaignCode());
+        $this->assertEquals('hoge', $result[1]->getModel()->getCampaignCode());
+        $this->assertEquals(3, $result[0]->getVersion());
+        $this->assertEquals(4, $result[1]->getVersion());
+        $this->assertEquals('REG', $result[0]->getChunkId());
+        $this->assertEquals('req2', $result[1]->getRequestId());
     }
 
     /**

@@ -5,6 +5,7 @@ namespace Gustav\App\Logic;
 
 use Gustav\App\Model\IdentificationModel;
 use Gustav\Common\Exception\ModelException;
+use Gustav\Common\Model\ModelChunk;
 
 class UserRegistrationTest extends LogicBase
 {
@@ -17,7 +18,7 @@ class UserRegistrationTest extends LogicBase
         $request = new IdentificationModel([
             IdentificationModel::CAMPAIGN_CODE => 'hogehoge'
         ]);
-        $result = self::$dispatcher->dispatch(1, self::$container, $request);
+        $result = self::$dispatcher->dispatch(self::$container, new ModelChunk('REG', 1, 'req', $request));
 
         $this->assertInstanceOf(IdentificationModel::class, $result);
     }

@@ -16,7 +16,7 @@ abstract class AbstractExecutor implements ExecutorInterface
     /**
      * @inheritDoc
      */
-    public function getInstance(): ExecutorInterface
+    public static function getInstance(): ExecutorInterface
     {
         return new static();
     }

@@ -6,8 +6,11 @@ namespace Gustav\Common;
 use DI\Container;
 use Gustav\Common\Logic\ExecutorInterface;
 use Gustav\Common\Exception\ModelException;
+use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelClassMap;
 use Gustav\Common\Model\ModelInterface;
+use ReflectionClass;
+use ReflectionException;
 
 class BaseDispatcher implements DispatcherInterface
 {
@@ -72,25 +75,34 @@ class BaseDispatcher implements DispatcherInterface
     }
 
     /**
-     * @param int $version
      * @param Container $container
-     * @param ModelInterface $request
+     * @param ModelChunk $requestObject
      * @return ModelInterface|null
      * @throws ModelException
      */
-    public function dispatch(int $version, Container $container, ModelInterface $request): ?ModelInterface
+    public function dispatch(Container $container, ModelChunk $requestObject): ?ModelInterface
     {
+        $request = $requestObject->getModel();
+
         $class = get_class($request);
         if (!isset(self::$dispatchTable[$class])) {
             throw new ModelException('Executor is not registered');
         }
 
         $executorClass = self::$dispatchTable[get_class($request)];
-        $executor = call_user_func([$executorClass, 'getInstance']);
-        if ($executor instanceof ExecutorInterface) {
-            return $executor->execute($version, $container, $request);
+        try {
+            $refClass = new ReflectionClass($executorClass);
+            if (!$refClass->isSubclassOf(ExecutorInterface::class)) {
+                throw new ModelException('Executor is not instance of ExecutorInterface');
+            }
+            $method = $refClass->getMethod('getInstance');
+            $executor = $method->invoke(null);
+            if (!($executor instanceof ExecutorInterface)) {
+                throw new ModelException('Executor is not instance of ExecutorInterface');
+            }
+        } catch (ReflectionException $e) {
+            throw new ModelException('ReflectionException occurred', 0, $e);
         }
-
-        throw new ModelException('Executor is not instance of ExecutorInterface');
+        return $executor->execute($container, $requestObject);
     }
 }

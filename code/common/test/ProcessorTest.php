@@ -7,6 +7,7 @@ namespace Gustav\Common;
 use Composer\Autoload\ClassLoader;
 use DI\Container;
 use Gustav\Common\Config\ApplicationConfigInterface;
+use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelClassMap;
 use Gustav\Common\Model\ModelInterface;
 use Gustav\Common\Model\ModelSerializerInterface;
@@ -62,10 +63,10 @@ class ProcessorTest extends TestCase
         $outputArray = $serializer->deserialize($encryptor->decrypt($outputData));
 
         // 確認
-        $this->assertEquals(1, $outputArray[0][0]);
-        $this->assertEquals('req1', $outputArray[0][1]);
-        $this->assertEquals('gaia', $outputArray[0][2]->name);
-        $this->assertEquals(11, $outputArray[0][2]->hp);
+        $this->assertEquals(1, $outputArray[0]->getVersion());
+        $this->assertEquals('req1', $outputArray[0]->getRequestId());
+        $this->assertEquals('gaia', $outputArray[0]->getModel()->name);
+        $this->assertEquals(11, $outputArray[0]->getModel()->hp);
     }
 
     private function getInputData(Container $container)
@@ -83,7 +84,11 @@ class ProcessorTest extends TestCase
         $monster3->hp = 333;
 
         $serializer = $container->get(ModelSerializerInterface::class);
-        $stream = $serializer->serialize([[1, 'req1', $monster1], [1, 'req2', $monster2], [1, 'req3', $monster3]]);
+        $stream = $serializer->serialize([
+            new ModelChunk('MON', 1, 'req1', $monster1),
+            new ModelChunk('MON', 1, 'req2', $monster2),
+            new ModelChunk('MON', 1, 'req3', $monster3)
+        ]);
 
         $encryptor = $container->get(BinaryEncryptorInterface::class);
         return $encryptor->encrypt($stream);
@@ -92,8 +97,9 @@ class ProcessorTest extends TestCase
 
 class DummyDispatcher implements DispatcherInterface
 {
-    public function dispatch(int $version, Container $container, ModelInterface $request): ?ModelInterface
+    public function dispatch(Container $container, ModelChunk $requestObject): ?ModelInterface
     {
+        $request = $requestObject->getModel();
         if ($request instanceof MonsterModel) {
             $request->hp -= 100;
         }

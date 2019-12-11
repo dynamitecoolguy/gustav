@@ -5,11 +5,11 @@ namespace Gustav\App\Logic;
 
 use DI\Container;
 use Gustav\App\Model\IdentificationModel;
-use Gustav\App\Model\TransferCodeModel;
 use Gustav\App\Operation\OpenIdConverter;
 use Gustav\Common\Adapter\MySQLAdapter;
 use Gustav\Common\Exception\DatabaseException;
 use Gustav\Common\Exception\ModelException;
+use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelInterface;
 
 /**
@@ -19,15 +19,15 @@ use Gustav\Common\Model\ModelInterface;
 class UserRegistration extends AbstractExecutor
 {
     /**
-     * @param int $version // フォーマットバージョン
      * @param Container $container // DI\Container
-     * @param ModelInterface $request // リクエストオブジェクト
+     * @param ModelChunk $requestObject // リクエストオブジェクト
      * @return ModelInterface|null
      * @throws ModelException
      * @throws DatabaseException
      */
-    public function execute(int $version, Container $container, ModelInterface $request): ?ModelInterface
+    public function execute(Container $container, ModelChunk $requestObject): ?ModelInterface
     {
+        $request = $requestObject->getModel();
         if (!($request instanceof IdentificationModel)) {
             throw new ModelException('Request object is not expected class');
         }

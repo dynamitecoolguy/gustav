@@ -5,6 +5,8 @@ namespace Gustav\Common\Logic;
 
 
 use DI\Container;
+use Gustav\Common\Exception\ModelException;
+use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelInterface;
 
 /**
@@ -17,13 +19,13 @@ interface ExecutorInterface
      * インスタンス作成
      * @return ExecutorInterface
      */
-    public function getInstance(): ExecutorInterface;
+    public static function getInstance(): ExecutorInterface;
 
     /**
-     * @param int            $version       // フォーマットバージョン
      * @param Container      $container     // DI\Container
-     * @param ModelInterface $request       // リクエストオブジェクト
+     * @param ModelChunk     $requestObject // リクエストオブジェクト
      * @return ModelInterface|null
+     * @throws ModelException
      */
-    public function execute(int $version, Container $container, ModelInterface $request): ?ModelInterface;
+    public function execute(Container $container, ModelChunk $requestObject): ?ModelInterface;
 }

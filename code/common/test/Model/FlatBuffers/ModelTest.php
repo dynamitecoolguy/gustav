@@ -6,6 +6,7 @@ namespace Gustav\Common\Model\FlatBuffers;
 use Composer\Autoload\ClassLoader;
 use Google\FlatBuffers\ByteBuffer;
 use Gustav\Common\Exception\ModelException;
+use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelClassMap;
 use Gustav\Common\Model\ModelInterface;
 use Gustav\Common\Model\MonsterModel;
@@ -37,16 +38,18 @@ class ModelTest extends TestCase
 
         $serializer = new FlatBuffersSerializer();
 
-        $stream = $serializer->serialize([[1, 'req', $monster]]);
+        $stream = $serializer->serialize([new ModelChunk('MON', 1, 'req', $monster)]);
 
         $result = $serializer->deserialize($stream);
 
         $this->assertIsArray($result);
 
-        $version = $result[0][0];
-        $requestId = $result[0][1];
-        $resultMonster = $result[0][2];
+        $chunkId = $result[0]->getChunkId();
+        $version = $result[0]->getVersion();
+        $requestId = $result[0]->getRequestId();
+        $resultMonster = $result[0]->getModel();
 
+        $this->assertEquals('MON', $chunkId);
         $this->assertEquals(1, $version);
         $this->assertEquals('req', $requestId);
         $this->assertFalse($monster === $resultMonster);
@@ -75,22 +78,26 @@ class ModelTest extends TestCase
         $monster3->hp = 333;
 
         $serializer = new FlatBuffersSerializer();
-        $stream = $serializer->serialize([[1, 'req1', $monster1], [2, 'req2', $monster2], [3, 'req3', $monster3]]);
+        $stream = $serializer->serialize([
+            new ModelChunk('MON', 1, 'req1', $monster1),
+            new ModelChunk('MON', 2, 'req2', $monster2),
+            new ModelChunk('MON', 3, 'req3', $monster3)
+        ]);
         $result = $serializer->deserialize($stream);
 
         $this->assertIsArray($result);
 
-        $resultMonster1 = $result[0][2];
-        $resultMonster2 = $result[1][2];
-        $resultMonster3 = $result[2][2];
+        $resultMonster1 = $result[0]->getModel();
+        $resultMonster2 = $result[1]->getModel();
+        $resultMonster3 = $result[2]->getModel();
 
-        $resultId1 = $result[0][1];
-        $resultId2 = $result[1][1];
-        $resultId3 = $result[2][1];
+        $resultId1 = $result[0]->getRequestId();
+        $resultId2 = $result[1]->getRequestId();
+        $resultId3 = $result[2]->getRequestId();
 
-        $version1 = $result[0][0];
-        $version2 = $result[1][0];
-        $version3 = $result[2][0];
+        $version1 = $result[0]->getVersion();
+        $version2 = $result[1]->getVersion();
+        $version3 = $result[2]->getVersion();
 
         $this->assertEquals(1, $version1);
         $this->assertEquals(2, $version2);
@@ -156,13 +163,14 @@ class ModelTest extends TestCase
         ModelClassMap::registerModel('MON2', AnotherMonsterModel::class);
 
         $this->expectException(ModelException::class);
+        $this->expectException(\Exception::class);
 
         $monster = new AnotherMonsterModel();
         $monster->name = 'noone';
         $monster->hp = 0;
 
         $serializer = new FlatBuffersSerializer();
-        $stream = $serializer->serialize([[0, 'req', $monster]]);
+        $stream = $serializer->serialize([new ModelChunk('MON2', 0, 'req', $monster)]);
         $serializer->deserialize($stream);
     }
 }

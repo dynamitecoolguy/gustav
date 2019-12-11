@@ -5,8 +5,11 @@ namespace Gustav\Common\Model\Primitive;
 
 use \Exception;
 use Gustav\Common\Exception\ModelException;
+use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelClassMap;
 use Gustav\Common\Model\ModelSerializerInterface;
+use ReflectionClass;
+use ReflectionException;
 
 abstract class PrimitiveSerializer implements ModelSerializerInterface
 {
@@ -15,21 +18,18 @@ abstract class PrimitiveSerializer implements ModelSerializerInterface
 
     /**
      * @inheritDoc
-     * @throws ModelException
      */
     public function serialize(array $objectList): string
     {
         $result = [];
 
         // DataChunkのリストを作成する
-        foreach ($objectList as [$version, $requestId, $object]) {
-            /** @var PrimitiveSerializable $object */
-
+        foreach ($objectList as $object) {
             $result[] = [
-                ModelClassMap::findChunkId(get_class($object)),
-                $version,
-                $requestId,
-                $object->serializePrimitive()
+                $object->getChunkId(),
+                $object->getVersion(),
+                $object->getRequestId(),
+                $object->getModel()->serializePrimitive()
             ];
         }
 
@@ -38,7 +38,6 @@ abstract class PrimitiveSerializer implements ModelSerializerInterface
 
     /**
      * @inheritDoc
-     * @throws ModelException
      */
     public function deserialize(string $stream): array
     {
@@ -49,17 +48,21 @@ abstract class PrimitiveSerializer implements ModelSerializerInterface
             list ($chunkId, $version, $requestId, $primitives) = $chunk;
 
             $className = ModelClassMap::findModelClass($chunkId);
-
             try {
-                $object = call_user_func([$className, 'deserializePrimitive'], $version, $primitives);
+                $refClass = new ReflectionClass($className);
+                if (!$refClass->isSubclassOf(PrimitiveSerializable::class)) {
+                    throw new ModelException("Class(${className} is not instance of PrimitiveSerializable");
+                }
+                $method = $refClass->getMethod('deserializePrimitive');
+                $object = $method->invoke(null, $version, $primitives);
                 if (!($object instanceof PrimitiveSerializable)) {
                     throw new ModelException('Deserialize result is not instanceof FlatBuffersSerializable');
                 }
-            } catch (Exception $e) {
-                throw new ModelException('Deserialize Error Reason:' . $e->getMessage(), 0, $e);
+            } catch (ReflectionException $e) {
+                throw new ModelException("Class(${className} could not create ReflectionClass");
             }
 
-            $objectList[] = [$version, $requestId, $object];
+            $objectList[] = new ModelChunk($chunkId, $version, $requestId, $object);
         }
 
         return $objectList;

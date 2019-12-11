@@ -6,6 +6,7 @@ namespace Gustav\Common;
 use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelSerializerInterface;
 use Gustav\Common\Operation\BinaryEncryptorInterface;
 
@@ -21,6 +22,7 @@ class Processor
      * @return string
      * @throws DependencyException
      * @throws NotFoundException
+     * @throws Exception\ModelException
      */
     public static function process(string $input, Container $container): string
     {
@@ -34,11 +36,16 @@ class Processor
         // デシリアライズ
         $resultList = [];
         $requestObjectList = $serializer->deserialize($decrypted);
-        foreach ($requestObjectList as [$version, $requestId, $requestObject]) {
+        foreach ($requestObjectList as $requestObject) {
             // リクエストオブジェクト毎に処理
-            $result = $dispatcher->dispatch($version, $container, $requestObject);
+            $result = $dispatcher->dispatch($container, $requestObject);
             if (!is_null($result)) {
-                $resultList[] = [$version, $requestId, $result];
+                $resultList[] = new ModelChunk(
+                    $requestObject->getChunkId(),
+                    $requestObject->getVersion(),
+                    $requestObject->getRequestId(),
+                    $result
+                );
             }
         }
 
