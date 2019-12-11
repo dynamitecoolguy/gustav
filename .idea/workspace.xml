@@ -4,18 +4,7 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42a86106-9ee1-482e-8a8e-7d4cde83786b" name="Default Changelist" comment="パッケージ名のDXをDxに変更&#10;ModelInterfaceを実装した仮想親クラスAbstractModelを作成&#10;AbstractModelにModel用便利メソッド等を実装&#10;transfer_code.fbsと周辺クラスを追加">
-      <change afterPath="$PROJECT_DIR$/code/app/src/Logic/TransferOperation.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/app/test/Logic/LogicBase.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/app/test/Logic/UserRegistrationTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.phpunit.result.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.phpunit.result.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/AppContainerBuilder.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/AppContainerBuilder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/AppDispatcher.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/AppDispatcher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/Logic/UserRegistration.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Logic/UserRegistration.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/test/AppDispatcherTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/test/AppDispatcherTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/test/CommandRegistrationTest.php" beforeDir="false" />
-    </list>
+    <list default="true" id="42a86106-9ee1-482e-8a8e-7d4cde83786b" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -260,7 +249,7 @@
       <workItem from="1575868532749" duration="11300000" />
       <workItem from="1575937315581" duration="8917000" />
       <workItem from="1575949160152" duration="12619000" />
-      <workItem from="1576024107753" duration="13038000" />
+      <workItem from="1576024107753" duration="13306000" />
     </task>
     <task id="LOCAL-00001" summary="* http://mgr.localhost/phpinfo.phpが表示できるところまで&#10;* [BUG] https://mgr.localhostがPR_END_OF_FILEエラーになる">
       <created>1573204290729</created>
@@ -542,7 +531,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576035260745</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="パッケージ名のDXをDxに変更&#10;ModelInterfaceを実装した仮想親クラスAbstractModelを作成&#10;AbstractModelにModel用便利メソッド等を実装&#10;transfer_code.fbsと周辺クラスを追加">
+      <created>1576042441048</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1576042441048</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -635,14 +631,14 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="716" y="331" width="528" height="348" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/51.27.1869.958@51.27.1869.958" timestamp="1576042238679" />
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1576041926160">
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1576042481105">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1576041926160" />
-    <state x="151" y="125" width="1669" height="760" key="DiffContextDialog" timestamp="1575858633724">
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1576042481105" />
+    <state x="151" y="125" width="1669" height="760" key="DiffContextDialog" timestamp="1576042426211">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="151" y="125" width="1669" height="760" key="DiffContextDialog/51.27.1869.958@51.27.1869.958" timestamp="1575858633724" />
+    <state x="151" y="125" width="1669" height="760" key="DiffContextDialog/51.27.1869.958@51.27.1869.958" timestamp="1576042426211" />
     <state x="763" y="262" width="424" height="484" key="FileChooserDialogImpl" timestamp="1575252175535">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -703,10 +699,10 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="598" y="139" key="SettingsEditor/51.27.1869.958@51.27.1869.958" timestamp="1575968586771" />
-    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1576035264129">
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1576042461655">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1576035264129" />
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1576042461655" />
     <state x="772" y="242" width="416" height="526" key="VcsDiffUtil.ChangesDialog" timestamp="1575362718686">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
