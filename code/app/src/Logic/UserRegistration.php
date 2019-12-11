@@ -5,6 +5,7 @@ namespace Gustav\App\Logic;
 
 use DI\Container;
 use Gustav\App\Model\IdentificationModel;
+use Gustav\App\Model\TransferCodeModel;
 use Gustav\App\Operation\OpenIdConverter;
 use Gustav\Common\Adapter\MySQLAdapter;
 use Gustav\Common\Exception\DatabaseException;

@@ -3,11 +3,6 @@
 
 namespace Gustav\App;
 
-
-use DI\Container;
-use Gustav\App\Operation\RedisKeys;
-use Gustav\Common\Adapter\RedisAdapter;
-use Gustav\Common\Adapter\RedisInterface;
 use Gustav\Common\BaseContainerBuilder;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\DispatcherInterface;

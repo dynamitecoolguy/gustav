@@ -4,22 +4,17 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42a86106-9ee1-482e-8a8e-7d4cde83786b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/code/app/src/Model/TransferCodeModel.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/app/test/Model/AbstractModelTest.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/common/src/Model/AbstractModel.php" afterDir="false" />
+    <list default="true" id="42a86106-9ee1-482e-8a8e-7d4cde83786b" name="Default Changelist" comment="パッケージ名のDXをDxに変更&#10;ModelInterfaceを実装した仮想親クラスAbstractModelを作成&#10;AbstractModelにModel用便利メソッド等を実装&#10;transfer_code.fbsと周辺クラスを追加">
+      <change afterPath="$PROJECT_DIR$/code/app/src/Logic/TransferOperation.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/app/test/Logic/LogicBase.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/app/test/Logic/UserRegistrationTest.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.phpunit.result.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.phpunit.result.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/AppContainerBuilder.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/AppContainerBuilder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/AppDispatcher.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/AppDispatcher.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/app/src/Logic/UserRegistration.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Logic/UserRegistration.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/Model/IdentificationModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/Model/IdentificationModel.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/test/CommandRegistrationTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/test/CommandRegistrationTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/test/Model/IdentificationModelTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/test/Model/IdentificationModelTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Model/FlatBuffers/FlatBuffersSerializable.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/FlatBuffers/FlatBuffersSerializable.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/common/src/Model/Primitive/PrimitiveSerializable.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/common/src/Model/Primitive/PrimitiveSerializable.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/flatbuffers/idl/identification.fbs" beforeDir="false" afterPath="$PROJECT_DIR$/code/flatbuffers/idl/identification.fbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/flatbuffers/idl/transfer_code.fbs" beforeDir="false" afterPath="$PROJECT_DIR$/code/flatbuffers/idl/transfer_code.fbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/flatbuffers/php/Gustav/DX/Identification.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/flatbuffers/php/Gustav/Dx/Identification.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/flatbuffers/php/Gustav/DX/TransferCode.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/flatbuffers/php/Gustav/Dx/TransferCode.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/test/AppDispatcherTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/test/AppDispatcherTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/test/CommandRegistrationTest.php" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -174,11 +169,11 @@
       <recent name="$PROJECT_DIR$/code/app/src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/code/app/test/Logic" />
+      <recent name="$PROJECT_DIR$/code/common/test/Model" />
       <recent name="$PROJECT_DIR$/code/common/src/Model" />
       <recent name="$PROJECT_DIR$/code/app/src" />
-      <recent name="$PROJECT_DIR$/code/common/test/Model" />
       <recent name="$PROJECT_DIR$/code/common/src/Model/Primitive" />
-      <recent name="$PROJECT_DIR$/code/common/test/Model/FlatBuffers" />
     </key>
   </component>
   <component name="RunManager" selected="PHPUnit.phpunit">
@@ -265,7 +260,7 @@
       <workItem from="1575868532749" duration="11300000" />
       <workItem from="1575937315581" duration="8917000" />
       <workItem from="1575949160152" duration="12619000" />
-      <workItem from="1576024107753" duration="9976000" />
+      <workItem from="1576024107753" duration="13038000" />
     </task>
     <task id="LOCAL-00001" summary="* http://mgr.localhost/phpinfo.phpが表示できるところまで&#10;* [BUG] https://mgr.localhostがPR_END_OF_FILEエラーになる">
       <created>1573204290729</created>
@@ -540,7 +535,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575968635470</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="パッケージ名のDXをDxに変更&#10;ModelInterfaceを実装した仮想親クラスAbstractModelを作成&#10;AbstractModelにModel用便利メソッド等を実装&#10;transfer_code.fbsと周辺クラスを追加">
+      <created>1576035260744</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1576035260745</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -561,7 +563,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="RELOAD_CONTEXT" value="false" />
-    <MESSAGE value="M系列処理を追加" />
     <MESSAGE value="sqsインターフェースを追加&#10;dynamodbのDockerfileを追加 (将来的にカスタマイズできるように)&#10;Configでデフォルト値を指定可能なように変更" />
     <MESSAGE value="SQSを使ったDataLoggerの追加" />
     <MESSAGE value="Flatbuffersを使ったモデルのシリアライズ/デシリアライズの仕組みを追加" />
@@ -586,7 +587,8 @@
     <MESSAGE value="openid取得処理の追加" />
     <MESSAGE value="MySQLのmaster/slaveに対応。&#10;DB関連の便利メソッドの追加" />
     <MESSAGE value="Registrationの命名変更(Identification)&#10;TransferCodeテーブルの追加" />
-    <option name="LAST_COMMIT_MESSAGE" value="Registrationの命名変更(Identification)&#10;TransferCodeテーブルの追加" />
+    <MESSAGE value="パッケージ名のDXをDxに変更&#10;ModelInterfaceを実装した仮想親クラスAbstractModelを作成&#10;AbstractModelにModel用便利メソッド等を実装&#10;transfer_code.fbsと周辺クラスを追加" />
+    <option name="LAST_COMMIT_MESSAGE" value="パッケージ名のDXをDxに変更&#10;ModelInterfaceを実装した仮想親クラスAbstractModelを作成&#10;AbstractModelにModel用便利メソッド等を実装&#10;transfer_code.fbsと周辺クラスを追加" />
   </component>
   <component name="WindowStateProjectService">
     <state x="580" y="166" width="800" height="677" key="#Project_Structure" timestamp="1575249622191">
@@ -613,10 +615,10 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="668" y="225" width="624" height="562" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/51.27.1869.958@51.27.1869.958" timestamp="1575851779722" />
-    <state x="609" y="27" width="734" height="958" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1575963504223">
+    <state x="609" y="27" width="734" height="958" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1576041651921">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="609" y="27" width="734" height="958" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/51.27.1869.958@51.27.1869.958" timestamp="1575963504223" />
+    <state x="609" y="27" width="734" height="958" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/51.27.1869.958@51.27.1869.958" timestamp="1576041651921" />
     <state x="718" y="251" width="524" height="508" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1575250669942">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -629,14 +631,14 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="582" y="27" width="797" height="958" key="#com.jetbrains.php.refactoring.move.namespace.PhpMoveRelatedNamespacesDialog/51.27.1869.958@51.27.1869.958" timestamp="1575515693507" />
-    <state x="716" y="331" width="528" height="348" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1575617978266">
+    <state x="716" y="331" width="528" height="348" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1576042238680">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="716" y="331" width="528" height="348" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/51.27.1869.958@51.27.1869.958" timestamp="1575617978266" />
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1575968635299">
+    <state x="716" y="331" width="528" height="348" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/51.27.1869.958@51.27.1869.958" timestamp="1576042238679" />
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2" timestamp="1576041926160">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1575968635299" />
+    <state x="535" y="79" width="890" height="851" key="CommitChangelistDialog2/51.27.1869.958@51.27.1869.958" timestamp="1576041926160" />
     <state x="151" y="125" width="1669" height="760" key="DiffContextDialog" timestamp="1575858633724">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -645,38 +647,38 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="763" y="262" width="424" height="484" key="FileChooserDialogImpl/51.27.1869.958@51.27.1869.958" timestamp="1575252175535" />
-    <state width="1811" height="241" key="GridCell.Tab.0.bottom" timestamp="1576035127947">
+    <state width="1811" height="241" key="GridCell.Tab.0.bottom" timestamp="1576042325218">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.bottom/51.27.1869.958@51.27.1869.958" timestamp="1576035127947" />
-    <state width="1811" height="241" key="GridCell.Tab.0.center" timestamp="1576035127946">
+    <state width="1811" height="241" key="GridCell.Tab.0.bottom/51.27.1869.958@51.27.1869.958" timestamp="1576042325218" />
+    <state width="1811" height="241" key="GridCell.Tab.0.center" timestamp="1576042325216">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.center/51.27.1869.958@51.27.1869.958" timestamp="1576035127945" />
-    <state width="1811" height="241" key="GridCell.Tab.0.left" timestamp="1576035127945">
+    <state width="1811" height="241" key="GridCell.Tab.0.center/51.27.1869.958@51.27.1869.958" timestamp="1576042325216" />
+    <state width="1811" height="241" key="GridCell.Tab.0.left" timestamp="1576042325216">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.left/51.27.1869.958@51.27.1869.958" timestamp="1576035127945" />
-    <state width="1811" height="241" key="GridCell.Tab.0.right" timestamp="1576035127946">
+    <state width="1811" height="241" key="GridCell.Tab.0.left/51.27.1869.958@51.27.1869.958" timestamp="1576042325216" />
+    <state width="1811" height="241" key="GridCell.Tab.0.right" timestamp="1576042325217">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="241" key="GridCell.Tab.0.right/51.27.1869.958@51.27.1869.958" timestamp="1576035127946" />
-    <state width="1811" height="278" key="GridCell.Tab.1.bottom" timestamp="1576032395339">
+    <state width="1811" height="241" key="GridCell.Tab.0.right/51.27.1869.958@51.27.1869.958" timestamp="1576042325217" />
+    <state width="1811" height="278" key="GridCell.Tab.1.bottom" timestamp="1576041905910">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="278" key="GridCell.Tab.1.bottom/51.27.1869.958@51.27.1869.958" timestamp="1576032395339" />
-    <state width="1811" height="278" key="GridCell.Tab.1.center" timestamp="1576032395339">
+    <state width="1811" height="278" key="GridCell.Tab.1.bottom/51.27.1869.958@51.27.1869.958" timestamp="1576041905910" />
+    <state width="1811" height="278" key="GridCell.Tab.1.center" timestamp="1576041905909">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="278" key="GridCell.Tab.1.center/51.27.1869.958@51.27.1869.958" timestamp="1576032395339" />
-    <state width="1811" height="278" key="GridCell.Tab.1.left" timestamp="1576032395338">
+    <state width="1811" height="278" key="GridCell.Tab.1.center/51.27.1869.958@51.27.1869.958" timestamp="1576041905909" />
+    <state width="1811" height="278" key="GridCell.Tab.1.left" timestamp="1576041905909">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="278" key="GridCell.Tab.1.left/51.27.1869.958@51.27.1869.958" timestamp="1576032395338" />
-    <state width="1811" height="278" key="GridCell.Tab.1.right" timestamp="1576032395339">
+    <state width="1811" height="278" key="GridCell.Tab.1.left/51.27.1869.958@51.27.1869.958" timestamp="1576041905909" />
+    <state width="1811" height="278" key="GridCell.Tab.1.right" timestamp="1576041905910">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state width="1811" height="278" key="GridCell.Tab.1.right/51.27.1869.958@51.27.1869.958" timestamp="1576032395339" />
+    <state width="1811" height="278" key="GridCell.Tab.1.right/51.27.1869.958@51.27.1869.958" timestamp="1576041905910" />
     <state width="1811" height="278" key="GridCell.Tab.2.bottom" timestamp="1575344300189">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -693,18 +695,18 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state width="1811" height="278" key="GridCell.Tab.2.right/51.27.1869.958@51.27.1869.958" timestamp="1575344300189" />
-    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog" timestamp="1576032512403">
+    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog" timestamp="1576042056789">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog/51.27.1869.958@51.27.1869.958" timestamp="1576032512403" />
+    <state x="663" y="294" width="667" height="421" key="NewPhpClassDialog/51.27.1869.958@51.27.1869.958" timestamp="1576042056789" />
     <state x="598" y="139" key="SettingsEditor" timestamp="1575968586771">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="598" y="139" key="SettingsEditor/51.27.1869.958@51.27.1869.958" timestamp="1575968586771" />
-    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1575968637677">
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2" timestamp="1576035264129">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1575968637677" />
+    <state x="580" y="239" width="800" height="532" key="Vcs.Push.Dialog.v2/51.27.1869.958@51.27.1869.958" timestamp="1576035264129" />
     <state x="772" y="242" width="416" height="526" key="VcsDiffUtil.ChangesDialog" timestamp="1575362718686">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -769,10 +771,10 @@
       <screen x="51" y="27" width="1869" height="958" />
     </state>
     <state x="151" y="125" width="1669" height="760" key="dock-window-9/51.27.1869.958@51.27.1869.958" timestamp="1575868493214" />
-    <state x="610" y="187" width="914" height="724" key="find.popup" timestamp="1576031492849">
+    <state x="610" y="187" width="914" height="724" key="find.popup" timestamp="1576041247978">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
-    <state x="610" y="187" width="914" height="724" key="find.popup/51.27.1869.958@51.27.1869.958" timestamp="1576031492849" />
+    <state x="610" y="187" width="914" height="724" key="find.popup/51.27.1869.958@51.27.1869.958" timestamp="1576041247978" />
     <state x="732" y="282" key="git4idea.merge.GitMergeDialog" timestamp="1575362728329">
       <screen x="51" y="27" width="1869" height="958" />
     </state>
@@ -808,6 +810,11 @@
           <url>file://$PROJECT_DIR$/code/app/test/Model/IdentificationModelTest.php</url>
           <line>93</line>
           <option name="timeStamp" value="38" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/code/app/test/Logic/UserRegistrationTest.php</url>
+          <line>16</line>
+          <option name="timeStamp" value="39" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
