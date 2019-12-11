@@ -53,6 +53,10 @@ class UserRegistration extends AbstractExecutor
             }
         );
 
-        return new IdentificationModel($userId, $openId, $campaignCode);
+        return new IdentificationModel([
+            'userId' => $userId,
+            'openId' => $openId,
+            'campaignCode' => $campaignCode
+        ]);
     }
 }

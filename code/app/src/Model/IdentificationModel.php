@@ -6,71 +6,58 @@ namespace Gustav\App\Model;
 
 use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
+use Gustav\Common\Model\AbstractModel;
 use Gustav\Common\Model\FlatBuffers\FlatBuffersSerializable;
-
-use Gustav\Common\Model\ModelInterface;
 use Gustav\Common\Model\Primitive\PrimitiveSerializable;
-use Gustav\DX\Identification;
+use Gustav\Dx\Identification;
 
 /**
  * 登録
  * Class IdentificationModel
  * @package Gustav\App\Model
  */
-class IdentificationModel implements FlatBuffersSerializable, PrimitiveSerializable, ModelInterface
+class IdentificationModel extends AbstractModel implements FlatBuffersSerializable, PrimitiveSerializable
 {
     /** @var int 内部用ユーザID */
-    private $userId;
+    private $userId = 0;
+    const USER_ID = 'userId';
 
     /** @var string 公開用ID */
-    private $openId;
+    private $openId = '';
+    const OPEN_ID = 'openId';
 
     /** @var string キャンペーンコード */
-    private $campaignCode;
+    private $campaignCode = '';
+    const CAMPAIGN_CODE = 'campaignCode';
 
     /**
-     * @param int $version
-     * @param ByteBuffer $buffer
-     * @return FlatBuffersSerializable
+     * @inheritDoc
      */
     public static function deserializeFlatBuffers(int $version, ByteBuffer $buffer): FlatBuffersSerializable
     {
         $identification = Identification::getRootAsIdentification($buffer);
 
-        return new IdentificationModel(
-            $identification->getUserId(),
-            $identification->getOpenId(),
-            $identification->getCampaignCode()
-        );
+        return new static([
+            self::USER_ID => $identification->getUserId(),
+            self::OPEN_ID => $identification->getOpenId(),
+            self::CAMPAIGN_CODE => $identification->getCampaignCode()
+        ]);
     }
-
 
     /**
      * @inheritDoc
      */
     public static function deserializePrimitive(int $version, array $primitives): PrimitiveSerializable
     {
-        $self = new static();
-        list($self->userId, $self->openId, $self->campaignCode) = $primitives;
-        return $self;
+        return new static([
+            self::USER_ID => $primitives[0],
+            self::OPEN_ID => $primitives[1],
+            self::CAMPAIGN_CODE => $primitives[2]
+        ]);
     }
 
     /**
-     * IdentificationModel constructor.
-     * @param int $userId
-     * @param string $openId
-     * @param string $campaignCode
-     */
-    public function __construct(int $userId = 0, string $openId = '', string $campaignCode = '')
-    {
-        $this->userId = $userId;
-        $this->openId = $openId;
-        $this->campaignCode = $campaignCode;
-    }
-
-    /**
-     * @param FlatbufferBuilder $builder
-     * @return int
+     * @inheritDoc
      */
     public function serializeFlatBuffers(FlatbufferBuilder &$builder): int
     {
@@ -89,52 +76,5 @@ class IdentificationModel implements FlatBuffersSerializable, PrimitiveSerializa
     public function serializePrimitive(): array
     {
         return [$this->userId, $this->openId, $this->campaignCode];
-    }
-    /**
-     * @return int
-     */
-    public function getUserId(): int
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param int $userId
-     */
-    public function setUserId(int $userId): void
-    {
-        $this->userId = $userId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOpenId(): string
-    {
-        return $this->openId;
-    }
-
-    /**
-     * @param string $openId
-     */
-    public function setOpenId(string $openId): void
-    {
-        $this->openId = $openId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCampaignCode(): string
-    {
-        return $this->campaignCode;
-    }
-
-    /**
-     * @param string $campaignCode
-     */
-    public function setCampaignCode(string $campaignCode): void
-    {
-        $this->campaignCode = $campaignCode;
     }
 }

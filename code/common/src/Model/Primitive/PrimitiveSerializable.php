@@ -4,6 +4,8 @@
 namespace Gustav\Common\Model\Primitive;
 
 
+use Gustav\Common\Exception\ModelException;
+
 interface PrimitiveSerializable
 {
     /**
@@ -11,6 +13,7 @@ interface PrimitiveSerializable
      * @param int $version
      * @param array $primitives
      * @return PrimitiveSerializable
+     * @throws ModelException
      */
     public static function deserializePrimitive(int $version, array $primitives): PrimitiveSerializable;
 

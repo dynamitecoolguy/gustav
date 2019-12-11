@@ -6,6 +6,7 @@ namespace Gustav\Common\Model\FlatBuffers;
 
 use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
+use Gustav\Common\Exception\ModelException;
 
 /**
  * Interface FlatBuffersSerializable
@@ -18,6 +19,7 @@ interface FlatBuffersSerializable
      * @param int $version
      * @param ByteBuffer $buffer
      * @return FlatBuffersSerializable
+     * @throws ModelException
      */
     public static function deserializeFlatBuffers(int $version, ByteBuffer $buffer): FlatBuffersSerializable;
 

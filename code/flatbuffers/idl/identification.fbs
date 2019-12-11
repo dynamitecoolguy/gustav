@@ -1,4 +1,4 @@
-namespace Gustav.DX;
+namespace Gustav.Dx;
 
 /// ユーザ登録(Input/Output)
 table Identification {

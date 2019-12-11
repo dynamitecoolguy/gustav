@@ -1,4 +1,4 @@
-namespace Gustav.DX;
+namespace Gustav.Dx;
 
 /// データ移管
 table TransferCode {

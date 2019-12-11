@@ -68,7 +68,9 @@ class CommandRegistrationTest extends TestCase
      */
     public function registration(): void
     {
-        $request = new IdentificationModel(0, 0, 'hogehoge');
+        $request = new IdentificationModel([
+            IdentificationModel::CAMPAIGN_CODE => 'hogehoge'
+        ]);
         $result = self::$dispatcher->dispatch(1, self::$container, $request);
 
         $this->assertTrue(true);

@@ -25,11 +25,19 @@ class IdentificationModelTest extends TestCase
 
     /**
      * @param ModelSerializerInterface $serializer
+     * @throws ModelException
      */
     private function encodeAndDecodeBody(ModelSerializerInterface $serializer)
     {
-        $register1 = new IdentificationModel(1, '101', '');
-        $register2 = new IdentificationModel(2, '102', 'hoge');
+        $register1 = new IdentificationModel([
+            IdentificationModel::USER_ID => 1,
+            IdentificationModel::OPEN_ID => '101'
+        ]);
+        $register2 = new IdentificationModel([
+            IdentificationModel::USER_ID => 2,
+            IdentificationModel::OPEN_ID => '102',
+            IdentificationModel::CAMPAIGN_CODE => 'hoge'
+        ]);
 
         $stream = $serializer->serialize([
             [1, 'req1', $register1],
@@ -55,6 +63,7 @@ class IdentificationModelTest extends TestCase
 
     /**
      * @test
+     * @throws ModelException
      */
     public function encodeAndDecodeJson()
     {
@@ -63,6 +72,7 @@ class IdentificationModelTest extends TestCase
 
     /**
      * @test
+     * @throws ModelException
      */
     public function encodeAndDecodeMessagePack()
     {
@@ -71,17 +81,22 @@ class IdentificationModelTest extends TestCase
 
     /**
      * @test
+     * @throws ModelException
      */
     public function getterAndSetter()
     {
-        $r = new IdentificationModel(3, 103, '333');
+        $r = new IdentificationModel([
+            IdentificationModel::USER_ID => 3,
+            IdentificationModel::OPEN_ID => '103',
+            IdentificationModel::CAMPAIGN_CODE => 'hoge'
+        ]);
 
         $r->setUserId(4);
-        $r->setOpenId('104');
+        $r->set(IdentificationModel::OPEN_ID, '104');
         $r->setCampaignCode('444');
 
         $this->assertEquals(4, $r->getUserId());
         $this->assertEquals('104', $r->getOpenId());
-        $this->assertEquals('444', $r->getCampaignCode());
+        $this->assertEquals('444', $r->get(IdentificationModel::CAMPAIGN_CODE));
     }
 }
