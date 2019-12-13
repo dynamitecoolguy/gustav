@@ -9,6 +9,11 @@ use Gustav\Common\Adapter\S3Interface;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Psr\Http\Message\ResponseInterface;
 use Gustav\Common\Adapter\MySQLInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Interfaces\CallableResolverInterface;
+use Slim\Interfaces\InvocationStrategyInterface;
+use Slim\Interfaces\RouteInterface;
+use Slim\Psr7\Environment;
 
 /**
  * サンプルコントローラ
@@ -68,5 +73,4 @@ class HelloController
 
         return $response;
     }
-
 }

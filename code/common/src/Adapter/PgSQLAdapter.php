@@ -3,6 +3,9 @@
 
 namespace Gustav\Common\Adapter;
 
+use Gustav\Common\Config\ApplicationConfigInterface;
+use Gustav\Common\Exception\ConfigException;
+use Gustav\Common\Network\NameResolver;
 use PDO;
 
 /**
@@ -18,11 +21,27 @@ class PgSQLAdapter implements PgSQLInterface
 
     /**
      * PgSQLAdapter constructor.
-     * @param PDO $pdo
+     * @param ApplicationConfigInterface $config
+     * @throws ConfigException
      */
-    public function __construct(PDO $pdo)
+    public function __construct(ApplicationConfigInterface $config)
     {
-        $this->pdo = $pdo;
+        list($host, $port) = NameResolver::resolveHostAndPort($config->getValue('pgsql', 'host'));
+        $dsn = 'pgsql:host=' . $host . ';dbname=' . $config->getValue('pgsql', 'dbname');
+        if ($port > 0) {
+            $dsn .= ';port=' . $port;
+        }
+        $options = [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false
+        ];
+        $this->pdo = new PDO(
+            $dsn,
+            $config->getValue('pgsql', 'user'),
+            $config->getValue('pgsql', 'password'),
+            $options
+        );
     }
 
     /**

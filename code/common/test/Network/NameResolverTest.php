@@ -14,7 +14,17 @@ class NameResolverTest extends TestCase
     public function getLocalhost(): void
     {
         NameResolver::flushCache('localhost');
-        $this->assertEquals(NameResolver::getIp('localhost'), '127.0.0.1');
-        $this->assertEquals(NameResolver::getIp('localhost'), '127.0.0.1'); // cache used
+        $this->assertEquals('127.0.0.1', NameResolver::getIp('localhost'));
+        $this->assertEquals('127.0.0.1', NameResolver::getIp('localhost'));
+    }
+
+    /**
+     * @test
+     */
+    public function resolve(): void
+    {
+        NameResolver::flushCache('localhost');
+        $this->assertEquals(['127.0.0.1', 0], NameResolver::resolveHostAndPort('localhost'));
+        $this->assertEquals(['127.0.0.1', 8080], NameResolver::resolveHostAndPort('localhost:8080'));
     }
 }

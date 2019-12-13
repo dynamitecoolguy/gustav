@@ -53,7 +53,7 @@ class DataLoggerFluent implements DataLoggerInterface
         $this->entityList = [];
         $this->logger = new FluentLogger(
             $host,
-            $port,
+            $port > 0 ? $port : 24224,
             [
                 'max_write_retry' => 10,
                 'socket_timeout' => 60,

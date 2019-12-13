@@ -4,7 +4,10 @@
 namespace Gustav\Common\Adapter;
 
 use \Exception;
+use Gustav\Common\Config\ApplicationConfigInterface;
+use Gustav\Common\Exception\ConfigException;
 use Gustav\Common\Exception\DatabaseException;
+use Gustav\Common\Network\NameResolver;
 use PDO;
 use PDOStatement;
 
@@ -26,12 +29,29 @@ class MySQLAdapter implements MySQLInterface
 
     /**
      * MySQLAdapter constructor.
-     * @param PDO $pdo
+     * @param ApplicationConfigInterface $config
      * @param bool $forMaster
+     * @throws ConfigException
      */
-    public function __construct(PDO $pdo, bool $forMaster)
+   public function __construct(ApplicationConfigInterface $config, bool $forMaster)
     {
-        $this->pdo = $pdo;
+        $hostKey = $forMaster ? 'hostm' : 'host';
+        list($host, $port) = NameResolver::resolveHostAndPort($config->getValue('mysql', $hostKey));
+        $dsn = 'mysql:host=' . $host . ';dbname=' . $config->getValue('mysql', 'dbname');
+        if ($port > 0) {
+            $dsn .= ';port=' . $port;
+        }
+        $options = [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false
+        ];
+        $this->pdo = new PDO(
+            $dsn,
+            $config->getValue('mysql', 'user'),
+            $config->getValue('mysql', 'password'),
+            $options
+        );
         $this->forMaster = $forMaster;
     }
 

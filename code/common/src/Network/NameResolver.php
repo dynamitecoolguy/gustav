@@ -48,6 +48,22 @@ class NameResolver
     }
 
     /**
+     * ホスト名からIPとポートを分離する
+     * @param string $host
+     * @return array  [string, integer] ホスト名, ポート番号
+     */
+    public static function resolveHostAndPort(string $host): array
+    {
+        $portPos = strrpos($host, ':');
+        if ($portPos === false) {
+            return [static::getIp($host), 0];
+        }
+        $hostBody = substr($host, 0, $portPos);
+        $port = substr($host, $portPos + 1);
+        return [static::getIp($hostBody), (int)$port];
+    }
+
+    /**
      * APCUに格納するときのキーを生成する
      * @param string $name
      * @return string

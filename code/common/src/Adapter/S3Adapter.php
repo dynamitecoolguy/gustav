@@ -5,6 +5,8 @@ namespace Gustav\Common\Adapter;
 
 
 use Aws\S3\S3Client;
+use Gustav\Common\Config\ApplicationConfigInterface;
+use Gustav\Common\Exception\ConfigException;
 
 /**
  * Class S3Adapter
@@ -17,9 +19,20 @@ class S3Adapter implements S3Interface
      */
     private $client;
 
-    public function __construct(S3Client $client)
+    /**
+     * S3Adapter constructor.
+     * @param ApplicationConfigInterface $config
+     * @throws ConfigException
+     */
+    public function __construct(ApplicationConfigInterface $config)
     {
-        $this->client = $client;
+        $sdk = AwsSdkFactory::create(
+            $config,
+            'storage',
+            '2006-03-01',
+            ['use_path_style_endpoint' => true]
+        );
+        $this->client = $sdk->createS3();
     }
 
     /**

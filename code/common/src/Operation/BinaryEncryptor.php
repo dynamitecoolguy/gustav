@@ -17,6 +17,11 @@ class BinaryEncryptor implements BinaryEncryptorInterface
     const CRYPT_KEY       = '0ef71ec9cca1f45d07cae9af7f46e34f';
     const OPENSSL_CRYPT_ALGORITHM = 'AES-128-CBC';
 
+    public function __construct()
+    {
+        // do nothing
+    }
+
     /**
      * @inheritDoc
      */

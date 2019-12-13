@@ -3,7 +3,6 @@
 
 namespace Gustav\Common\Model\FlatBuffers;
 
-use Exception;
 use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
 use Gustav\Common\Exception\ModelException;

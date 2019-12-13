@@ -2,8 +2,6 @@
 
 namespace Gustav\Common\Config;
 
-use Gustav\Common\Exception\ConfigException;
-
 /**
  * Config取得用クラス. 一度読み込んだ設定内容はローカルとAPCUにキャッシュされる。APCU側のキャッシュはPARAMETER_TTL秒の間保持される.
  * Class ApplicationConfig
@@ -27,8 +25,7 @@ class ApplicationConfig implements ApplicationConfigInterface
     private $configLoader;
 
     /**
-     * @var array
-     * 取得済みの値
+     * @var array 取得済みの値
      */
     private $fetchedValue = [];
 

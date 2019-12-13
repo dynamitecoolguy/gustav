@@ -5,6 +5,8 @@ namespace Gustav\Common\Adapter;
 
 
 use Aws\DynamoDb\DynamoDbClient;
+use Gustav\Common\Config\ApplicationConfigInterface;
+use Gustav\Common\Exception\ConfigException;
 
 /**
  * Class DynamoDbAdapter
@@ -17,9 +19,15 @@ class DynamoDbAdapter implements DynamoDbInterface
      */
     private $client;
 
-    public function __construct(DynamoDbClient $client)
+    /**
+     * DynamoDbAdapter constructor.
+     * @param ApplicationConfigInterface $config
+     * @throws ConfigException
+     */
+    public function __construct(ApplicationConfigInterface $config)
     {
-        $this->client = $client;
+        $sdk = AwsSdkFactory::create($config, 'dynamodb', '2012-08-10');
+        $this->client = $sdk->createDynamoDb();
     }
 
     /**

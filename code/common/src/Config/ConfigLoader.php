@@ -53,11 +53,15 @@ class ConfigLoader
     /**
      * 配列の内容を後から上書きする関数
      * @param array $accumulator
-     * @param array $value
+     * @param array|null $value
      * @return array
      */
-    private function mergeArray(array $accumulator, array $value): array
+    private function mergeArray(array $accumulator, ?array $value): array
     {
+        if (is_null($value)) {
+            return $accumulator;
+        }
+
         foreach ($value as $k => $v) {
             if (is_array($v)) {
                 $accumulator[$k] = $this->mergeArray($accumulator[$k] ?? [], $v);

@@ -5,6 +5,8 @@ namespace Gustav\Common\Adapter;
 
 
 use Aws\Sqs\SqsClient;
+use Gustav\Common\Config\ApplicationConfigInterface;
+use Gustav\Common\Exception\ConfigException;
 
 /**
  * Class SqsAdapter
@@ -17,9 +19,19 @@ class SqsAdapter implements SqsInterface
      */
     private $client;
 
-    public function __construct(SqsClient $client)
+    /**
+     * S3Adapter constructor.
+     * @param ApplicationConfigInterface $config
+     * @throws ConfigException
+     */
+    public function __construct(ApplicationConfigInterface $config)
     {
-        $this->client = $client;
+        $sdk = AwsSdkFactory::create(
+            $config,
+            'sqs',
+            '2012-11-05'
+        );
+        $this->client = $sdk->createSqs();
     }
 
     /**

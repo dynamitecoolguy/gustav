@@ -3,6 +3,9 @@
 
 namespace Gustav\Common\Adapter;
 
+use Gustav\Common\Config\ApplicationConfigInterface;
+use Gustav\Common\Exception\ConfigException;
+use Gustav\Common\Network\NameResolver;
 use Redis;
 
 /**
@@ -18,10 +21,20 @@ class RedisAdapter implements RedisInterface
 
     /**
      * RedisAdapter constructor.
-     * @param Redis $redis
+     * @param ApplicationConfigInterface $config
+     * @throws ConfigException
      */
-    public function __construct(Redis $redis)
+    public function __construct(ApplicationConfigInterface $config)
     {
+        list($host, $port) = NameResolver::resolveHostAndPort($config->getValue('redis', 'host'));
+        $redis = new Redis();
+        if ($port > 0) {
+            $redis->connect($host, $port);
+        } else {
+            $redis->connect($host);
+        }
+        $redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_IGBINARY);
+
         $this->redis = $redis;
     }
 

@@ -33,6 +33,6 @@ class TransferOperation extends AbstractExecutor
         // UserIdのみ -> TransferCodeの取得
         // UserId + TransferCode + OldPassword + NewPassword -> Passwordの変更
         // TransferCode + OldPassword -> UserIdの取得
-        // UserId + OldPassword -> TransfetCodeの再発行
+        // UserId + OldPassword -> TransferCodeの再発行
     }
 }

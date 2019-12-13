@@ -34,7 +34,7 @@ $app = Bridge::create($container);
 $app->add(new ContentLengthMiddleware());
 
 // ルーティング (@see PHP-DI in Slim)
-if ($config->getValue('app', 'debugapi', 'false') == 'true') {
+if ($config->getValue('app', 'debugapi', 'false')) {
     // デバグ/テスト用途
     $app->get('/hello/{who}', [Gustav\App\Controller\HelloController::class, 'hello']);
     $app->get('/mysql/{number}', [Gustav\App\Controller\HelloController::class, 'mysql']);

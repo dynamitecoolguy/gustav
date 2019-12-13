@@ -70,6 +70,7 @@ sqs:
   secret: fuga
 
 logger:
+  #type: sqs
   type: fluent
   host: localhost:24224
 __EOF__

@@ -3,7 +3,6 @@
 
 namespace Gustav\Common\Model\Primitive;
 
-use \Exception;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelClassMap;
@@ -11,6 +10,10 @@ use Gustav\Common\Model\ModelSerializerInterface;
 use ReflectionClass;
 use ReflectionException;
 
+/**
+ * Class PrimitiveSerializer
+ * @package Gustav\Common\Model\Primitive
+ */
 abstract class PrimitiveSerializer implements ModelSerializerInterface
 {
     protected abstract function encode(array $result): string;
