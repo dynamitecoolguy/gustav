@@ -117,7 +117,7 @@ services:
     build:
       context: ./sqs
     ports:
-      - "9324:9324"
+      - "19324:9324"
     container_name: sqs
     networks:
       - private_net
