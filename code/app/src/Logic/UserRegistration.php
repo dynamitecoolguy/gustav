@@ -11,6 +11,7 @@ use Gustav\Common\Exception\DatabaseException;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelInterface;
+use Gustav\Common\Operation\KeyOperatorInterface;
 
 /**
  * ユーザ登録処理
@@ -21,7 +22,6 @@ class UserRegistration extends AbstractExecutor
 {
     /**
      * @inheritDoc
-     * @throws DatabaseException
      */
     public function execute(Container $container, ModelChunk $requestObject): ?ModelInterface
     {
@@ -30,15 +30,18 @@ class UserRegistration extends AbstractExecutor
             throw new ModelException('Request object is not expected class');
         }
 
-        $campaignCode = $request->getCampaignCode();
+        $note = $request->getNote();
+
+        $keyOperator = $container->get(KeyOperatorInterface::class);
+        list($privateKey, $publicKey) = $keyOperator->createKeys();
 
         $mysql = $this->getMySQLMasterAdapter($container);
 
         list($userId, $openId) = $mysql->executeWithTransaction(
-            function (MySQLAdapter $adapter) use ($campaignCode, $container) {
+            function (MySQLAdapter $adapter) use ($note, $container, $privateKey, $publicKey) {
                 $adapter->execute(
-                    'insert into identification(open_id, campaign_code) values(0, :code)',
-                    [':code' => $campaignCode]
+                    'insert into identification(open_id, note) values(0, :note)',
+                    [':note' => $note]
                 );
                 $userId = (int)$adapter->lastInsertId();
 
@@ -48,6 +51,12 @@ class UserRegistration extends AbstractExecutor
                     'update identification set open_id=:oid where user_id=:uid',
                     [':oid' => (int)$openId, ':uid' => $userId]
                 );
+
+                $adapter->execute(
+                    'insert into key_pair(user_id, private_key, public_key) values(:uid, :pri, :pub)',
+                    [':uid' => $userId, ':pri' => $privateKey, ':pub' => $publicKey]
+                );
+
                 return [$userId, $openId];
             }
         );
@@ -55,7 +64,9 @@ class UserRegistration extends AbstractExecutor
         return new IdentificationModel([
             IdentificationModel::USER_ID => $userId,
             IdentificationModel::OPEN_ID => $openId,
-            IdentificationModel::CAMPAIGN_CODE => $campaignCode
+            IdentificationModel::NOTE => $note,
+            IdentificationModel::PRIVATE_KEY => $privateKey,
+            IdentificationModel::PUBLIC_KEY => $publicKey
         ]);
     }
 }

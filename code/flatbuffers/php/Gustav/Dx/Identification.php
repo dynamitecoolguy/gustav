@@ -48,9 +48,21 @@ class Identification extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getCampaignCode()
+    public function getNote()
     {
         $o = $this->__offset(8);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getPrivateKey()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getPublicKey()
+    {
+        $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -60,19 +72,21 @@ class Identification extends Table
      */
     public static function startIdentification(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(5);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return Identification
      */
-    public static function createIdentification(FlatBufferBuilder $builder, $user_id, $open_id, $campaign_code)
+    public static function createIdentification(FlatBufferBuilder $builder, $user_id, $open_id, $note, $private_key, $public_key)
     {
-        $builder->startObject(3);
+        $builder->startObject(5);
         self::addUserId($builder, $user_id);
         self::addOpenId($builder, $open_id);
-        self::addCampaignCode($builder, $campaign_code);
+        self::addNote($builder, $note);
+        self::addPrivateKey($builder, $private_key);
+        self::addPublicKey($builder, $public_key);
         $o = $builder->endObject();
         return $o;
     }
@@ -102,9 +116,29 @@ class Identification extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addCampaignCode(FlatBufferBuilder $builder, $campaignCode)
+    public static function addNote(FlatBufferBuilder $builder, $note)
     {
-        $builder->addOffsetX(2, $campaignCode, 0);
+        $builder->addOffsetX(2, $note, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPrivateKey(FlatBufferBuilder $builder, $privateKey)
+    {
+        $builder->addOffsetX(3, $privateKey, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPublicKey(FlatBufferBuilder $builder, $publicKey)
+    {
+        $builder->addOffsetX(4, $publicKey, 0);
     }
 
     /**

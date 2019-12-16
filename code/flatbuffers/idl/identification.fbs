@@ -4,7 +4,9 @@ namespace Gustav.Dx;
 table Identification {
   user_id: int;           // (Input/Output) ユーザID
   open_id: string;        // (Output)       公開用ID
-  campaign_code: string;  // (Input/Output) キャンペーンコード
+  note: string;           // (Input/Output) キャンペーンコードなどの登録時のデータ
+  private_key: string;    // (Output)       秘密鍵
+  public_key: string;     // (Output)       公開鍵
 }
 
 root_type Identification;

@@ -10,7 +10,7 @@ class DataLoggerSqsTest extends TestCase
 {
     private static $client;
 
-    private static $queueUrl = 'http://localhost:9324/queue/hoge_queue';
+    private static $queueUrl = 'http://localhost:19324/queue/hoge_queue';
 
     /**
      * @beforeClass
@@ -18,7 +18,7 @@ class DataLoggerSqsTest extends TestCase
     public static function setUpSqsClient()
     {
         $sdk = new Sdk([
-            'endpoint' => 'http://localhost:9324',
+            'endpoint' => 'http://localhost:19324',
             'region' => 'ap-northeast-1',
             'version' => '2012-11-05',
             'credentials' => [

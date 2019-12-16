@@ -5,9 +5,11 @@ namespace Gustav\Common\Logic;
 
 
 use DI\Container;
+use Gustav\Common\Exception\DatabaseException;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelInterface;
+use Psr\Container\ContainerExceptionInterface;
 
 /**
  * データ処理を実際に行うクラス用のインターフェイスです.
@@ -28,6 +30,8 @@ interface ExecutorInterface
      * @param ModelChunk     $requestObject // リクエストオブジェクト
      * @return ModelInterface|null
      * @throws ModelException
+     * @throws DatabaseException
+     * @throws ContainerExceptionInterface
      */
     public function execute(Container $container, ModelChunk $requestObject): ?ModelInterface;
 }

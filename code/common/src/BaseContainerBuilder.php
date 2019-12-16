@@ -24,6 +24,8 @@ use Gustav\Common\Operation\BinaryEncryptor;
 use Gustav\Common\Operation\BinaryEncryptorInterface;
 use DI\Container;
 use DI\ContainerBuilder;
+use Gustav\Common\Operation\KeyOperator;
+use Gustav\Common\Operation\KeyOperatorInterface;
 use function DI\create;
 use function DI\factory;
 
@@ -66,6 +68,7 @@ class BaseContainerBuilder extends ContainerBuilder
             S3Interface::class => create(S3Adapter::class)->constructor($config),
             SqsInterface::class => create(SqsAdapter::class)->constructor($config),
             BinaryEncryptorInterface::class => create(BinaryEncryptor::class),
+            KeyOperatorInterface::class => create(KeyOperator::class),
             DataLoggerInterface::class => factory([DataLoggerFactory::class, 'create']),
             DispatcherInterface::class => create(BaseDispatcher::class),
             ModelSerializerInterface::class => factory([ModelSerializerFactory::class, 'create'])

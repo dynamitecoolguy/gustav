@@ -16,7 +16,7 @@ class UserRegistrationTest extends LogicBase
     public function registration(): void
     {
         $request = new IdentificationModel([
-            IdentificationModel::CAMPAIGN_CODE => 'hogehoge'
+            IdentificationModel::NOTE => 'hogehoge'
         ]);
         $result = self::$dispatcher->dispatch(self::$container, new ModelChunk('REG', 1, 'req', $request));
 

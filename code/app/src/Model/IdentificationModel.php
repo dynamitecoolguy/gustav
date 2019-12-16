@@ -26,9 +26,17 @@ class IdentificationModel extends AbstractModel implements FlatBuffersSerializab
     private $openId = '';
     const OPEN_ID = 'openId';
 
-    /** @var string キャンペーンコード */
-    private $campaignCode = '';
-    const CAMPAIGN_CODE = 'campaignCode';
+    /** @var string ノート */
+    private $note = '';
+    const NOTE = 'note';
+
+    /** @var string 秘密鍵 */
+    private $privateKey = '';
+    const PRIVATE_KEY = 'privateKey';
+
+    /** @var string 公開鍵 */
+    private $publicKey = '';
+    const PUBLIC_KEY = 'publicKey';
 
     /**
      * @inheritDoc
@@ -40,7 +48,9 @@ class IdentificationModel extends AbstractModel implements FlatBuffersSerializab
         return new static([
             self::USER_ID => $identification->getUserId(),
             self::OPEN_ID => $identification->getOpenId(),
-            self::CAMPAIGN_CODE => $identification->getCampaignCode()
+            self::NOTE => $identification->getNote(),
+            self::PRIVATE_KEY => $identification->getPrivateKey(),
+            self::PUBLIC_KEY => $identification->getPublicKey()
         ]);
     }
 
@@ -52,7 +62,9 @@ class IdentificationModel extends AbstractModel implements FlatBuffersSerializab
         return new static([
             self::USER_ID => $primitives[0],
             self::OPEN_ID => $primitives[1],
-            self::CAMPAIGN_CODE => $primitives[2]
+            self::NOTE => $primitives[2],
+            self::PRIVATE_KEY => $primitives[3],
+            self::PUBLIC_KEY => $primitives[4]
         ]);
     }
 
@@ -61,12 +73,16 @@ class IdentificationModel extends AbstractModel implements FlatBuffersSerializab
      */
     public function serializeFlatBuffers(FlatbufferBuilder &$builder): int
     {
-        $campaignCode = $builder->createString($this->campaignCode);
         $openId = $builder->createString($this->openId);
+        $note = $builder->createString($this->note);
+        $privateKey = $builder->createString($this->privateKey);
+        $publicKey = $builder->createString($this->publicKey);
         Identification::startIdentification($builder);
         Identification::addUserId($builder, $this->userId);
         Identification::addOpenId($builder, $openId);
-        Identification::addCampaignCode($builder, $campaignCode);
+        Identification::addNote($builder, $note);
+        Identification::addPrivateKey($builder, $privateKey);
+        Identification::addPublicKey($builder, $publicKey);
         return Identification::endIdentification($builder);
     }
 
@@ -75,6 +91,6 @@ class IdentificationModel extends AbstractModel implements FlatBuffersSerializab
      */
     public function serializePrimitive(): array
     {
-        return [$this->userId, $this->openId, $this->campaignCode];
+        return [$this->userId, $this->openId, $this->note, $this->privateKey, $this->publicKey];
     }
 }
