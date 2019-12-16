@@ -1,12 +1,11 @@
 <?php
 
-use Gustav\Common\Operation\Time;
-use Slim\Middleware\ContentLengthMiddleware;
 use DI\Bridge\Slim\Bridge;
-
 use Gustav\App\AppContainerBuilder;
 use Gustav\Common\Config\ApplicationConfig;
 use Gustav\Common\Config\ConfigLoader;
+use Gustav\Common\Operation\Time;
+use Slim\Middleware\ContentLengthMiddleware;
 
 /** @var Composer\Autoload\ClassLoader $autoloader */
 $autoloader = require __DIR__ . '/../../vendor/autoload.php';

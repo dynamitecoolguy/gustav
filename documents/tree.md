@@ -48,4 +48,5 @@
     /web_mgr                          管理ツールアプリケーション
     docker-compose-local.yml          Docker-compose定義ファイル(ローカル環境用)
     docker-compose-development.yml    Docker-compose定義ファイル(開発環境用)
+  /documents                        各種ドキュメント
 ```

@@ -29,6 +29,7 @@ class Processor
      */
     public static function process(string $input, Container $container): string
     {
+        // Containerからデータ処理に使用するオブジェクトを取得する
         $dispatcher = $container->get(DispatcherInterface::class);
         $encryptor = $container->get(BinaryEncryptorInterface::class);
         $serializer = $container->get(ModelSerializerInterface::class);
@@ -37,10 +38,11 @@ class Processor
         $decrypted = $encryptor->decrypt($input);
 
         // デシリアライズ
-        $resultList = [];
         $requestObjectList = $serializer->deserialize($decrypted);
+
+        // リクエストオブジェクト毎に処理
+        $resultList = [];
         foreach ($requestObjectList as $requestObject) {
-            // リクエストオブジェクト毎に処理
             $result = $dispatcher->dispatch($container, $requestObject);
             if (!is_null($result)) {
                 $resultList[] = new ModelChunk(

@@ -20,7 +20,6 @@ Gustavは、汎用的なゲーム用APIサーバフレームワークです。
 | environment.md | 開発環境一覧 |
 | flow.md | コントロールフロー |
 | tree.md | プロジェクトソースツリー解説 |
-| README.md | このファイル |
 
 ### License
 

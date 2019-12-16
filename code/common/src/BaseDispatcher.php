@@ -4,6 +4,7 @@
 namespace Gustav\Common;
 
 use DI\Container;
+use Gustav\Common\Exception\DatabaseException;
 use Gustav\Common\Logic\ExecutorInterface;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\ModelChunk;
@@ -83,6 +84,7 @@ class BaseDispatcher implements DispatcherInterface
      * @param ModelChunk $requestObject
      * @return ModelInterface|null
      * @throws ModelException
+     * @throws DatabaseException
      */
     public function dispatch(Container $container, ModelChunk $requestObject): ?ModelInterface
     {
