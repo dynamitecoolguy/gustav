@@ -13,18 +13,10 @@ use Gustav\Common\Model\ModelInterface;
  * Class TransferOperation
  * @package Gustav\App\Logic
  */
-class TransferOperation extends AbstractExecutor
+class TransferOperation
 {
-    /**
-     * @inheritDoc
-     */
-    public function execute(Container $container, ModelChunk $requestObject): ?ModelInterface
+    public function __invoke(Container $container, TransferCodeModel $request): ?ModelInterface
     {
-        $request = $requestObject->getModel();
-        if (!($request instanceof TransferCodeModel)) {
-            throw new ModelException('Request object is not expected class');
-        }
-
         // パラメータ
         $userId = $request->getUserId();             /** @var int    $userId */
         $transferCode = $request->getTransferCode(); /** @var string $transferCode */
@@ -34,5 +26,7 @@ class TransferOperation extends AbstractExecutor
         // UserId + TransferCode + OldPassword + NewPassword -> Passwordの変更
         // TransferCode + OldPassword -> UserIdの取得
         // UserId + OldPassword -> TransferCodeの再発行
+
+        // TODO:
     }
 }

@@ -4,9 +4,7 @@
 namespace Gustav\Common;
 
 
-use DI\Container;
 use Gustav\Common\Config\ApplicationConfigInterface;
-use Gustav\Common\Logic\ExecutorInterface;
 use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelInterface;
 use PHPUnit\Framework\TestCase;
@@ -60,12 +58,10 @@ class DummyBaseDispatcherModel implements ModelInterface
 {
 }
 
-class DummyBaseDispatcherExecutor implements ExecutorInterface
+class DummyBaseDispatcherExecutor
 {
-    public static function getInstance(): ExecutorInterface { return new static(); }
-
-    public function execute(Container $container, ModelChunk $requestObject): ?ModelInterface
+    public function __invoke(DummyBaseDispatcherModel $model): ?ModelInterface
     {
-        return $requestObject->getModel();
+        return $model;
     }
 }

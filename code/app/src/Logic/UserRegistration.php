@@ -7,10 +7,8 @@ use DI\Container;
 use Gustav\App\Model\IdentificationModel;
 use Gustav\App\Operation\OpenIdConverter;
 use Gustav\Common\Adapter\MySQLAdapter;
-use Gustav\Common\Exception\DatabaseException;
+use Gustav\Common\Adapter\MySQLMasterInterface;
 use Gustav\Common\Exception\ModelException;
-use Gustav\Common\Model\ModelChunk;
-use Gustav\Common\Model\ModelInterface;
 use Gustav\Common\Operation\KeyOperatorInterface;
 
 /**
@@ -18,24 +16,21 @@ use Gustav\Common\Operation\KeyOperatorInterface;
  * Class UserRegistration
  * @package Gustav\App\Logic
  */
-class UserRegistration extends AbstractExecutor
+class UserRegistration
 {
     /**
-     * @inheritDoc
+     * @param Container $container
+     * @param IdentificationModel $request
+     * @param MySQLMasterInterface $mysql
+     * @param KeyOperatorInterface $keyOperator
+     * @return IdentificationModel
+     * @throws ModelException
      */
-    public function execute(Container $container, ModelChunk $requestObject): ?ModelInterface
+    public function __invoke(Container $container, IdentificationModel $request, MySQLMasterInterface $mysql, KeyOperatorInterface $keyOperator): IdentificationModel
     {
-        $request = $requestObject->getModel();
-        if (!($request instanceof IdentificationModel)) {
-            throw new ModelException('Request object is not expected class');
-        }
-
         $note = $request->getNote();
 
-        $keyOperator = $container->get(KeyOperatorInterface::class);
         list($privateKey, $publicKey) = $keyOperator->createKeys();
-
-        $mysql = $this->getMySQLMasterAdapter($container);
 
         list($userId, $openId) = $mysql->executeWithTransaction(
             function (MySQLAdapter $adapter) use ($note, $container, $privateKey, $publicKey) {

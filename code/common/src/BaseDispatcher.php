@@ -4,14 +4,16 @@
 namespace Gustav\Common;
 
 use DI\Container;
-use Gustav\Common\Exception\DatabaseException;
-use Gustav\Common\Logic\ExecutorInterface;
+use Exception;
+use Gustav\Common\Exception\GustavException;
+use Invoker\Invoker;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelClassMap;
 use Gustav\Common\Model\ModelInterface;
-use ReflectionClass;
-use ReflectionException;
+use Invoker\ParameterResolver\Container\TypeHintContainerResolver;
+use Invoker\ParameterResolver\ResolverChain;
+use Invoker\ParameterResolver\TypeHintResolver;
 
 /**
  * Class BaseDispatcher
@@ -83,8 +85,7 @@ class BaseDispatcher implements DispatcherInterface
      * @param Container $container
      * @param ModelChunk $requestObject
      * @return ModelInterface|null
-     * @throws ModelException
-     * @throws DatabaseException
+     * @throws GustavException
      */
     public function dispatch(Container $container, ModelChunk $requestObject): ?ModelInterface
     {
@@ -95,20 +96,27 @@ class BaseDispatcher implements DispatcherInterface
             throw new ModelException('Executor is not registered');
         }
 
+        // Executorを探す
         $executorClass = self::$dispatchTable[get_class($request)];
+
+        // PHP-DI/Invokerで引数をtype-hintingで割り当てる
+        $invoker = new Invoker(
+            new ResolverChain([
+                new TypeHintResolver(),
+                new TypeHintContainerResolver($container)
+            ]),
+            $container);
+
         try {
-            $refClass = new ReflectionClass($executorClass);
-            if (!$refClass->isSubclassOf(ExecutorInterface::class)) {
-                throw new ModelException('Executor is not instance of ExecutorInterface');
-            }
-            $method = $refClass->getMethod('getInstance');
-            $executor = $method->invoke(null);
-            if (!($executor instanceof ExecutorInterface)) {
-                throw new ModelException('Executor is not instance of ExecutorInterface');
-            }
-        } catch (ReflectionException $e) {
-            throw new ModelException('ReflectionException occurred', 0, $e);
+            return $invoker->call($executorClass,
+                [
+                    // TypeHintResolverで処理されるもの。これ以外はcontainerに問い合わされる
+                    ModelChunk::class => $requestObject,
+                    ModelInterface::class => $request,
+                    $class => $request
+                ]);
+        } catch (Exception $e) {
+            throw new ModelException("Executor(${executorClass}) is not callable or failed to call", 0, $e);
         }
-        return $executor->execute($container, $requestObject);
     }
 }

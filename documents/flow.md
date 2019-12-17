@@ -331,7 +331,85 @@ class Processor
 
 ### Dispatcher
 
+リクエストを処理するディスパッチャーは、Gustav\Common\DispatcherInterfaceを実装したクラスで行います。
+このクラスの実装は、containerにDispatcherInterface::classをキーにして登録しておく必要があります。
 
-### Executor
+
+```php
+use DI\Container;
+use Gustav\Common\Exception\ModelException;
+use Gustav\Common\Model\ModelChunk;
+use Gustav\Common\Model\ModelInterface;
+
+/**
+ * Interface DispatcherInterface
+ * @package Gustav\App
+ */
+interface DispatcherInterface
+{
+    /**
+     * @param Container      $container     // DI\Container
+     * @param ModelChunk     $request       // リクエストオブジェクト
+     * @return ModelInterface|null          // リザルト。必要ない場合はnull
+     * @throws ModelException
+     */
+    public function dispatch(Container $container, ModelChunk $request): ?ModelInterface;
+}
+```
+
+標準的な実装はGustav\Common\BaseDispatcherです。
+ただし、この実装には、実際の振り分け先は登録されていないので、通常は、このクラスを継承したクラスを登録します
+(例: Gustav\App\AppDispatcher)。
+
+BaseDispatcherを継承したクラスでは、getModelAndExecutor()メソッドをoverrideします。
+このメソッドでは、リクエストに付けられた識別子、リクエストオブジェクトを格納するためのモデルクラス、リクエスト処理を行う処理クラスのセットの配列を返します。
+
+モデルクラスは、Gustav\Common\Model\ModelInterfaceを実装する必要があります。
+
+```php
+    /**
+     * 必要であればアプリケーション側でoverrideする
+     * @return array
+     */
+    protected static function getModelAndExecutor(): array
+    {
+        return [
+            ['REG', IdentificationModel::class, UserRegistration::class],
+            ['TRC', TransferCodeModel::class, TransferOperation::class]
+        ];
+    }
+```
+
+### 処理クラス
+
+上述した処理を行うクラスは、__invoke マジックメソッドを実装します。
+このメソッドの引数は、typeに応じてcontainerに登録された値がセットされます。
+ただし、Gustav\Common\Model\ModelChunk、Gustav\Common\Model\ModelInterface、実際にリクエストに用いられたクラス名(下の例ではGustav\App\Model\IdentificationModel)に関しては、Containerに登録されていなくても値がセットされます。
 
 
+```php
+namespace Gustav\App\Logic;
+
+use DI\Container;
+use Gustav\App\Model\IdentificationModel;
+use Gustav\Common\Adapter\MySQLMasterInterface;
+
+/**
+ * ユーザ登録処理
+ * Class UserRegistration
+ * @package Gustav\App\Logic
+ */
+class UserRegistration
+{
+    /**
+     * @param Container $container
+     * @param IdentificationModel $request
+     * @param MySQLMasterInterface $mysql
+     * @return IdentificationModel
+     */
+    public function __invoke(Container $container, IdentificationModel $request, MySQLMasterInterface $mysql, KeyOperatorInterface $keyOperator): IdentificationModel
+    {
+        return new IdentificationModel([....]);
+    }
+}
+```

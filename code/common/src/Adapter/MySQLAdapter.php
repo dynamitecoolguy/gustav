@@ -15,7 +15,7 @@ use PDOStatement;
  * Class MySQLAdapter
  * @package Gustav\Common\Adapter
  */
-class MySQLAdapter implements MySQLInterface
+class MySQLAdapter implements MySQLInterface, MySQLMasterInterface
 {
     /**
      * @var PDO PDO Object
