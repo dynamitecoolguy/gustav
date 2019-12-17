@@ -20,11 +20,11 @@ class S3Adapter implements S3Interface
     private $client;
 
     /**
-     * S3Adapter constructor.
      * @param ApplicationConfigInterface $config
+     * @return S3Adapter
      * @throws ConfigException
      */
-    public function __construct(ApplicationConfigInterface $config)
+    public static function create(ApplicationConfigInterface $config): S3Adapter
     {
         $sdk = AwsSdkFactory::create(
             $config,
@@ -32,7 +32,16 @@ class S3Adapter implements S3Interface
             '2006-03-01',
             ['use_path_style_endpoint' => true]
         );
-        $this->client = $sdk->createS3();
+        return new static($sdk->createS3());
+    }
+
+    /**
+     * S3Adapter constructor.
+     * @param S3Client $client
+     */
+    public function __construct(S3Client $client)
+    {
+        $this->client = $client;
     }
 
     /**

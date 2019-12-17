@@ -3,9 +3,12 @@
 
 namespace Gustav\App;
 
+use Gustav\App\Operation\OpenIdConverter;
+use Gustav\App\Operation\OpenIdConverterInterface;
 use Gustav\Common\BaseContainerBuilder;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\DispatcherInterface;
+use function DI\create;
 
 /**
  * BaseContainerBuilderのDIコンテナの定義を変更する場合は、このクラスのようにdefinitionsメソッドを変更する方法がある
@@ -25,9 +28,8 @@ class AppContainerBuilder extends BaseContainerBuilder
             parent::getDefinitions($config),
             [
                 // Dispatcherをapp側のものに上書き
-                DispatcherInterface::class => function (): DispatcherInterface {
-                    return new AppDispatcher();
-                }
+                DispatcherInterface::class => create(AppDispatcher::class),
+                OpenIdConverterInterface::class => create(OpenIdConverter::class)
             ]
         );
     }

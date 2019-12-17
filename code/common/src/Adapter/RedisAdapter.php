@@ -20,11 +20,11 @@ class RedisAdapter implements RedisInterface
     private $redis;
 
     /**
-     * RedisAdapter constructor.
      * @param ApplicationConfigInterface $config
+     * @return RedisAdapter
      * @throws ConfigException
      */
-    public function __construct(ApplicationConfigInterface $config)
+    public static function create(ApplicationConfigInterface $config): RedisAdapter
     {
         list($host, $port) = NameResolver::resolveHostAndPort($config->getValue('redis', 'host'));
         $redis = new Redis();
@@ -35,6 +35,15 @@ class RedisAdapter implements RedisInterface
         }
         $redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_IGBINARY);
 
+        return new static($redis);
+    }
+
+    /**
+     * RedisAdapter constructor.
+     * @param Redis $redis
+     */
+    public function __construct(Redis $redis)
+    {
         $this->redis = $redis;
     }
 

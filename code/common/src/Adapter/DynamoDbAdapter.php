@@ -20,14 +20,23 @@ class DynamoDbAdapter implements DynamoDbInterface
     private $client;
 
     /**
-     * DynamoDbAdapter constructor.
      * @param ApplicationConfigInterface $config
+     * @return DynamoDbAdapter
      * @throws ConfigException
      */
-    public function __construct(ApplicationConfigInterface $config)
+    public static function create(ApplicationConfigInterface $config): DynamoDbAdapter
     {
         $sdk = AwsSdkFactory::create($config, 'dynamodb', '2012-08-10');
-        $this->client = $sdk->createDynamoDb();
+        return new static($sdk->createDynamoDb());
+    }
+
+    /**
+     * DynamoDbAdapter constructor.
+     * @param DynamoDbClient $client
+     */
+    public function __construct(DynamoDbClient $client)
+    {
+        $this->client = $client;
     }
 
     /**

@@ -28,12 +28,12 @@ class MySQLAdapter implements MySQLInterface, MySQLMasterInterface
     private $forMaster;
 
     /**
-     * MySQLAdapter constructor.
      * @param ApplicationConfigInterface $config
      * @param bool $forMaster
+     * @return static
      * @throws ConfigException
      */
-   public function __construct(ApplicationConfigInterface $config, bool $forMaster)
+    public static function create(ApplicationConfigInterface $config, bool $forMaster): MySQLAdapter
     {
         $hostKey = $forMaster ? 'hostm' : 'host';
         list($host, $port) = NameResolver::resolveHostAndPort($config->getValue('mysql', $hostKey));
@@ -46,12 +46,24 @@ class MySQLAdapter implements MySQLInterface, MySQLMasterInterface
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false
         ];
-        $this->pdo = new PDO(
+        $pdo = new PDO(
             $dsn,
             $config->getValue('mysql', 'user'),
             $config->getValue('mysql', 'password'),
             $options
         );
+
+        return new static($pdo, $forMaster);
+    }
+
+    /**
+     * MySQLAdapter constructor.
+     * @param PDO $pdo
+     * @param bool $forMaster
+     */
+   public function __construct(PDO $pdo, bool $forMaster)
+    {
+        $this->pdo = $pdo;
         $this->forMaster = $forMaster;
     }
 

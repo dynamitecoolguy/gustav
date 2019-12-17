@@ -20,11 +20,11 @@ class PgSQLAdapter implements PgSQLInterface
     private $pdo;
 
     /**
-     * PgSQLAdapter constructor.
      * @param ApplicationConfigInterface $config
+     * @return PgSQLAdapter
      * @throws ConfigException
      */
-    public function __construct(ApplicationConfigInterface $config)
+    public static function create(ApplicationConfigInterface $config): PgSQLAdapter
     {
         list($host, $port) = NameResolver::resolveHostAndPort($config->getValue('pgsql', 'host'));
         $dsn = 'pgsql:host=' . $host . ';dbname=' . $config->getValue('pgsql', 'dbname');
@@ -36,12 +36,23 @@ class PgSQLAdapter implements PgSQLInterface
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false
         ];
-        $this->pdo = new PDO(
+        $pdo = new PDO(
             $dsn,
             $config->getValue('pgsql', 'user'),
             $config->getValue('pgsql', 'password'),
             $options
         );
+
+        return new static($pdo);
+    }
+
+    /**
+     * PgSQLAdapter constructor.
+     * @param PDO $pdo
+     */
+    public function __construct(PDO $pdo)
+    {
+        $this->pdo = $pdo;
     }
 
     /**

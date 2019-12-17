@@ -49,15 +49,18 @@ class OpenIdConverterTest extends TestCase
      */
     public function mseq()
     {
-        $this->assertEquals(OpenIdConverter::INIT_VALUE, OpenIdConverter::userIdToOpenId(self::$container, 0));
+        $converter = new OpenIdConverter();
+        $redis = self::$container->get(RedisInterface::class);
+
+        $this->assertEquals(OpenIdConverter::INIT_VALUE, $converter->userIdToOpenId($redis, 0));
 
         $redisManager = self::$container->get(RedisInterface::class);
 
         // キャッシュ無しからの計算
         $redisManager->del(RedisKeys::KEY_OPEN_ID);
-        $openId = OpenIdConverter::userIdToOpenId(self::$container, 10);
+        $openId = $converter->userIdToOpenId($redis, 10);
 
         // キャッシュからの計算
-        $this->assertEquals($openId, OpenIdConverter::userIdToOpenId(self::$container, 10));
+        $this->assertEquals($openId, $converter->userIdToOpenId($redis, 10));
     }
 }

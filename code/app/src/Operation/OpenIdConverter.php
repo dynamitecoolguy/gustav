@@ -4,20 +4,17 @@
 namespace Gustav\App\Operation;
 
 
-use DI\Container;
 use Gustav\App\RedisKeys;
 use Gustav\Common\Adapter\RedisAdapter;
 use Gustav\Common\Adapter\RedisInterface;
-use Gustav\Common\Exception\NobodyExpectedException;
 use Gustav\Common\Operation\MaximumLengthSequence;
-use Psr\Container\ContainerExceptionInterface;
 
 /**
  * 公開IDは、1〜8,589,934,591 (2^33 - 1)までの数値を文字列にしたものである.
  * Class OpenIdConverter
  * @package Gustav\App\Operation
  */
-class OpenIdConverter
+class OpenIdConverter implements OpenIdConverterInterface
 {
     const P = 33;
     const Q = 13;
@@ -41,24 +38,17 @@ class OpenIdConverter
 
     /**
      * ユーザーIDをM系列で数値に変換する
-     * @param Container $container
+     * @param RedisInterface $redis
      * @param int $userId
      * @return string
-     * @throws NobodyExpectedException
      */
-    public static function userIdToOpenId(Container $container, int $userId): string
+    public function userIdToOpenId(RedisInterface $redis, int $userId): string
     {
         // M系列のパラメータセット確認
         self::checkParameter();
 
-        try {
-            $redisAdapter = $container->get(RedisInterface::class);
-            if (!($redisAdapter instanceof RedisAdapter)) {
-                throw new NobodyExpectedException('RedisInterface containerObject is not instance of RedisAdapter');
-            }
-        } catch (ContainerExceptionInterface $e) {
-            throw new NobodyExpectedException('Can\'t create redisManager', 0, $e);
-        }
+        // RedisInterfaceをRedisAdapterにする
+        $redisAdapter = ($redis instanceof RedisAdapter) ? $redis : new RedisAdapter($redis->getRedis());
 
         $cached = $redisAdapter->get(RedisKeys::KEY_OPEN_ID);
 

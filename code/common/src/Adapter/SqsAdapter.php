@@ -20,18 +20,27 @@ class SqsAdapter implements SqsInterface
     private $client;
 
     /**
-     * S3Adapter constructor.
      * @param ApplicationConfigInterface $config
+     * @return SqsAdapter
      * @throws ConfigException
      */
-    public function __construct(ApplicationConfigInterface $config)
+    public static function create(ApplicationConfigInterface $config): SqsAdapter
     {
         $sdk = AwsSdkFactory::create(
             $config,
             'sqs',
             '2012-11-05'
         );
-        $this->client = $sdk->createSqs();
+        return new static($sdk->createSqs());
+    }
+
+    /**
+     * SqsAdapter constructor.
+     * @param SqsClient $client
+     */
+    public function __construct(SqsClient $client)
+    {
+        $this->client = $client;
     }
 
     /**
