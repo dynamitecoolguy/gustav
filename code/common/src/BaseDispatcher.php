@@ -8,8 +8,8 @@ use Exception;
 use Gustav\Common\Exception\GustavException;
 use Invoker\Invoker;
 use Gustav\Common\Exception\ModelException;
-use Gustav\Common\Model\ModelChunk;
-use Gustav\Common\Model\ModelClassMap;
+use Gustav\Common\Model\Pack;
+use Gustav\Common\Model\ModelMapper;
 use Gustav\Common\Model\ModelInterface;
 use Invoker\ParameterResolver\Container\TypeHintContainerResolver;
 use Invoker\ParameterResolver\ResolverChain;
@@ -43,11 +43,11 @@ class BaseDispatcher implements DispatcherInterface
         self::$dispatchTable = array_reduce(
             static::getModelAndExecutor(),
             function ($carry, $record) {
-                list($chunkId, $modelClass, $executorClass) = $record;
+                list($packType, $modelClass, $executorCallable) = $record;
 
-                ModelClassMap::registerModel($chunkId, $modelClass);
+                ModelMapper::registerModel($packType, $modelClass);
 
-                $carry[$modelClass] = $executorClass;
+                $carry[$modelClass] = $executorCallable;
 
                 return $carry;
             },
@@ -83,11 +83,11 @@ class BaseDispatcher implements DispatcherInterface
 
     /**
      * @param Container $container
-     * @param ModelChunk $requestObject
+     * @param Pack $requestObject
      * @return ModelInterface|null
      * @throws GustavException
      */
-    public function dispatch(Container $container, ModelChunk $requestObject): ?ModelInterface
+    public function dispatch(Container $container, Pack $requestObject): ?ModelInterface
     {
         $request = $requestObject->getModel();
 
@@ -97,7 +97,7 @@ class BaseDispatcher implements DispatcherInterface
         }
 
         // Executorを探す
-        $executorClass = self::$dispatchTable[get_class($request)];
+        $executorCallable = self::$dispatchTable[get_class($request)];
 
         // PHP-DI/Invokerで引数をtype-hintingで割り当てる
         $invoker = new Invoker(
@@ -108,15 +108,15 @@ class BaseDispatcher implements DispatcherInterface
             $container);
 
         try {
-            return $invoker->call($executorClass,
+            return $invoker->call($executorCallable,
                 [
                     // TypeHintResolverで処理されるもの。これ以外はcontainerに問い合わされる
-                    ModelChunk::class => $requestObject,
+                    Pack::class => $requestObject,
                     ModelInterface::class => $request,
                     $class => $request
                 ]);
         } catch (Exception $e) {
-            throw new ModelException("Executor(${executorClass}) is not callable or failed to call", 0, $e);
+            throw new ModelException("Executor is not callable or failed to call", 0, $e);
         }
     }
 }

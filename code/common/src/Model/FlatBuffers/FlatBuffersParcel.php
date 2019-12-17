@@ -8,22 +8,22 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-class DataModel extends Table
+class FlatBuffersParcel extends Table
 {
     /**
      * @param ByteBuffer $bb
-     * @return DataModel
+     * @return FlatBuffersParcel
      */
-    public static function getRootAsDataModel(ByteBuffer $bb)
+    public static function getRootAsFlatBuffersParcel(ByteBuffer $bb)
     {
-        $obj = new DataModel();
+        $obj = new FlatBuffersParcel();
         return ($obj->init($bb->getInt($bb->getPosition()) + $bb->getPosition(), $bb));
     }
 
     /**
      * @param int $_i offset
      * @param ByteBuffer $_bb
-     * @return DataModel
+     * @return FlatBuffersParcel
      **/
     public function init($_i, ByteBuffer $_bb)
     {
@@ -32,22 +32,28 @@ class DataModel extends Table
         return $this;
     }
 
+    public function getToken()
+    {
+        $o = $this->__offset(4);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @returnVectorOffset
      */
-    public function getChunk($j)
+    public function getPack($j)
     {
-        $o = $this->__offset(4);
-        $obj = new DataChunk();
+        $o = $this->__offset(6);
+        $obj = new FlatBuffersPack();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
 
     /**
      * @return int
      */
-    public function getChunkLength()
+    public function getPackLength()
     {
-        $o = $this->__offset(4);
+        $o = $this->__offset(6);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -55,21 +61,32 @@ class DataModel extends Table
      * @param FlatBufferBuilder $builder
      * @return void
      */
-    public static function startDataModel(FlatBufferBuilder $builder)
+    public static function startFlatBuffersParcel(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(1);
+        $builder->StartObject(2);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @return DataModel
+     * @return FlatBuffersParcel
      */
-    public static function createDataModel(FlatBufferBuilder $builder, $chunk)
+    public static function createFlatBuffersParcel(FlatBufferBuilder $builder, $token, $pack)
     {
-        $builder->startObject(1);
-        self::addChunk($builder, $chunk);
+        $builder->startObject(2);
+        self::addToken($builder, $token);
+        self::addPack($builder, $pack);
         $o = $builder->endObject();
         return $o;
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addToken(FlatBufferBuilder $builder, $token)
+    {
+        $builder->addOffsetX(0, $token, 0);
     }
 
     /**
@@ -77,9 +94,9 @@ class DataModel extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addChunk(FlatBufferBuilder $builder, $chunk)
+    public static function addPack(FlatBufferBuilder $builder, $pack)
     {
-        $builder->addOffsetX(0, $chunk, 0);
+        $builder->addOffsetX(1, $pack, 0);
     }
 
     /**
@@ -87,7 +104,7 @@ class DataModel extends Table
      * @param array offset array
      * @return int vector offset
      */
-    public static function createChunkVector(FlatBufferBuilder $builder, array $data)
+    public static function createPackVector(FlatBufferBuilder $builder, array $data)
     {
         $builder->startVector(4, count($data), 4);
         for ($i = count($data) - 1; $i >= 0; $i--) {
@@ -101,7 +118,7 @@ class DataModel extends Table
      * @param int $numElems
      * @return void
      */
-    public static function startChunkVector(FlatBufferBuilder $builder, $numElems)
+    public static function startPackVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
     }
@@ -110,13 +127,13 @@ class DataModel extends Table
      * @param FlatBufferBuilder $builder
      * @return int table offset
      */
-    public static function endDataModel(FlatBufferBuilder $builder)
+    public static function endFlatBuffersParcel(FlatBufferBuilder $builder)
     {
         $o = $builder->endObject();
         return $o;
     }
 
-    public static function finishDataModelBuffer(FlatBufferBuilder $builder, $offset)
+    public static function finishFlatBuffersParcelBuffer(FlatBufferBuilder $builder, $offset)
     {
         $builder->finish($offset);
     }

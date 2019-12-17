@@ -1,0 +1,15 @@
+namespace Gustav.Common.Model.FlatBuffers;
+
+table FlatBuffersPack {
+  packType: string;
+  version: ubyte;
+  requestId: string;
+  content: [ubyte];
+}
+
+table FlatBuffersParcel {
+  token: string;
+  pack: [FlatBuffersPack];
+}
+
+root_type FlatBuffersParcel;

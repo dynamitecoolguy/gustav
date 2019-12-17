@@ -7,8 +7,9 @@ namespace Gustav\Common;
 use Composer\Autoload\ClassLoader;
 use DI\Container;
 use Gustav\Common\Config\ApplicationConfigInterface;
-use Gustav\Common\Model\ModelChunk;
-use Gustav\Common\Model\ModelClassMap;
+use Gustav\Common\Model\Pack;
+use Gustav\Common\Model\Parcel;
+use Gustav\Common\Model\ModelMapper;
 use Gustav\Common\Model\ModelInterface;
 use Gustav\Common\Model\ModelSerializerInterface;
 use Gustav\Common\Model\MonsterModel;
@@ -28,8 +29,8 @@ class ProcessorTest extends TestCase
         $autoloader = require __DIR__ . '/../../vendor/autoload.php';
         $autoloader->addPsr4('', __DIR__ . '/../../flatbuffers/example/php');              // flatbuffers/php
 
-        ModelClassMap::resetMap();
-        ModelClassMap::registerModel('MON', MonsterModel::class);
+        ModelMapper::resetMap();
+        ModelMapper::registerModel('MON', MonsterModel::class);
     }
 
     /**
@@ -60,9 +61,11 @@ class ProcessorTest extends TestCase
 
         $encryptor = $container->get(BinaryEncryptorInterface::class);
         $serializer = $container->get(ModelSerializerInterface::class);
-        $outputArray = $serializer->deserialize($encryptor->decrypt($outputData));
+        $outputParcel = $serializer->deserialize($encryptor->decrypt($outputData));
+        $outputArray = $outputParcel->getPackList();
 
         // 確認
+        $this->assertEquals('mytoken', $outputParcel->getToken());
         $this->assertEquals(1, $outputArray[0]->getVersion());
         $this->assertEquals('req1', $outputArray[0]->getRequestId());
         $this->assertEquals('gaia', $outputArray[0]->getModel()->name);
@@ -84,11 +87,14 @@ class ProcessorTest extends TestCase
         $monster3->hp = 333;
 
         $serializer = $container->get(ModelSerializerInterface::class);
-        $stream = $serializer->serialize([
-            new ModelChunk('MON', 1, 'req1', $monster1),
-            new ModelChunk('MON', 1, 'req2', $monster2),
-            new ModelChunk('MON', 1, 'req3', $monster3)
-        ]);
+        $stream = $serializer->serialize(new Parcel(
+            'mytoken',
+            [
+                new Pack('MON', 1, 'req1', $monster1),
+                new Pack('MON', 1, 'req2', $monster2),
+                new Pack('MON', 1, 'req3', $monster3)
+            ]
+        ));
 
         $encryptor = $container->get(BinaryEncryptorInterface::class);
         return $encryptor->encrypt($stream);
@@ -97,7 +103,7 @@ class ProcessorTest extends TestCase
 
 class DummyDispatcher implements DispatcherInterface
 {
-    public function dispatch(Container $container, ModelChunk $requestObject): ?ModelInterface
+    public function dispatch(Container $container, Pack $requestObject): ?ModelInterface
     {
         $request = $requestObject->getModel();
         if ($request instanceof MonsterModel) {

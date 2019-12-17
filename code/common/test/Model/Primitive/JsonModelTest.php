@@ -4,8 +4,9 @@
 namespace Gustav\Common\Model\Primitive;
 
 use Composer\Autoload\ClassLoader;
-use Gustav\Common\Model\ModelChunk;
-use Gustav\Common\Model\ModelClassMap;
+use Gustav\Common\Model\Pack;
+use Gustav\Common\Model\Parcel;
+use Gustav\Common\Model\ModelMapper;
 use Gustav\Common\Model\MonsterModel;
 use PHPUnit\Framework\TestCase;
 
@@ -25,8 +26,8 @@ class JsonModelTest extends TestCase
      */
     public function singleMonster()
     {
-        ModelClassMap::resetMap();
-        ModelClassMap::registerModel('MON', MonsterModel::class);
+        ModelMapper::resetMap();
+        ModelMapper::registerModel('MON', MonsterModel::class);
 
         $monster = new MonsterModel();
         $monster->name = 'single';
@@ -34,17 +35,19 @@ class JsonModelTest extends TestCase
 
         $serializer = new JsonSerializer();
 
-        $stream = $serializer->serialize([new ModelChunk('MON', 1, 'req', $monster)]);
+        $stream = $serializer->serialize(new Parcel('tt', [new Pack('MON', 1, 'req', $monster)]));
 
         $result = $serializer->deserialize($stream);
 
-        $this->assertIsArray($result);
+        $this->assertInstanceOf(Parcel::class, $result);
+        $packList = $result->getPackList();
 
-        $chunkId = $result[0]->getChunkId();
-        $version = $result[0]->getVersion();
-        $requestId = $result[0]->getRequestId();
-        $resultMonster = $result[0]->getModel();
+        $chunkId = $packList[0]->getPackType();
+        $version = $packList[0]->getVersion();
+        $requestId = $packList[0]->getRequestId();
+        $resultMonster = $packList[0]->getModel();
 
+        $this->assertEquals('tt', $result->getToken());
         $this->assertEquals('MON', $chunkId);
         $this->assertEquals(1, $version);
         $this->assertEquals('req', $requestId);
@@ -52,5 +55,4 @@ class JsonModelTest extends TestCase
         $this->assertEquals('single', $resultMonster->name);
         $this->assertEquals(123, $resultMonster->hp);
     }
-
 }

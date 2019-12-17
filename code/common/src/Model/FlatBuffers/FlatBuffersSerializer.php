@@ -6,8 +6,9 @@ namespace Gustav\Common\Model\FlatBuffers;
 use Google\FlatBuffers\ByteBuffer;
 use Google\FlatBuffers\FlatbufferBuilder;
 use Gustav\Common\Exception\ModelException;
-use Gustav\Common\Model\ModelChunk;
-use Gustav\Common\Model\ModelClassMap;
+use Gustav\Common\Model\Pack;
+use Gustav\Common\Model\Parcel;
+use Gustav\Common\Model\ModelMapper;
 use Gustav\Common\Model\ModelSerializerInterface;
 use ReflectionClass;
 use ReflectionException;
@@ -16,13 +17,16 @@ use ReflectionException;
  * Class FlatBuffersSerializer
  * @package Gustav\Common\Model
  *
- * table DataChunk {
- *   id: string;
+ * table Pack {
+ *   packType: string;
  *   version: ubyte;
+ *   requestId: string;
  *   content: [ubyte];
  * }
- * table DataModel {
- *   chunk: [DataChunk];
+ *
+ * table Parcel {
+ *   token: string;
+ *   pack: [Pack];
  * }
  */
 class FlatBuffersSerializer implements ModelSerializerInterface
@@ -40,40 +44,41 @@ class FlatBuffersSerializer implements ModelSerializerInterface
     /**
      * @inheritDoc
      */
-    public function serialize(array $objectList): string
+    public function serialize(Parcel $parcel): string
     {
         $builder = new FlatbufferBuilder(self::INITIAL_TOTAL_BUFFER_SIZE);
 
         // 各オブジェクトの識別コード (一度登録した識別コードは再利用する)
-        $chunkIdMap = [];
-        $chunkList = [];
+        $packTypeMap = [];
+        $packList = [];
 
-        // DataChunkのリストを作成する
-        foreach ($objectList as $object) {
-            $chunkId = $object->getChunkId();
+        // Packのリストを作成する
+        foreach ($parcel->getPackList() as $object) {
+            $packType = $object->getPackType();
             $model = $object->getModel(); /** @var FlatBuffersSerializable $model */
             $requestId = $object->getRequestId();
 
-            if (!isset($chunkIdMap[$chunkId])) {
-                $chunkIdMap[$chunkId] = $builder->createString($chunkId);
+            if (!isset($packTypeMap[$packType])) {
+                $packTypeMap[$packType] = $builder->createString($packType);
             }
             $requestIdPos = $builder->createString($requestId);
 
-            $chunkList[] = DataChunk::createDataChunk(
+            $packList[] = FlatBuffersPack::createFlatBuffersPack(
                 $builder,
-                $chunkIdMap[$chunkId],                                                  // id
-                $object->getVersion(),
-                $requestIdPos,                                                          // requestId
-                DataChunk::createContentVector($builder, self::serializeModel($model))  // content
+                $packTypeMap[$packType],                                                        // packType
+                $object->getVersion(),                                                        // version
+                $requestIdPos,                                                                // requestId
+                FlatBuffersPack::createContentVector($builder, self::serializeModel($model))  // content
             );
         }
 
-        // DataModelを作成する
-        $chunkListVector = DataModel::createChunkVector($builder, $chunkList);
-        $dataModel = DataModel::createDataModel($builder, $chunkListVector);
+        // Parcelを作成する
+        $packVector = FlatBuffersParcel::createPackVector($builder, $packList);
+        $tokenPos = $builder->createString($parcel->getToken());
+        $parcel = FlatBuffersParcel::createFlatBuffersParcel($builder, $tokenPos, $packVector);
 
         // 作成終了
-        $builder->finish($dataModel);
+        $builder->finish($parcel);
 
         // 必要なところだけカットして返す
         return $builder->sizedByteArray();
@@ -82,26 +87,27 @@ class FlatBuffersSerializer implements ModelSerializerInterface
     /**
      * @inheritDoc
      */
-    public function deserialize(string $stream): array
+    public function deserialize(string $stream): Parcel
     {
         // 結果
         $objectList = [];
 
-        // DataModelの取得
+        // Parcelの取得
         $buffer = ByteBuffer::wrap($stream);
-        $dataModel = DataModel::getRootAsDataModel($buffer);
+        $parcel = FlatBuffersParcel::getRootAsFlatBuffersParcel($buffer);
+        $token = $parcel->getToken();
 
-        // DataModel内の各DataChunkの処理
-        $chunkLength = $dataModel->getChunkLength();
-        for ($i = 0; $i < $chunkLength; $i++) {
-            $chunk = $dataModel->getChunk($i);
+        // Parcel内の各Packetの処理
+        $packSize = $parcel->getPackLength();
+        for ($i = 0; $i < $packSize; $i++) {
+            $pack = $parcel->getPack($i);
 
-            $chunkId = $chunk->getChunkId();
-            $version = (int)$chunk->getVersion();
-            $requestId = $chunk->getRequestId();
-            $content = $chunk->getContentBytes();
+            $packType = $pack->getPackType();
+            $version = (int)$pack->getVersion();
+            $requestId = $pack->getRequestId();
+            $content = $pack->getContentBytes();
 
-            $className = ModelClassMap::findModelClass($chunkId);
+            $className = ModelMapper::findModelClass($packType);
             try {
                 $refClass = new ReflectionClass($className);
                 if (!$refClass->isSubclassOf(FlatBuffersSerializable::class)) {
@@ -116,10 +122,10 @@ class FlatBuffersSerializer implements ModelSerializerInterface
                 throw new ModelException("Class(${className} could not create ReflectionClass");
             }
 
-            $objectList[] = new ModelChunk($chunkId, $version, $requestId, $object);
+            $objectList[] = new Pack($packType, $version, $requestId, $object);
         }
 
-        return $objectList;
+        return new Parcel($token, $objectList);
     }
 
     /**

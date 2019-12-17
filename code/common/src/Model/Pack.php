@@ -4,13 +4,14 @@
 namespace Gustav\Common\Model;
 
 /**
- * Class ModelChunk
+ * リクエスト/レスポンスオブジェクトとその付随情報
+ * Class Pack
  * @package Gustav\Common\Model
  */
-class ModelChunk
+class Pack
 {
     /** @var string リクエスト識別子*/
-    private $chunkId;
+    private $packType;
 
     /** @var int フォーマットバージョン */
     private $version;
@@ -21,9 +22,9 @@ class ModelChunk
     /** @var ModelInterface リクエスト/レスポンスのオブジェクト */
     private $model;
 
-    public function __construct(string $chunkId, int $version, string $requestId, ModelInterface $model)
+    public function __construct(string $packType, int $version, string $requestId, ModelInterface $model)
     {
-        $this->chunkId = $chunkId;
+        $this->packType = $packType;
         $this->version = $version;
         $this->requestId = $requestId;
         $this->model = $model;
@@ -32,9 +33,9 @@ class ModelChunk
     /**
      * @return string
      */
-    public function getChunkId(): string
+    public function getPackType(): string
     {
-        return $this->chunkId;
+        return $this->packType;
     }
 
     /**

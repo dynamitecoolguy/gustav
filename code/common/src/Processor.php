@@ -8,7 +8,8 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Gustav\Common\Exception\FormatException;
 use Gustav\Common\Exception\ModelException;
-use Gustav\Common\Model\ModelChunk;
+use Gustav\Common\Model\Pack;
+use Gustav\Common\Model\Parcel;
 use Gustav\Common\Model\ModelSerializerInterface;
 use Gustav\Common\Operation\BinaryEncryptorInterface;
 
@@ -38,15 +39,16 @@ class Processor
         $decrypted = $encryptor->decrypt($input);
 
         // デシリアライズ
-        $requestObjectList = $serializer->deserialize($decrypted);
+        $requestParcel = $serializer->deserialize($decrypted);
+        $requestToken = $requestParcel->getToken();
 
         // リクエストオブジェクト毎に処理
         $resultList = [];
-        foreach ($requestObjectList as $requestObject) {
+        foreach ($requestParcel->getPackList() as $requestObject) {
             $result = $dispatcher->dispatch($container, $requestObject);
             if (!is_null($result)) {
-                $resultList[] = new ModelChunk(
-                    $requestObject->getChunkId(),
+                $resultList[] = new Pack(
+                    $requestObject->getPackType(),
                     $requestObject->getVersion(),
                     $requestObject->getRequestId(),
                     $result
@@ -55,7 +57,8 @@ class Processor
         }
 
         // 結果をシリアライズ
-        $resultBinary = $serializer->serialize($resultList);
+        $resultToken = $requestToken;
+        $resultBinary = $serializer->serialize(new Parcel($resultToken, $resultList));
 
         // 暗号化
         return $encryptor->encrypt($resultBinary);

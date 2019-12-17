@@ -374,7 +374,7 @@ BaseDispatcherを継承したクラスでは、getModelAndExecutor()メソッド
     protected static function getModelAndExecutor(): array
     {
         return [
-            ['REG', IdentificationModel::class, UserRegistration::class],
+            ['REG', IdentificationModel::class, [UserRegistration::class, 'register']],
             ['TRC', TransferCodeModel::class, TransferOperation::class]
         ];
     }
@@ -382,7 +382,7 @@ BaseDispatcherを継承したクラスでは、getModelAndExecutor()メソッド
 
 ### 処理クラス
 
-上述した処理を行うクラスは、__invoke マジックメソッドを実装します。
+上述した処理を行うクラスはcallableの形式で登録します。
 このメソッドの引数は、typeに応じてcontainerに登録された値がセットされます。
 ただし、Gustav\Common\Model\ModelChunk、Gustav\Common\Model\ModelInterface、実際にリクエストに用いられたクラス名(下の例ではGustav\App\Model\IdentificationModel)に関しては、Containerに登録されていなくても値がセットされます。
 
@@ -407,7 +407,7 @@ class UserRegistration
      * @param MySQLMasterInterface $mysql
      * @return IdentificationModel
      */
-    public function __invoke(Container $container, IdentificationModel $request, MySQLMasterInterface $mysql, KeyOperatorInterface $keyOperator): IdentificationModel
+    public function register(Container $container, IdentificationModel $request, MySQLMasterInterface $mysql, KeyOperatorInterface $keyOperator): IdentificationModel
     {
         return new IdentificationModel([....]);
     }

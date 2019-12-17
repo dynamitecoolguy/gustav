@@ -4,8 +4,9 @@
 namespace Gustav\Common\Model\Primitive;
 
 use Gustav\Common\Exception\ModelException;
-use Gustav\Common\Model\ModelChunk;
-use Gustav\Common\Model\ModelClassMap;
+use Gustav\Common\Model\Pack;
+use Gustav\Common\Model\Parcel;
+use Gustav\Common\Model\ModelMapper;
 use Gustav\Common\Model\ModelSerializerInterface;
 use ReflectionClass;
 use ReflectionException;
@@ -22,19 +23,20 @@ abstract class PrimitiveSerializer implements ModelSerializerInterface
     /**
      * @inheritDoc
      */
-    public function serialize(array $objectList): string
+    public function serialize(Parcel $parcel): string
     {
         $result = [];
 
-        // DataChunkのリストを作成する
-        foreach ($objectList as $object) {
+        // Packのリストを作成する
+        foreach ($parcel->getPackList() as $object) {
             $result[] = [
-                $object->getChunkId(),
+                $object->getPackType(),
                 $object->getVersion(),
                 $object->getRequestId(),
                 $object->getModel()->serializePrimitive()
             ];
         }
+        $result[] = $parcel->getToken();
 
         return $this->encode($result);
     }
@@ -42,15 +44,18 @@ abstract class PrimitiveSerializer implements ModelSerializerInterface
     /**
      * @inheritDoc
      */
-    public function deserialize(string $stream): array
+    public function deserialize(string $stream): Parcel
     {
         // 結果
-        $objectList = [];
+        $packList = [];
 
-        foreach ($this->decode($stream) as $chunk) {
-            list ($chunkId, $version, $requestId, $primitives) = $chunk;
+        $decoded = $this->decode($stream);
+        $token = array_pop($decoded);
 
-            $className = ModelClassMap::findModelClass($chunkId);
+        foreach ($decoded as $pack) {
+            list ($packType, $version, $requestId, $primitives) = $pack;
+
+            $className = ModelMapper::findModelClass($packType);
             try {
                 $refClass = new ReflectionClass($className);
                 if (!$refClass->isSubclassOf(PrimitiveSerializable::class)) {
@@ -65,9 +70,9 @@ abstract class PrimitiveSerializer implements ModelSerializerInterface
                 throw new ModelException("Class(${className} could not create ReflectionClass");
             }
 
-            $objectList[] = new ModelChunk($chunkId, $version, $requestId, $object);
+            $packList[] = new Pack($packType, $version, $requestId, $object);
         }
 
-        return $objectList;
+        return new Parcel($token, $packList);
     }
 }

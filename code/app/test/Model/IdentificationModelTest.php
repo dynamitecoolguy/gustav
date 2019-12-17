@@ -6,7 +6,8 @@ namespace Gustav\App\Model;
 use Composer\Autoload\ClassLoader;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\FlatBuffers\FlatBuffersSerializer;
-use Gustav\Common\Model\ModelChunk;
+use Gustav\Common\Model\Pack;
+use Gustav\Common\Model\Parcel;
 use Gustav\Common\Model\ModelSerializerInterface;
 use Gustav\Common\Model\Primitive\JsonSerializer;
 use Gustav\Common\Model\Primitive\MessagePackSerializer;
@@ -46,24 +47,31 @@ class IdentificationModelTest extends TestCase
             IdentificationModel::PUBLIC_KEY => 'pub'
         ]);
 
-        $stream = $serializer->serialize([
-            new ModelChunk('REG', 3, 'req1', $register1),
-            new ModelChunk('REG', 4, 'req2', $register2),
-            new ModelChunk('REG', 5, 'req3', $register3),
-        ]);
+        $stream = $serializer->serialize(
+            new Parcel(
+                "token",
+                [
+                    new Pack('REG', 3, 'req1', $register1),
+                    new Pack('REG', 4, 'req2', $register2),
+                    new Pack('REG', 5, 'req3', $register3),
+                ]
+            )
+        );
 
         $result = $serializer->deserialize($stream);
 
-        $this->assertEquals(1, $result[0]->getModel()->getUserId());
-        $this->assertEquals('102', $result[1]->getModel()->getOpenId());
-        $this->assertEquals('', $result[0]->getModel()->getNote());
-        $this->assertEquals('hoge', $result[1]->getModel()->getNote());
-        $this->assertEquals('pri', $result[2]->getModel()->getPrivateKey());
-        $this->assertEquals('pub', $result[2]->getModel()->getPublicKey());
-        $this->assertEquals(3, $result[0]->getVersion());
-        $this->assertEquals(4, $result[1]->getVersion());
-        $this->assertEquals('REG', $result[0]->getChunkId());
-        $this->assertEquals('req2', $result[1]->getRequestId());
+        $packList = $result->getPackList();
+        $this->assertEquals('token', $result->getToken());
+        $this->assertEquals(1, $packList[0]->getModel()->getUserId());
+        $this->assertEquals('102', $packList[1]->getModel()->getOpenId());
+        $this->assertEquals('', $packList[0]->getModel()->getNote());
+        $this->assertEquals('hoge', $packList[1]->getModel()->getNote());
+        $this->assertEquals('pri', $packList[2]->getModel()->getPrivateKey());
+        $this->assertEquals('pub', $packList[2]->getModel()->getPublicKey());
+        $this->assertEquals(3, $packList[0]->getVersion());
+        $this->assertEquals(4, $packList[1]->getVersion());
+        $this->assertEquals('REG', $packList[0]->getPackType());
+        $this->assertEquals('req2', $packList[1]->getRequestId());
     }
 
     /**

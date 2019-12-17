@@ -5,7 +5,7 @@ namespace Gustav\Common;
 
 
 use Gustav\Common\Config\ApplicationConfigInterface;
-use Gustav\Common\Model\ModelChunk;
+use Gustav\Common\Model\Pack;
 use Gustav\Common\Model\ModelInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -30,7 +30,7 @@ class BaseDispatcherTest extends TestCase
 
         BaseDispatcher::resetDispatchTable();
         $dispatcher = new DummyBaseDispatcher();
-        $requestModel = new ModelChunk('dummy', 1, 'req', $dummyModel);
+        $requestModel = new Pack('dummy', 1, 'req', $dummyModel);
         $resultModel = $dispatcher->dispatch($container, $requestModel);
 
         $this->assertEquals($resultModel, $dummyModel);

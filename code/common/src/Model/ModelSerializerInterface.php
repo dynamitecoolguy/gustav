@@ -10,17 +10,17 @@ interface ModelSerializerInterface
 {
     /**
      * オブジェクトリストからデータストリームへの変換
-     * @param ModelChunk[] $objectList  データストリームへ変換するオブジェクトのリスト
+     * @param Parcel $parcel  データストリームへ変換するオブジェクトのリスト
      * @return string
      * @throws ModelException
      */
-    public function serialize(array $objectList): string;
+    public function serialize(Parcel $parcel): string;
 
     /**
      * データストリームからオブジェクトリストへの変換
      * @param string $stream
-     * @return ModelChunk[]
+     * @return Parcel
      * @throws ModelException
      */
-    public function deserialize(string $stream): array;
+    public function deserialize(string $stream): Parcel;
 }

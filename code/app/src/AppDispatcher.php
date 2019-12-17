@@ -24,7 +24,7 @@ class AppDispatcher extends BaseDispatcher
     protected static function getModelAndExecutor(): array
     {
         return [
-            ['REG', IdentificationModel::class, UserRegistration::class],
+            ['REG', IdentificationModel::class, [UserRegistration::class, 'register']],
             ['TRC', TransferCodeModel::class, TransferOperation::class]
         ];
     }

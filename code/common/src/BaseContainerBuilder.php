@@ -59,7 +59,15 @@ class BaseContainerBuilder extends ContainerBuilder
     protected function getDefinitions(ApplicationConfigInterface $config): array
     {
         return [
+            // 設定
             ApplicationConfigInterface::class  => $config,
+
+            // 通信用加工処理 (暗号化、シリアライズ、ディスパッチ)
+            BinaryEncryptorInterface::class => create(BinaryEncryptor::class),
+            ModelSerializerInterface::class => factory([ModelSerializerFactory::class, 'create']),
+            DispatcherInterface::class => create(BaseDispatcher::class),
+
+            // AWSサービス
             MySQLInterface::class => factory([MySQLAdapter::class, 'create'])->parameter('forMaster', false),
             MySQLMasterInterface::class => factory([MySQLAdapter::class, 'create'])->parameter('forMaster', true),
             PgSQLInterface::class => factory([PgSQLAdapter::class, 'create']),
@@ -67,11 +75,12 @@ class BaseContainerBuilder extends ContainerBuilder
             DynamoDbInterface::class => factory([DynamoDbAdapter::class, 'create']),
             S3Interface::class => factory([S3Adapter::class, 'create']),
             SqsInterface::class => factory([SqsAdapter::class, 'create']),
-            BinaryEncryptorInterface::class => create(BinaryEncryptor::class),
+
+            // 鍵処理
             KeyOperatorInterface::class => create(KeyOperator::class),
-            DataLoggerInterface::class => factory([DataLoggerFactory::class, 'create']),
-            DispatcherInterface::class => create(BaseDispatcher::class),
-            ModelSerializerInterface::class => factory([ModelSerializerFactory::class, 'create'])
+
+            // データログ処理
+            DataLoggerInterface::class => factory([DataLoggerFactory::class, 'create'])
         ];
     }
 }

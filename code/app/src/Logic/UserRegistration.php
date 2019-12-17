@@ -29,19 +29,23 @@ class UserRegistration
      * @return IdentificationModel
      * @throws GustavException
      */
-    public function __invoke(
+    public function register(
         IdentificationModel $request,
         MySQLMasterInterface $mysql,
         KeyOperatorInterface $keyOperator,
         OpenIdConverterInterface $openIdConverter,
         RedisInterface $redis): IdentificationModel
     {
+        // 登録時の備考 (登録するが未使用)
         $note = $request->getNote();
 
+        // 秘密鍵と公開鍵の生成
         list($privateKey, $publicKey) = $keyOperator->createKeys();
 
+        // MySQLのmaster dbへの接続adapter
         $adapter = ($mysql instanceof MySQLAdapter) ? $mysql : new MySQLAdapter($mysql->getPDO(), true);
 
+        // DBのtransaction処理
         list($userId, $openId) = $adapter->executeWithTransaction(
             function (MySQLAdapter $adapter) use ($note, $openIdConverter, $redis, $privateKey, $publicKey) {
                 $userId = IdentificationTable::insert($adapter, $note);
@@ -54,6 +58,7 @@ class UserRegistration
             }
         );
 
+        // 登録結果
         return new IdentificationModel([
             IdentificationModel::USER_ID => $userId,
             IdentificationModel::OPEN_ID => $openId,

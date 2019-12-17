@@ -9,7 +9,7 @@ use Gustav\App\Logic\UserRegistration;
 use Gustav\App\Model\IdentificationModel;
 use Gustav\Common\Config\ApplicationConfig;
 use Gustav\Common\Exception\ModelException;
-use Gustav\Common\Model\ModelChunk;
+use Gustav\Common\Model\Pack;
 use Gustav\Common\Model\ModelInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -55,7 +55,7 @@ class AppDispatcherTest extends TestCase
 
         $dispatchTable = $dispatcher->getDispatchTable();
 
-        $this->assertEquals(UserRegistration::class, $dispatchTable[IdentificationModel::class]);
+        $this->assertEquals([UserRegistration::class, 'register'], $dispatchTable[IdentificationModel::class]);
     }
 
     /**
@@ -69,7 +69,7 @@ class AppDispatcherTest extends TestCase
         AppDispatcher::resetDispatchTable();
         $dispatcher = new AppDispatcher();
         $request = new class implements ModelInterface {};
-        $requestObject = new ModelChunk('MON', 1, 'req1', $request);
+        $requestObject = new Pack('MON', 1, 'req1', $request);
         $dispatcher->dispatch(self::$container, $requestObject);
     }
 }
