@@ -52,7 +52,9 @@ class OpenIdConverterTest extends TestCase
         $converter = new OpenIdConverter();
         $redis = self::$container->get(RedisInterface::class);
 
-        $this->assertEquals(OpenIdConverter::INIT_VALUE, $converter->userIdToOpenId($redis, 0));
+        $initialValue = substr('000000000' . strval(OpenIdConverter::INIT_VALUE), -10, 10);
+
+        $this->assertEquals($initialValue, $converter->userIdToOpenId($redis, 0));
 
         $redisManager = self::$container->get(RedisInterface::class);
 

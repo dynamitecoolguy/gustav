@@ -5,8 +5,6 @@ namespace Gustav\App\Logic;
 
 use DI\Container;
 use Gustav\App\Model\TransferCodeModel;
-use Gustav\Common\Exception\ModelException;
-use Gustav\Common\Model\ModelChunk;
 use Gustav\Common\Model\ModelInterface;
 
 /**

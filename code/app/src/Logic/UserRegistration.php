@@ -3,9 +3,9 @@
 
 namespace Gustav\App\Logic;
 
-use DI\Container;
+use Gustav\App\Database\IdentificationTable;
+use Gustav\App\Database\KeyPairTable;
 use Gustav\App\Model\IdentificationModel;
-use Gustav\App\Operation\OpenIdConverter;
 use Gustav\App\Operation\OpenIdConverterInterface;
 use Gustav\Common\Adapter\MySQLAdapter;
 use Gustav\Common\Adapter\MySQLMasterInterface;
@@ -44,23 +44,11 @@ class UserRegistration
 
         list($userId, $openId) = $adapter->executeWithTransaction(
             function (MySQLAdapter $adapter) use ($note, $openIdConverter, $redis, $privateKey, $publicKey) {
-                $adapter->execute(
-                    'insert into identification(open_id, note) values(0, :note)',
-                    [':note' => $note]
-                );
-                $userId = (int)$adapter->lastInsertId();
-
+                $userId = IdentificationTable::insert($adapter, $note);
                 $openId = $openIdConverter->userIdToOpenId($redis, $userId);
+                IdentificationTable::updateOpenId($adapter, $userId, $openId);
 
-                $adapter->execute(
-                    'update identification set open_id=:oid where user_id=:uid',
-                    [':oid' => (int)$openId, ':uid' => $userId]
-                );
-
-                $adapter->execute(
-                    'insert into key_pair(user_id, private_key, public_key) values(:uid, :pri, :pub)',
-                    [':uid' => $userId, ':pri' => $privateKey, ':pub' => $publicKey]
-                );
+                KeyPairTable::insert($adapter, $userId, $privateKey, $publicKey);
 
                 return [$userId, $openId];
             }
