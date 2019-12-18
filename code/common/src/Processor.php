@@ -4,8 +4,6 @@ namespace Gustav\Common;
 
 
 use DI\Container;
-use DI\DependencyException;
-use DI\NotFoundException;
 use Gustav\Common\Exception\FormatException;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\Pack;
@@ -22,19 +20,20 @@ class Processor
     /**
      * @param string $input
      * @param Container $container
+     * @param DispatcherInterface $dispatcher
+     * @param BinaryEncryptorInterface $encryptor
+     * @param ModelSerializerInterface $serializer
      * @return string
-     * @throws DependencyException
-     * @throws NotFoundException
-     * @throws ModelException
      * @throws FormatException
+     * @throws ModelException
      */
-    public static function process(string $input, Container $container): string
+    public static function process(
+        string $input,
+        Container $container,
+        DispatcherInterface $dispatcher,
+        BinaryEncryptorInterface $encryptor,
+        ModelSerializerInterface $serializer): string
     {
-        // Containerからデータ処理に使用するオブジェクトを取得する
-        $dispatcher = $container->get(DispatcherInterface::class);
-        $encryptor = $container->get(BinaryEncryptorInterface::class);
-        $serializer = $container->get(ModelSerializerInterface::class);
-
         // 復号化
         $decrypted = $encryptor->decrypt($input);
 

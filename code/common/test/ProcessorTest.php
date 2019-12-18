@@ -14,6 +14,10 @@ use Gustav\Common\Model\ModelInterface;
 use Gustav\Common\Model\ModelSerializerInterface;
 use Gustav\Common\Model\MonsterModel;
 use Gustav\Common\Network\BinaryEncryptorInterface;
+use Invoker\Invoker;
+use Invoker\ParameterResolver\AssociativeArrayResolver;
+use Invoker\ParameterResolver\Container\TypeHintContainerResolver;
+use Invoker\ParameterResolver\ResolverChain;
 use PHPUnit\Framework\TestCase;
 
 
@@ -57,7 +61,16 @@ class ProcessorTest extends TestCase
         $inputData = $this->getInputData($container);
 
         // Processing
-        $outputData = Processor::process($inputData, $container);
+        $invoker = new Invoker(
+            new ResolverChain([
+                new AssociativeArrayResolver(),
+                new TypeHintContainerResolver($container)
+            ]),
+            $container);
+        $outputData = $invoker->call(
+            [Processor::class, 'process'],
+            ['input' => $inputData]
+        );
 
         $encryptor = $container->get(BinaryEncryptorInterface::class);
         $serializer = $container->get(ModelSerializerInterface::class);

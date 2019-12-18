@@ -11,13 +11,13 @@ use Gustav\Common\Model\ModelInterface;
 
 /**
  * Interface DispatcherInterface
- * @package Gustav\App
+ * @package Gustav\Common
  */
 interface DispatcherInterface
 {
     /**
      * @param Container      $container     // DI\Container
-     * @param Pack     $request       // リクエストオブジェクト
+     * @param Pack           $request       // リクエストオブジェクト
      * @return ModelInterface|null          // リザルト。必要ない場合はnull
      * @throws ModelException
      */

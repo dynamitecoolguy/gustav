@@ -97,7 +97,7 @@ class BaseDispatcher implements DispatcherInterface
         }
 
         // Executorを探す
-        $executorCallable = self::$dispatchTable[get_class($request)];
+        $executorCallable = self::$dispatchTable[$class];
 
         // PHP-DI/Invokerで引数をtype-hintingで割り当てる
         $invoker = new Invoker(
