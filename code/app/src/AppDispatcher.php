@@ -19,6 +19,7 @@ class AppDispatcher extends BaseDispatcher
 {
     /**
      * 必要であればアプリケーション側でoverrideする
+     * @uses UserRegistration::register()
      * @return array
      */
     protected static function getModelAndExecutor(): array

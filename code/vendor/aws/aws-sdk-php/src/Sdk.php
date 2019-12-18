@@ -124,6 +124,8 @@ namespace Aws;
  * @method \Aws\MultiRegionClient createMultiRegionDataSync(array $args = [])
  * @method \Aws\DatabaseMigrationService\DatabaseMigrationServiceClient createDatabaseMigrationService(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionDatabaseMigrationService(array $args = [])
+ * @method \Aws\Detective\DetectiveClient createDetective(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionDetective(array $args = [])
  * @method \Aws\DeviceFarm\DeviceFarmClient createDeviceFarm(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionDeviceFarm(array $args = [])
  * @method \Aws\DirectConnect\DirectConnectClient createDirectConnect(array $args = [])
@@ -439,7 +441,7 @@ namespace Aws;
  */
 class Sdk
 {
-    const VERSION = '3.128.0';
+    const VERSION = '3.129.2';
 
     /** @var array Arguments for creating clients */
     private $args;

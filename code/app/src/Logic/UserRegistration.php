@@ -3,6 +3,7 @@
 
 namespace Gustav\App\Logic;
 
+use Gustav\App\AppDispatcher;
 use Gustav\App\Database\IdentificationTable;
 use Gustav\App\Database\KeyPairTable;
 use Gustav\App\Model\IdentificationModel;
@@ -28,6 +29,7 @@ class UserRegistration
      * @param RedisInterface $redis
      * @return IdentificationModel
      * @throws GustavException
+     * @used-by AppDispatcher::getModelAndExecutor()
      */
     public function register(
         IdentificationModel $request,

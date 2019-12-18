@@ -60,10 +60,10 @@ class KeyOperator implements KeyOperatorInterface
         if ($key[0] !== '-') {
             $key = $this->der2pem('PRIVATE', $key);
         }
-        if (!@openssl_private_encrypt($data, $crypted, $key, OPENSSL_PKCS1_PADDING)) {
+        if (!@openssl_private_encrypt($data, $encrypted, $key, OPENSSL_PKCS1_PADDING)) {
             return null;
         }
-        return $crypted;
+        return $encrypted;
     }
 
     public function decryptPrivate(string $data, string $key): ?string

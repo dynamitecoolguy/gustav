@@ -7,6 +7,7 @@ namespace Gustav\App\Operation;
 use Gustav\App\AppRedisKeys;
 use Gustav\Common\Adapter\RedisAdapter;
 use Gustav\Common\Adapter\RedisInterface;
+use Gustav\Common\Exception\UninitializedException;
 use Gustav\Common\Operation\MaximumLengthSequence;
 
 /**
@@ -18,7 +19,7 @@ class OpenIdConverter implements OpenIdConverterInterface
 {
     const P = 33;
     const Q = 13;
-    const INIT_VALUE = 1835215621;
+    const INIT_VALUE = '1835215621';
 
     /**
      * @var bool M系列パラメータを初期化したかどうか
@@ -41,6 +42,7 @@ class OpenIdConverter implements OpenIdConverterInterface
      * @param RedisInterface $redis
      * @param int $userId
      * @return string
+     * @throws UninitializedException
      */
     public function userIdToOpenId(RedisInterface $redis, int $userId): string
     {
@@ -61,6 +63,6 @@ class OpenIdConverter implements OpenIdConverterInterface
 
         $redisAdapter->set(AppRedisKeys::KEY_OPEN_ID, [$userId, $value]);
 
-        return substr('000000000' . strval($value), -10, 10);
+        return substr('000000000' . $value, -10, 10);
     }
 }

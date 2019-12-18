@@ -10,6 +10,16 @@ use Gustav\Common\Model\FlatBuffers\FlatBuffersSerializable;
 use Gustav\Common\Model\Primitive\PrimitiveSerializable;
 use Gustav\Dx\TransferCode;
 
+/**
+ * Class TransferCodeModel
+ * @package Gustav\App\Model
+ * @method int getUserId()
+ * @method void setUserId(int $userId)
+ * @method string getTransferCode()
+ * @method void setTransferCode(string $transferCode)
+ * @method string getPassword()
+ * @method void setPassword(string $password)
+ */
 class TransferCodeModel extends AbstractModel implements FlatBuffersSerializable, PrimitiveSerializable
 {
     /** @var int 内部用ユーザID */

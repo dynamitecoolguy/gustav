@@ -7,7 +7,7 @@ RUN apk upgrade --update \
   && apk --no-cache add gettext-dev libzip-dev curl-dev
 
 RUN apk --no-cache add supervisor tzdata nginx php7 php7-fpm \
-     php7-gettext php7-mbstring php7-zip php7-ctype php7-json php7-bcmath php7-sockets php7-curl php7-simplexml \
+     php7-gettext php7-mbstring php7-zip php7-ctype php7-json php7-bcmath php7-sockets php7-curl php7-simplexml php7-gmp \
      php7-pecl-apcu php7-pecl-igbinary php7-pecl-msgpack
 
 # PDO(MySQL)

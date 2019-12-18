@@ -2,6 +2,7 @@
 
 use DI\Bridge\Slim\Bridge;
 use Gustav\App\AppContainerBuilder;
+use Gustav\App\Controller\MainController;
 use Gustav\Common\Config\ApplicationConfig;
 use Gustav\Common\Config\ConfigLoader;
 use Gustav\Common\Operation\Time;
@@ -42,7 +43,8 @@ if ($config->getValue('app', 'debugapi', 'false')) {
     $app->get('/dynamo', [Gustav\App\Controller\HelloController::class, 'dynamo']);
     $app->get('/s3/{from}/{to}', [Gustav\App\Controller\HelloController::class, 's3']);
 }
-$app->post('/', [Gustav\App\Controller\MainController::class, 'post']);
+/** @uses MainController::post() */
+$app->post('/', [MainController::class, 'post']);
 
 // 実行
 $app->run();

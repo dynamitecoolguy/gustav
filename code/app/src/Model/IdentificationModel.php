@@ -15,6 +15,16 @@ use Gustav\Dx\Identification;
  * 登録
  * Class IdentificationModel
  * @package Gustav\App\Model
+ * @method int getUserId()
+ * @method void setUserId(int $userId)
+ * @method string getOpenId()
+ * @method void setOpenid(string $openId)
+ * @method string getNote()
+ * @method void setNote(string $note)
+ * @method string getPrivateKey()
+ * @method void setPrivateKey(string $privateKey)
+ * @method string getPublicKey()
+ * @method void setPublicKey(string $publicKey)
  */
 class IdentificationModel extends AbstractModel implements FlatBuffersSerializable, PrimitiveSerializable
 {

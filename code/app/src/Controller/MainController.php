@@ -14,6 +14,12 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class MainController
 {
+    /**
+     * @param ServerRequestInterface $request
+     * @param Container $container
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
     public function post(
         ServerRequestInterface $request,
         Container $container,
