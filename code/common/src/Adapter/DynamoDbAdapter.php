@@ -31,6 +31,16 @@ class DynamoDbAdapter implements DynamoDbInterface
     }
 
     /**
+     * DynamoDbInterfaceをDynamoDbAdapterにwrapする
+     * @param DynamoDbInterface $dynamoDb
+     * @return DynamoDbAdapter
+     */
+    public static function wrap(DynamoDbInterface $dynamoDb): DynamoDbAdapter
+    {
+        return ($dynamoDb instanceof DynamoDbAdapter) ? $dynamoDb : new static($dynamoDb->getClient());
+    }
+
+    /**
      * DynamoDbAdapter constructor.
      * @param DynamoDbClient $client
      */

@@ -13,7 +13,7 @@ use Gustav\Common\Model\ModelMapper;
 use Gustav\Common\Model\ModelInterface;
 use Gustav\Common\Model\ModelSerializerInterface;
 use Gustav\Common\Model\MonsterModel;
-use Gustav\Common\Operation\BinaryEncryptorInterface;
+use Gustav\Common\Network\BinaryEncryptorInterface;
 use PHPUnit\Framework\TestCase;
 
 

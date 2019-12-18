@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Gustav\Common\Operation;
+namespace Gustav\Common\Network;
 
 use PHPUnit\Framework\TestCase;
 

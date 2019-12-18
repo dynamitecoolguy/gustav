@@ -7,7 +7,7 @@ use Composer\Autoload\ClassLoader;
 use DI\Container;
 use Gustav\App\AppContainerBuilder;
 use Gustav\App\LocalConfigLoader;
-use Gustav\App\RedisKeys;
+use Gustav\App\AppRedisKeys;
 use Gustav\Common\Adapter\RedisAdapter;
 use Gustav\Common\Adapter\RedisInterface;
 use Gustav\Common\Config\ApplicationConfig;
@@ -59,7 +59,7 @@ class OpenIdConverterTest extends TestCase
         $redisManager = self::$container->get(RedisInterface::class);
 
         // キャッシュ無しからの計算
-        $redisManager->del(RedisKeys::KEY_OPEN_ID);
+        $redisManager->del(AppRedisKeys::KEY_OPEN_ID);
         $openId = $converter->userIdToOpenId($redis, 10);
 
         // キャッシュからの計算

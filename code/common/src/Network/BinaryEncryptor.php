@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Gustav\Common\Operation;
+namespace Gustav\Common\Network;
 
 
 use Gustav\Common\Exception\FormatException;
@@ -17,6 +17,23 @@ class BinaryEncryptor implements BinaryEncryptorInterface
     const CRYPT_KEY       = '0ef71ec9cca1f45d07cae9af7f46e34f';
     const OPENSSL_CRYPT_ALGORITHM = 'AES-128-CBC';
 
+    /** @var string|null */
+    private static $cryptKey = null;
+
+    /**
+     * @return string
+     */
+    private static function cryptKey()
+    {
+        if (is_null(self::$cryptKey)) {
+            self::$cryptKey = hex2bin(self::CRYPT_KEY);
+        }
+        return self::$cryptKey;
+    }
+
+    /**
+     * BinaryEncryptor constructor.
+     */
     public function __construct()
     {
         // do nothing
@@ -27,19 +44,11 @@ class BinaryEncryptor implements BinaryEncryptorInterface
      */
     public function encrypt(string $raw): string
     {
-        // 初期ベクタを作る
-        $iva = [];
-        for ($i = 4; $i !== 0; $i--) {
-            $rnd = mt_rand(0, 0xFFFFFFFF);
-            $iva[] = chr($rnd & 0xFF);
-            $iva[] = chr(($rnd >> 8) & 0xFF);
-            $iva[] = chr(($rnd >> 16) & 0xFF);
-            $iva[] = chr($rnd >> 24);
-        }
-        $initialVector = implode('', $iva);
+        // 初期ベクタ
+        $initialVector = openssl_random_pseudo_bytes(16);
 
         // 秘密キー
-        $key = pack('H*', self::CRYPT_KEY);
+        $key = self::cryptKey();
 
         // AES_CBC $packed $key, $iv
         // 暗号化
@@ -69,7 +78,7 @@ class BinaryEncryptor implements BinaryEncryptorInterface
         }
 
         // 秘密キー
-        $key = pack('H*', self::CRYPT_KEY);
+        $key = self::cryptKey();
 
         return openssl_decrypt($encrypted, self::OPENSSL_CRYPT_ALGORITHM, $key, true, $initialVector);
     }
@@ -122,4 +131,5 @@ class BinaryEncryptor implements BinaryEncryptorInterface
 
         return [$encrypted, $initialVector, $hash];
     }
+
 }

@@ -1,13 +1,16 @@
 <?php
 
 
-namespace Gustav\Common\Operation;
+namespace Gustav\Common\Network;
 
-
+/**
+ * Class KeyOperator
+ * @package Gustav\Common\Network
+ */
 class KeyOperator implements KeyOperatorInterface
 {
-    const DIGEST_ALG = 'SHA256';
     const PRIVATE_KEY_LENGTH = 1024;
+    const HASH_ALGORITHM  = 'sha256';
 
     /**
      * 秘密鍵と公開鍵の作成。出力はDER形式
@@ -16,7 +19,7 @@ class KeyOperator implements KeyOperatorInterface
     public function createKeys(): array
     {
         $resource = openssl_pkey_new([
-            'digest_alg' => self::DIGEST_ALG,
+            'digest_alg' => self::HASH_ALGORITHM,
             'private_key_bits' => self::PRIVATE_KEY_LENGTH,
             'private_key_type' => OPENSSL_KEYTYPE_RSA
         ]);

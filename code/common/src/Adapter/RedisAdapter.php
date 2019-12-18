@@ -39,6 +39,16 @@ class RedisAdapter implements RedisInterface
     }
 
     /**
+     * RedisInterfaceをRedisAdapterにwrapする
+     * @param RedisInterface $redis
+     * @return RedisAdapter
+     */
+    public static function wrap(RedisInterface $redis): RedisAdapter
+    {
+        return ($redis instanceof RedisAdapter) ? $redis : new static($redis->getRedis());
+    }
+
+    /**
      * RedisAdapter constructor.
      * @param Redis $redis
      */

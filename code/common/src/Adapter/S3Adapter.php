@@ -36,6 +36,16 @@ class S3Adapter implements S3Interface
     }
 
     /**
+     * S3InterfaceをS3Adapterにwrapする
+     * @param S3Interface $s3
+     * @return S3Adapter
+     */
+    public static function wrap(S3Interface $s3): S3Adapter
+    {
+        return ($s3 instanceof S3Adapter) ? $s3 : new static($s3->getClient());
+    }
+
+    /**
      * S3Adapter constructor.
      * @param S3Client $client
      */

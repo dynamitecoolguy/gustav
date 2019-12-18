@@ -18,8 +18,8 @@ use Gustav\Common\Config\ApplicationConfig;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\Config\ConfigLoader;
 use Gustav\Common\Log\DataLoggerInterface;
-use Gustav\Common\Operation\BinaryEncryptor;
-use Gustav\Common\Operation\BinaryEncryptorInterface;
+use Gustav\Common\Network\BinaryEncryptor;
+use Gustav\Common\Network\BinaryEncryptorInterface;
 use PHPUnit\Framework\TestCase;
 
 class BaseContainerBuilderTest extends TestCase

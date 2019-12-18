@@ -4,7 +4,7 @@
 namespace Gustav\App\Operation;
 
 
-use Gustav\App\RedisKeys;
+use Gustav\App\AppRedisKeys;
 use Gustav\Common\Adapter\RedisAdapter;
 use Gustav\Common\Adapter\RedisInterface;
 use Gustav\Common\Operation\MaximumLengthSequence;
@@ -48,9 +48,9 @@ class OpenIdConverter implements OpenIdConverterInterface
         self::checkParameter();
 
         // RedisInterfaceをRedisAdapterにする
-        $redisAdapter = ($redis instanceof RedisAdapter) ? $redis : new RedisAdapter($redis->getRedis());
+        $redisAdapter = RedisAdapter::wrap($redis);
 
-        $cached = $redisAdapter->get(RedisKeys::KEY_OPEN_ID);
+        $cached = $redisAdapter->get(AppRedisKeys::KEY_OPEN_ID);
 
         if ($cached === false) {
             $sequencer = new MaximumLengthSequence($userId);
@@ -59,7 +59,7 @@ class OpenIdConverter implements OpenIdConverterInterface
         }
         $value = $sequencer->getValue();
 
-        $redisAdapter->set(RedisKeys::KEY_OPEN_ID, [$userId, $value]);
+        $redisAdapter->set(AppRedisKeys::KEY_OPEN_ID, [$userId, $value]);
 
         return substr('000000000' . strval($value), -10, 10);
     }

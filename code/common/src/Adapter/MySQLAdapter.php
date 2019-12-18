@@ -57,6 +57,17 @@ class MySQLAdapter implements MySQLInterface, MySQLMasterInterface
     }
 
     /**
+     * MySQLInterfaceをMySQLAdapterにwrapする
+     * @param MySQLInterface $mysql
+     * @param bool $forMaster
+     * @return MySQLAdapter
+     */
+    public static function wrap(MySQLInterface $mysql, bool $forMaster = false): MySQLAdapter
+    {
+        return ($mysql instanceof MySQLAdapter) ? $mysql : new static($mysql->getPDO(), $forMaster);
+    }
+
+    /**
      * MySQLAdapter constructor.
      * @param PDO $pdo
      * @param bool $forMaster

@@ -47,6 +47,16 @@ class PgSQLAdapter implements PgSQLInterface
     }
 
     /**
+     * PgSQLInterfaceをPgSQLAdapterにwrapする
+     * @param PgSQLInterface $pgsql
+     * @return PgSQLAdapter
+     */
+    public static function wrap(PgSQLInterface $pgsql): PgSQLAdapter
+    {
+        return ($pgsql instanceof PgSQLAdapter) ? $pgsql : new static($pgsql->getPDO());
+    }
+
+    /**
      * PgSQLAdapter constructor.
      * @param PDO $pdo
      */

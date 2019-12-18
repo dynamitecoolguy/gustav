@@ -11,7 +11,7 @@ use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\Pack;
 use Gustav\Common\Model\Parcel;
 use Gustav\Common\Model\ModelSerializerInterface;
-use Gustav\Common\Operation\BinaryEncryptorInterface;
+use Gustav\Common\Network\BinaryEncryptorInterface;
 
 /**
  * Class Processor

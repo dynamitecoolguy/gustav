@@ -20,12 +20,12 @@ use Gustav\Common\Log\DataLoggerFactory;
 use Gustav\Common\Log\DataLoggerInterface;
 use Gustav\Common\Model\ModelSerializerFactory;
 use Gustav\Common\Model\ModelSerializerInterface;
-use Gustav\Common\Operation\BinaryEncryptor;
-use Gustav\Common\Operation\BinaryEncryptorInterface;
+use Gustav\Common\Network\BinaryEncryptor;
+use Gustav\Common\Network\BinaryEncryptorInterface;
 use DI\Container;
 use DI\ContainerBuilder;
-use Gustav\Common\Operation\KeyOperator;
-use Gustav\Common\Operation\KeyOperatorInterface;
+use Gustav\Common\Network\KeyOperator;
+use Gustav\Common\Network\KeyOperatorInterface;
 use function DI\create;
 use function DI\factory;
 

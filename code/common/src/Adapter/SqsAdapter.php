@@ -35,6 +35,16 @@ class SqsAdapter implements SqsInterface
     }
 
     /**
+     * SqsInterfaceをSqsAdapterにwrapする
+     * @param SqsInterface $sqs
+     * @return SqsAdapter
+     */
+    public static function wrap(SqsInterface $sqs): SqsAdapter
+    {
+        return ($sqs instanceof SqsAdapter) ? $sqs : new static($sqs->getClient());
+    }
+
+    /**
      * SqsAdapter constructor.
      * @param SqsClient $client
      */

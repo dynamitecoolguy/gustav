@@ -11,7 +11,7 @@ use Gustav\Common\Adapter\MySQLAdapter;
 use Gustav\Common\Adapter\MySQLMasterInterface;
 use Gustav\Common\Adapter\RedisInterface;
 use Gustav\Common\Exception\GustavException;
-use Gustav\Common\Operation\KeyOperatorInterface;
+use Gustav\Common\Network\KeyOperatorInterface;
 
 /**
  * ユーザ登録処理
@@ -43,7 +43,7 @@ class UserRegistration
         list($privateKey, $publicKey) = $keyOperator->createKeys();
 
         // MySQLのmaster dbへの接続adapter
-        $adapter = ($mysql instanceof MySQLAdapter) ? $mysql : new MySQLAdapter($mysql->getPDO(), true);
+        $adapter = MySQLAdapter::wrap($mysql, true);
 
         // DBのtransaction処理
         list($userId, $openId) = $adapter->executeWithTransaction(
