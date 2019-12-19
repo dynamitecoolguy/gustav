@@ -78,7 +78,7 @@ class ProcessorTest extends TestCase
         $outputArray = $outputParcel->getPackList();
 
         // 確認
-        $this->assertEquals('mytoken', $outputParcel->getToken());
+        $this->assertEquals('', $outputParcel->getToken());
         $this->assertEquals(1, $outputArray[0]->getVersion());
         $this->assertEquals('req1', $outputArray[0]->getRequestId());
         $this->assertEquals('gaia', $outputArray[0]->getModel()->name);
@@ -124,6 +124,8 @@ class DummyDispatcher implements DispatcherInterface
         }
         return $request;
     }
+
+    public function isTokenRequired(Pack $requestToken): bool { return false; }
 }
 
 class DummyContainerBuilder extends BaseContainerBuilder

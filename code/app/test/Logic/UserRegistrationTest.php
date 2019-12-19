@@ -12,9 +12,6 @@ class UserRegistrationTest extends LogicBase
     /**
      * @test
      * @throws ModelException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
-     * @throws \Gustav\Common\Exception\GustavException
      */
     public function registration(): void
     {

@@ -21,4 +21,11 @@ interface DispatcherInterface
      * @throws ModelException
      */
     public function dispatch(ContainerInterface $container, Pack $request): ?ModelInterface;
+
+    /**
+     * トークンが必要かどうか
+     * @param Pack $requestToken
+     * @return bool
+     */
+    public function isTokenRequired(Pack $requestToken): bool;
 }

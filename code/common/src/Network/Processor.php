@@ -42,23 +42,45 @@ class Processor
 
         // リクエストオブジェクト毎に処理
         $resultList = [];
-        foreach ($requestParcel->getPackList() as $requestObject) {
-            $result = $dispatcher->dispatch($container, $requestObject);
-            if (!is_null($result)) {
+        $tokenChecked = false;
+        foreach ($requestParcel->getPackList() as $requestPack) {
+            // トークンが必要ならばトークンをチェックする
+            if ($dispatcher->isTokenRequired($requestPack)) {
+                if (!$tokenChecked) {
+                    self::checkToken();
+                    $tokenChecked = true;
+                }
+            }
+
+            $resultModel = $dispatcher->dispatch($container, $requestPack);
+            if (!is_null($resultModel)) {
                 $resultList[] = new Pack(
-                    $requestObject->getPackType(),
-                    $requestObject->getVersion(),
-                    $requestObject->getRequestId(),
-                    $result
+                    $requestPack->getPackType(),
+                    $requestPack->getVersion(),
+                    $requestPack->getRequestId(),
+                    $resultModel
                 );
             }
         }
 
+        // トークンを使ったら、次のトークンを用意
+        $resultToken = $tokenChecked ? self::nextToken() : '';
+
         // 結果をシリアライズ
-        $resultToken = $requestToken;
         $resultBinary = $serializer->serialize(new Parcel($resultToken, $resultList));
 
         // 暗号化
         return $encryptor->encrypt($resultBinary);
+    }
+
+    private static function checkToken(): void
+    {
+        // TODO: トークンのチェック
+    }
+
+    private static function nextToken(): string
+    {
+        // TODO: 次のトークン
+        return 'hogehoge';
     }
 }

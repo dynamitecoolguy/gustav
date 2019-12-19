@@ -22,12 +22,12 @@ use Gustav\Common\Network\KeyOperatorInterface;
 class UserRegistration
 {
     /**
-     * @param IdentificationModel $request
-     * @param MySQLMasterInterface $mysql
-     * @param KeyOperatorInterface $keyOperator
-     * @param OpenIdConverterInterface $openIdConverter
-     * @param RedisInterface $redis
-     * @return IdentificationModel
+     * @param IdentificationModel      $request           入力モデル
+     * @param MySQLMasterInterface     $mysql             DB
+     * @param KeyOperatorInterface     $keyOperator       秘密鍵と公開鍵生成
+     * @param OpenIdConverterInterface $openIdConverter   公開ID生成
+     * @param RedisInterface           $redis             OpenIdConverterに必要
+     * @return IdentificationModel                        出力モデル
      * @throws GustavException
      * @used-by AppContainerBuilder::getDefinitions()
      */
@@ -50,10 +50,14 @@ class UserRegistration
         // DBのtransaction処理
         list($userId, $openId) = $adapter->executeWithTransaction(
             function (MySQLAdapter $adapter) use ($note, $openIdConverter, $redis, $privateKey, $publicKey) {
+                // ユーザID登録
                 $userId = IdentificationTable::insert($adapter, $note);
+
+                // 公開IDの計算と更新
                 $openId = $openIdConverter->userIdToOpenId($redis, $userId);
                 IdentificationTable::updateOpenId($adapter, $userId, $openId);
 
+                // 秘密鍵と公開鍵の登録
                 KeyPairTable::insert($adapter, $userId, $privateKey, $publicKey);
 
                 return [$userId, $openId];

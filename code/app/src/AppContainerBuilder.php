@@ -37,7 +37,8 @@ class AppContainerBuilder extends BaseContainerBuilder
                     public function getDispatchTable(): array
                     {
                         return [
-                            ['REG', IdentificationModel::class, [UserRegistration::class, 'register']],
+                            // ユーザー新規登録
+                            ['REG', IdentificationModel::class, [UserRegistration::class, 'register'], false],
                             ['TRC', TransferCodeModel::class, TransferOperation::class]
                         ];
                     }

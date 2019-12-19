@@ -38,13 +38,13 @@ class BaseDispatcherTest extends TestCase
         );
 
         $dispatcher = Dispatcher::create($container);
-        $requestModel = new Pack('dummy', 1, 'req', $dummyModel);
+        $requestModel = new Pack('DUMMY', 1, 'req', $dummyModel);
         $resultModel = $dispatcher->dispatch($container, $requestModel);
 
         $this->assertEquals($resultModel, $dummyModel);
         $dispatchTable = $dispatcher->getDispatchTable();
         $this->assertEquals(
-            [DummyBaseDispatcherModel::class => DummyBaseDispatcherExecutor::class],
+            ['DUMMY' => [DummyBaseDispatcherModel::class, DummyBaseDispatcherExecutor::class, true]],
             $dispatchTable
         );
     }

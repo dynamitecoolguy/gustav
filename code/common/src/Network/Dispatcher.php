@@ -28,6 +28,7 @@ class Dispatcher implements DispatcherInterface
     private $dispatchTable;
 
     /**
+     * Dispatcherの作成
      * @param ContainerInterface $container
      * @return Dispatcher
      * @throws ModelException
@@ -44,6 +45,7 @@ class Dispatcher implements DispatcherInterface
      */
     protected function __construct(ContainerInterface $container)
     {
+        // Dispatcher用の定義ファイルの取得
         try {
             $dispatcherTableClass = $container->get(DispatcherTableInterface::class);
         } catch (ContainerExceptionInterface $e) {
@@ -53,31 +55,45 @@ class Dispatcher implements DispatcherInterface
 
         $this->dispatchTable = [];
         foreach ($dispatcherList as $record) {
-            list($packType, $modelClass, $executorCallable) = $record;
+            $length = sizeof($record);
+            if ($length == 3) {
+                list($packType, $modelClass, $executorCallable) = $record;
+                $tokenRequired = true;
+            } elseif ($length > 3) {
+                list($packType, $modelClass, $executorCallable, $tokenRequired) = $record;
+            } else {
+                throw new ModelException('Array size is too short');
+            }
 
             ModelMapper::registerModel($packType, $modelClass);
 
-            $this->dispatchTable[$modelClass] = $executorCallable;
+            $this->dispatchTable[$packType] = [$modelClass, $executorCallable, $tokenRequired];
         }
     }
 
     /**
-     * @param ContainerInterface $container
-     * @param Pack $requestObject
+     * @param ContainerInterface   $container
+     * @param Pack                 $requestPack
      * @return ModelInterface|null
      * @throws GustavException
      */
-    public function dispatch(ContainerInterface $container, Pack $requestObject): ?ModelInterface
+    public function dispatch(ContainerInterface $container, Pack $requestPack): ?ModelInterface
     {
-        $request = $requestObject->getModel();
+        $packType = $requestPack->getPackType();
+        $requestModel = $requestPack->getModel();
+        $requestClass = get_class($requestModel);
 
-        $class = get_class($request);
-        if (!isset($this->dispatchTable[$class])) {
+        if (!isset($this->dispatchTable[$packType])) {
             throw new ModelException('Executor is not registered');
         }
 
         // Executorを探す
-        $executorCallable = $this->dispatchTable[$class];
+        list($registeredClass, $executorCallable) = $this->dispatchTable[$packType];
+
+        // 要求クラスと登録されているクラスが異なる
+        if ($requestClass instanceof $registeredClass) {
+            throw new ModelException('Request class is not match as registered class');
+        }
 
         // PHP-DI/Invokerで引数をtype-hintingで割り当てる
         $invoker = new Invoker(
@@ -87,13 +103,14 @@ class Dispatcher implements DispatcherInterface
             ]),
             $container);
 
+        // Executorを実行する
         try {
             return $invoker->call($executorCallable,
                 [
                     // TypeHintResolverで処理されるもの。これ以外はcontainerに問い合わされる
-                    Pack::class => $requestObject,
-                    ModelInterface::class => $request,
-                    $class => $request
+                    Pack::class              => $requestPack,
+                    ModelInterface::class    => $requestModel,
+                    $requestClass            => $requestModel
                 ]);
         } catch (Exception $e) {
             throw new ModelException("Executor is not callable or failed to call", 0, $e);
@@ -101,7 +118,17 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * @return array
+     * トークンが必要かどうか
+     * @param Pack $requestToken
+     * @return bool
+     */
+    public function isTokenRequired(Pack $requestToken): bool
+    {
+        return $this->dispatchTable[$requestToken->getPackType()][2] ?? false;
+    }
+
+    /**
+     * @return array  PackTypeをキーに(モデルクラス, 実行callable, Token必要かどうか?)のマップを返す
      */
     public function getDispatchTable(): array
     {
