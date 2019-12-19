@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Gustav\Common;
+namespace Gustav\Common\Network;
 
 
 use Composer\Autoload\ClassLoader;
-use DI\Container;
+use Gustav\Common\BaseContainerBuilder;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\Model\Pack;
 use Gustav\Common\Model\Parcel;
@@ -13,12 +13,12 @@ use Gustav\Common\Model\ModelMapper;
 use Gustav\Common\Model\ModelInterface;
 use Gustav\Common\Model\ModelSerializerInterface;
 use Gustav\Common\Model\MonsterModel;
-use Gustav\Common\Network\BinaryEncryptorInterface;
 use Invoker\Invoker;
 use Invoker\ParameterResolver\AssociativeArrayResolver;
 use Invoker\ParameterResolver\Container\TypeHintContainerResolver;
 use Invoker\ParameterResolver\ResolverChain;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 
 
 class ProcessorTest extends TestCase
@@ -30,8 +30,8 @@ class ProcessorTest extends TestCase
     public static function setAutoLoader()
     {
         /** @var ClassLoader $autoloader */
-        $autoloader = require __DIR__ . '/../../vendor/autoload.php';
-        $autoloader->addPsr4('', __DIR__ . '/../../flatbuffers/example/php');              // flatbuffers/php
+        $autoloader = require __DIR__ . '/../../../vendor/autoload.php';
+        $autoloader->addPsr4('', __DIR__ . '/../../../flatbuffers/example/php');              // flatbuffers/php
 
         ModelMapper::resetMap();
         ModelMapper::registerModel('MON', MonsterModel::class);
@@ -85,7 +85,7 @@ class ProcessorTest extends TestCase
         $this->assertEquals(11, $outputArray[0]->getModel()->hp);
     }
 
-    private function getInputData(Container $container)
+    private function getInputData(ContainerInterface $container)
     {
         $monster1 = new MonsterModel();
         $monster1->name = 'gaia';
@@ -116,7 +116,7 @@ class ProcessorTest extends TestCase
 
 class DummyDispatcher implements DispatcherInterface
 {
-    public function dispatch(Container $container, Pack $requestObject): ?ModelInterface
+    public function dispatch(ContainerInterface $container, Pack $requestObject): ?ModelInterface
     {
         $request = $requestObject->getModel();
         if ($request instanceof MonsterModel) {

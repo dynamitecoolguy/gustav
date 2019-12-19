@@ -4,18 +4,17 @@
 namespace Gustav\App\Operation;
 
 use Composer\Autoload\ClassLoader;
-use DI\Container;
 use Gustav\App\AppContainerBuilder;
 use Gustav\App\LocalConfigLoader;
 use Gustav\App\AppRedisKeys;
-use Gustav\Common\Adapter\RedisAdapter;
 use Gustav\Common\Adapter\RedisInterface;
 use Gustav\Common\Config\ApplicationConfig;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 
 class OpenIdConverterTest extends TestCase
 {
-    /** @var Container */
+    /** @var ContainerInterface */
     private static $container;
 
     /**

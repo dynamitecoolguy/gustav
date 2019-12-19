@@ -1,9 +1,10 @@
 <?php
 
 
-namespace Gustav\Common;
+namespace Gustav\Common\Network;
 
 
+use Gustav\Common\BaseContainerBuilder;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\Model\Pack;
 use Gustav\Common\Model\ModelInterface;
@@ -27,30 +28,25 @@ class BaseDispatcherTest extends TestCase
             }
         );
         $container = $builder->build();
+        $container->set(DispatcherTableInterface::class,
+            new class implements DispatcherTableInterface {
+                public function getDispatchTable(): array
+                {
+                    return [['DUMMY', DummyBaseDispatcherModel::class, DummyBaseDispatcherExecutor::class]];
+                }
+            }
+        );
 
-        BaseDispatcher::resetDispatchTable();
-        $dispatcher = new DummyBaseDispatcher();
+        $dispatcher = Dispatcher::create($container);
         $requestModel = new Pack('dummy', 1, 'req', $dummyModel);
         $resultModel = $dispatcher->dispatch($container, $requestModel);
 
         $this->assertEquals($resultModel, $dummyModel);
-        $dispatchTable = DummyBaseDispatcher::getDispatchTable();
+        $dispatchTable = $dispatcher->getDispatchTable();
         $this->assertEquals(
             [DummyBaseDispatcherModel::class => DummyBaseDispatcherExecutor::class],
             $dispatchTable
         );
-    }
-}
-
-class DummyBaseDispatcher extends BaseDispatcher
-{
-    /**
-     * 必要であればアプリケーション側でoverrideする
-     * @return array
-     */
-    protected static function getModelAndExecutor(): array
-    {
-        return [['DUMMY', DummyBaseDispatcherModel::class, DummyBaseDispatcherExecutor::class]];
     }
 }
 

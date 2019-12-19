@@ -3,7 +3,6 @@
 
 namespace Gustav\Common;
 
-use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Gustav\Common\Adapter\DynamoDbInterface;
@@ -20,7 +19,10 @@ use Gustav\Common\Config\ConfigLoader;
 use Gustav\Common\Log\DataLoggerInterface;
 use Gustav\Common\Network\BinaryEncryptor;
 use Gustav\Common\Network\BinaryEncryptorInterface;
+use Gustav\Common\Network\DispatcherInterface;
+use Gustav\Common\Network\DispatcherTableInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 
 class BaseContainerBuilderTest extends TestCase
 {
@@ -100,10 +102,10 @@ __EOF__
     }
 
     /**
-     * @return Container
+     * @return ContainerInterface
      * @throws \Exception
      */
-    private function getContainer(): Container
+    private function getContainer(): ContainerInterface
     {
         $builder = new BaseContainerBuilder(new ApplicationConfig(new ConfigLoader(self::$tempFilePath)));
         return $builder->build();
@@ -111,8 +113,6 @@ __EOF__
 
     /**
      * @test
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     public function getMySQL(): void
     {
@@ -134,8 +134,6 @@ __EOF__
 
     /**
      * @test
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     public function getPgSQL(): void
     {
@@ -151,8 +149,6 @@ __EOF__
 
     /**
      * @test
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     public function getRedis(): void
     {
@@ -168,8 +164,6 @@ __EOF__
 
     /**
      * @test
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     public function getDynamo(): void
     {
@@ -184,8 +178,6 @@ __EOF__
 
     /**
      * @test
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     public function getS3(): void
     {
@@ -200,8 +192,6 @@ __EOF__
 
     /**
      * @test
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     public function getSqs(): void
     {
@@ -216,8 +206,6 @@ __EOF__
 
     /**
      * @test
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     public function binaryEncryptor(): void
     {
@@ -229,8 +217,6 @@ __EOF__
 
     /**
      * @test
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     public function getLogger(): void
     {
@@ -242,12 +228,18 @@ __EOF__
 
     /**
      * @test
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     public function getDispatcher(): void
     {
         $container = $this->getContainer();
+        $container->set(DispatcherTableInterface::class,
+            new class implements DispatcherTableInterface {
+                public function getDispatchTable(): array
+                {
+                    return [];
+                }
+            }
+        );
         $dispatcher = $container->get(DispatcherInterface::class);
 
         $this->assertInstanceOf(DispatcherInterface::class, $dispatcher);

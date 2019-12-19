@@ -3,11 +3,15 @@
 
 namespace Gustav\App;
 
+use Gustav\App\Logic\TransferOperation;
+use Gustav\App\Logic\UserRegistration;
+use Gustav\App\Model\IdentificationModel;
+use Gustav\App\Model\TransferCodeModel;
 use Gustav\App\Operation\OpenIdConverter;
 use Gustav\App\Operation\OpenIdConverterInterface;
 use Gustav\Common\BaseContainerBuilder;
 use Gustav\Common\Config\ApplicationConfigInterface;
-use Gustav\Common\DispatcherInterface;
+use Gustav\Common\Network\DispatcherTableInterface;
 use function DI\create;
 
 /**
@@ -27,9 +31,16 @@ class AppContainerBuilder extends BaseContainerBuilder
         return array_merge(
             parent::getDefinitions($config),
             [
-                // Dispatcherをapp側のものに上書き
-                DispatcherInterface::class => create(AppDispatcher::class),
-                OpenIdConverterInterface::class => create(OpenIdConverter::class)
+                OpenIdConverterInterface::class => create(OpenIdConverter::class),
+                DispatcherTableInterface::class => new class implements DispatcherTableInterface {
+                    public function getDispatchTable(): array
+                    {
+                        return [
+                            ['REG', IdentificationModel::class, [UserRegistration::class, 'register']],
+                            ['TRC', TransferCodeModel::class, TransferOperation::class]
+                        ];
+                    }
+                }
             ]
         );
     }

@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "5a0ae5248850cbe2367f625a9c77224f",
+    "content-hash": "82ec738f6a8e4480dd34817376f37d18",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.129.2",
+            "version": "3.129.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "68889a74c1be039e49719067d97532618999569f"
+                "reference": "7f6eb26563519bb7d5a295b674f31178db64cdfd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/68889a74c1be039e49719067d97532618999569f",
-                "reference": "68889a74c1be039e49719067d97532618999569f",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/7f6eb26563519bb7d5a295b674f31178db64cdfd",
+                "reference": "7f6eb26563519bb7d5a295b674f31178db64cdfd",
                 "shasum": ""
             },
             "require": {
@@ -88,7 +88,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-12-17T19:12:14+00:00"
+            "time": "2019-12-18T19:23:10+00:00"
         },
         {
             "name": "fig/http-message-util",
@@ -2903,7 +2903,7 @@
     "prefer-lowest": false,
     "platform": {
         "ext-pdo": "^7.3",
-        "ext-json": "^1.7",
+        "ext-json": "^7.3",
         "ext-redis": "^5.0",
         "ext-curl": "^7.3",
         "ext-yaml": "^2.0",
@@ -2911,7 +2911,9 @@
         "ext-openssl": "^7.3",
         "ext-igbinary": "^3.0",
         "ext-msgpack": "^2.0",
-        "ext-gmp": "^7.3"
+        "ext-gmp": "^7.3",
+        "ext-simplexml": "^7.3",
+        "ext-mbstring": "^7.3"
     },
     "platform-dev": []
 }

@@ -1,15 +1,14 @@
 <?php
 
-namespace Gustav\Common;
+namespace Gustav\Common\Network;
 
 
-use DI\Container;
 use Gustav\Common\Exception\FormatException;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\Pack;
 use Gustav\Common\Model\Parcel;
 use Gustav\Common\Model\ModelSerializerInterface;
-use Gustav\Common\Network\BinaryEncryptorInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class Processor
@@ -19,7 +18,7 @@ class Processor
 {
     /**
      * @param string $input
-     * @param Container $container
+     * @param ContainerInterface $container
      * @param DispatcherInterface $dispatcher
      * @param BinaryEncryptorInterface $encryptor
      * @param ModelSerializerInterface $serializer
@@ -29,7 +28,7 @@ class Processor
      */
     public static function process(
         string $input,
-        Container $container,
+        ContainerInterface $container,
         DispatcherInterface $dispatcher,
         BinaryEncryptorInterface $encryptor,
         ModelSerializerInterface $serializer): string

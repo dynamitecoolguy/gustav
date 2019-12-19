@@ -4,12 +4,12 @@
 namespace Gustav\Common\Log;
 
 
-use DI\Container;
 use Gustav\Common\Adapter\SqsInterface;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\Exception\ConfigException;
 use Gustav\Common\Network\NameResolver;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class DataLoggerFactory
@@ -19,11 +19,11 @@ class DataLoggerFactory
 {
     /**
      * @param ApplicationConfigInterface $config
-     * @param Container $container
+     * @param ContainerInterface $container
      * @return DataLoggerFluent|DataLoggerSqs
      * @throws ConfigException
      */
-    public static function create(ApplicationConfigInterface $config, Container $container)
+    public static function create(ApplicationConfigInterface $config, ContainerInterface $container)
     {
         $loggerType = strtolower($config->getValue('logger', 'type'));
 

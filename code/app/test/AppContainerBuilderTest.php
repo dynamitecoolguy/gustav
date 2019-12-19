@@ -6,7 +6,7 @@ namespace Gustav\App;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Gustav\Common\Config\ApplicationConfigInterface;
-use Gustav\Common\DispatcherInterface;
+use Gustav\Common\Network\DispatcherInterface;
 use PHPUnit\Framework\TestCase;
 
 class AppContainerBuilderTest extends TestCase
@@ -30,6 +30,6 @@ class AppContainerBuilderTest extends TestCase
 
         $dispatcher = $container->get(DispatcherInterface::class);
 
-        $this->assertInstanceOf(AppDispatcher::class, $dispatcher);
+        $this->assertInstanceOf(DispatcherInterface::class, $dispatcher);
     }
 }

@@ -24,6 +24,8 @@ use Gustav\Common\Network\BinaryEncryptor;
 use Gustav\Common\Network\BinaryEncryptorInterface;
 use DI\Container;
 use DI\ContainerBuilder;
+use Gustav\Common\Network\Dispatcher;
+use Gustav\Common\Network\DispatcherInterface;
 use Gustav\Common\Network\KeyOperator;
 use Gustav\Common\Network\KeyOperatorInterface;
 use function DI\create;
@@ -55,6 +57,15 @@ class BaseContainerBuilder extends ContainerBuilder
      * デフォルトの定義
      * @param ApplicationConfigInterface $config
      * @return array 定義
+     * @uses \Gustav\Common\Model\ModelSerializerFactory::create()
+     * @uses \Gustav\Common\Dispatcher::create()
+     * @uses \Gustav\Common\Adapter\MySQLAdapter::create()
+     * @uses \Gustav\Common\Adapter\PgSQLAdapter::create()
+     * @uses \Gustav\Common\Adapter\RedisAdapter::create()
+     * @uses \Gustav\Common\Adapter\DynamoDbAdapter::create()
+     * @uses \Gustav\Common\Adapter\S3Adapter::create()
+     * @uses \Gustav\Common\Adapter\SqsAdapter::create()
+     * @uses \Gustav\Common\Log\DataLoggerFactory::create()
      */
     protected function getDefinitions(ApplicationConfigInterface $config): array
     {
@@ -65,7 +76,7 @@ class BaseContainerBuilder extends ContainerBuilder
             // 通信用加工処理 (暗号化、シリアライズ、ディスパッチ)
             BinaryEncryptorInterface::class => create(BinaryEncryptor::class),
             ModelSerializerInterface::class => factory([ModelSerializerFactory::class, 'create']),
-            DispatcherInterface::class => create(BaseDispatcher::class),
+            DispatcherInterface::class => factory([Dispatcher::class, 'create']),
 
             // AWSサービス
             MySQLInterface::class => factory([MySQLAdapter::class, 'create'])->parameter('forMaster', false),

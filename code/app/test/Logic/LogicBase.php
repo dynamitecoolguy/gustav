@@ -5,20 +5,17 @@ namespace Gustav\App\Logic;
 
 
 use Composer\Autoload\ClassLoader;
-use DI\Container;
 use Gustav\App\AppContainerBuilder;
-use Gustav\App\AppDispatcher;
 use Gustav\App\LocalConfigLoader;
 use Gustav\Common\Config\ApplicationConfig;
+use Gustav\Common\Network\DispatcherInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 
 class LogicBase extends TestCase
 {
-    /** @var Container */
+    /** @var ContainerInterface */
     public static $container;
-
-    /** @var AppDispatcher */
-    public static $dispatcher;
 
     /**
      * @beforeClass
@@ -37,9 +34,6 @@ class LogicBase extends TestCase
 
         $containerBuilder = new AppContainerBuilder($config);
         self::$container = $containerBuilder->build();
-
-        AppDispatcher::resetDispatchTable();
-        self::$dispatcher = new AppDispatcher();
     }
 
     /**
@@ -48,5 +42,13 @@ class LogicBase extends TestCase
     public static function clean(): void
     {
         LocalConfigLoader::destroyConfigLoader();
+    }
+
+    /**
+     * @return DispatcherInterface
+     */
+    public static function getDispatcher(): DispatcherInterface
+    {
+        return self::$container->get(DispatcherInterface::class);
     }
 }

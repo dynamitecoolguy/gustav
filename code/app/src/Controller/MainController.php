@@ -2,13 +2,13 @@
 
 namespace Gustav\App\Controller;
 
-use DI\Container;
 use \Exception;
-use Gustav\Common\Processor;
+use Gustav\Common\Network\Processor;
 use Invoker\Invoker;
 use Invoker\ParameterResolver\AssociativeArrayResolver;
 use Invoker\ParameterResolver\Container\TypeHintContainerResolver;
 use Invoker\ParameterResolver\ResolverChain;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -20,14 +20,14 @@ class MainController
 {
     /**
      * @param ServerRequestInterface $request
-     * @param Container $container
+     * @param ContainerInterface $container
      * @param ResponseInterface $response
      * @return ResponseInterface
-     * @uses Processor::process()
+     * @uses \Gustav\Common\Processor::process()
      */
     public function post(
         ServerRequestInterface $request,
-        Container $container,
+        ContainerInterface $container,
         ResponseInterface $response): ResponseInterface
     {
         try {

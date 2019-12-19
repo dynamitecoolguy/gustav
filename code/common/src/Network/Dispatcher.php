@@ -1,9 +1,8 @@
 <?php
 
 
-namespace Gustav\Common;
+namespace Gustav\Common\Network;
 
-use DI\Container;
 use Exception;
 use Gustav\Common\Exception\GustavException;
 use Invoker\Invoker;
@@ -14,90 +13,71 @@ use Gustav\Common\Model\ModelInterface;
 use Invoker\ParameterResolver\Container\TypeHintContainerResolver;
 use Invoker\ParameterResolver\ResolverChain;
 use Invoker\ParameterResolver\TypeHintResolver;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 
 /**
- * Class BaseDispatcher
+ * Class Dispatcher
  * @package Gustav\Common
  */
-class BaseDispatcher implements DispatcherInterface
+class Dispatcher implements DispatcherInterface
 {
     /**
-     * @var ?array
+     * @var array
      */
-    private static $dispatchTable = null;
+    private $dispatchTable;
 
     /**
-     * 必要であればアプリケーション側でoverrideする
-     * @return array
+     * @param ContainerInterface $container
+     * @return Dispatcher
+     * @throws ModelException
      */
-    protected static function getModelAndExecutor(): array
+    public static function create(ContainerInterface $container): Dispatcher
     {
-        return [];
+        return new static($container);
     }
 
     /**
-     * 識別コート、Model、Executorのセットを登録する
+     * Dispatcher constructor.
+     * @param ContainerInterface $container
+     * @throws ModelException
      */
-    public static function registerModels(): void
+    protected function __construct(ContainerInterface $container)
     {
-        self::$dispatchTable = array_reduce(
-            static::getModelAndExecutor(),
-            function ($carry, $record) {
-                list($packType, $modelClass, $executorCallable) = $record;
+        try {
+            $dispatcherTableClass = $container->get(DispatcherTableInterface::class);
+        } catch (ContainerExceptionInterface $e) {
+            throw new ModelException('DispatcherTableInterface is not registered or illegal', 0, $e);
+        }
+        $dispatcherList = $dispatcherTableClass->getDispatchTable();
 
-                ModelMapper::registerModel($packType, $modelClass);
+        $this->dispatchTable = [];
+        foreach ($dispatcherList as $record) {
+            list($packType, $modelClass, $executorCallable) = $record;
 
-                $carry[$modelClass] = $executorCallable;
+            ModelMapper::registerModel($packType, $modelClass);
 
-                return $carry;
-            },
-            []
-        );
-    }
-
-    /**
-     * dispatchTableの初期化
-     */
-    public static function resetDispatchTable(): void
-    {
-        self::$dispatchTable = null;
-    }
-
-    /**
-     * @return array
-     */
-    public static function getDispatchTable(): array
-    {
-        return self::$dispatchTable;
-    }
-
-    /**
-     * BaseDispatcher constructor.
-     */
-    public function __construct()
-    {
-        if (is_null(self::$dispatchTable)) {
-            static::registerModels();
+            $this->dispatchTable[$modelClass] = $executorCallable;
         }
     }
 
     /**
-     * @param Container $container
+     * @param ContainerInterface $container
      * @param Pack $requestObject
      * @return ModelInterface|null
      * @throws GustavException
      */
-    public function dispatch(Container $container, Pack $requestObject): ?ModelInterface
+    public function dispatch(ContainerInterface $container, Pack $requestObject): ?ModelInterface
     {
         $request = $requestObject->getModel();
 
         $class = get_class($request);
-        if (!isset(self::$dispatchTable[$class])) {
+        if (!isset($this->dispatchTable[$class])) {
             throw new ModelException('Executor is not registered');
         }
 
         // Executorを探す
-        $executorCallable = self::$dispatchTable[$class];
+        $executorCallable = $this->dispatchTable[$class];
 
         // PHP-DI/Invokerで引数をtype-hintingで割り当てる
         $invoker = new Invoker(
@@ -118,5 +98,13 @@ class BaseDispatcher implements DispatcherInterface
         } catch (Exception $e) {
             throw new ModelException("Executor is not callable or failed to call", 0, $e);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getDispatchTable(): array
+    {
+        return $this->dispatchTable;
     }
 }

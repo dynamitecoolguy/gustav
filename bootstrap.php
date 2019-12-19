@@ -7,5 +7,6 @@ $loader->addPsr4('Gustav\\Mgr\\', __DIR__ . '/code/mgr/src');
 $loader->addPsr4('Gustav\\Mgr\\', __DIR__ . '/code/mgr/test');
 $loader->addPsr4('Gustav\\Common\\', __DIR__ . '/code/common/src');
 $loader->addPsr4('Gustav\\Common\\', __DIR__ . '/code/common/test');
+$loader->addPsr4('Gustav\\Dx\\', __DIR__ . '/code/flatbuffers/php');
 
 return $loader;
