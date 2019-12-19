@@ -12,6 +12,7 @@
       <w>igbinary</w>
       <w>inited</w>
       <w>mbstring</w>
+      <w>messagepack</w>
       <w>msgpack</w>
       <w>pgsql</w>
       <w>shasum</w>

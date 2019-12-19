@@ -98,7 +98,6 @@ class Processor
         ContainerInterface $container,
         DispatcherInterface $dispatcher): string
     {
-
         // デシリアライズ
         $serializer = new JsonSerializer();
 

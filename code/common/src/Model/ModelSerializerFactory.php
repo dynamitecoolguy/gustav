@@ -32,7 +32,10 @@ class ModelSerializerFactory
         } elseif ($serializerType == 'msgpack' || $serializerType == 'messagepack') {
             return new MessagePackSerializer();
         }
-        throw new ConfigException("serializer.type is unknown type(${serializerType})");
+        throw new ConfigException(
+            "Model serializer (serializer.type=${serializerType}) is invalid",
+            ConfigException::MODEL_SERIALIZER_IS_INVALID
+        );
     }
 
 }

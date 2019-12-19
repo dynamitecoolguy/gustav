@@ -28,17 +28,18 @@ class DataLoggerFactory
         $loggerType = strtolower($config->getValue('logger', 'type'));
 
         if ($loggerType == 'fluent') {
+            // FluentLogger
             list($host, $port) = NameResolver::resolveHostAndPort($config->getValue('logger', 'host'));
             return DataLoggerFluent::getInstance($host, $port);
         } elseif ($loggerType == 'sqs') {
-            try {
-                $sqsI = $container->get(SqsInterface::class);
-                $queueUrl = $config->getValue('logger', 'queue');
-                return DataLoggerSqs::getInstance($sqsI->getClient(), $queueUrl);
-            } catch (ContainerExceptionInterface $e) {
-                throw new ConfigException("Can not create sqs logger");
-            }
+            // SQSLogger
+            $sqsI = $container->get(SqsInterface::class);
+            $queueUrl = $config->getValue('logger', 'queue');
+            return DataLoggerSqs::getInstance($sqsI->getClient(), $queueUrl);
         }
-        throw new ConfigException("logger.type is unknown type(${loggerType})");
+        throw new ConfigException(
+            "Data logger(logger.type=${loggerType}) is invalid",
+            ConfigException::DATA_LOGGER_IS_INVALID
+        );
     }
 }

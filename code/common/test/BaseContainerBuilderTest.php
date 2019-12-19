@@ -16,6 +16,7 @@ use Gustav\Common\Adapter\SqsInterface;
 use Gustav\Common\Config\ApplicationConfig;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\Config\ConfigLoader;
+use Gustav\Common\Exception\DatabaseException;
 use Gustav\Common\Log\DataLoggerInterface;
 use Gustav\Common\Network\BinaryEncryptor;
 use Gustav\Common\Network\BinaryEncryptorInterface;
@@ -122,17 +123,39 @@ __EOF__
         $pdo = $mysqli->getPDO();
         $this->assertFalse($mysqli->forMaster());
 
+        $adapter = MySQLAdapter::wrap($mysqli);
+        $this->assertInstanceOf(MySQLAdapter::class, $adapter);
+
+        $adapter->setUnbufferedMode();
+        $adapter->setBufferedMode();
+
         $statement = $pdo->query('SELECT 1');
         $row = $statement->fetch();
 
         $this->assertEquals(1, $row[1]);
 
+        $prepared = $adapter->prepare('SELECT 2');
+        $this->assertTrue($prepared->execute());
+
+        // for master
         $masterMysqli = $container->get(MySQLMasterInterface::class);
         $this->assertInstanceOf(MySQLAdapter::class, $masterMysqli);
         $this->assertTrue($masterMysqli->forMaster());
     }
 
     /**
+     * @test
+     */
+    public function getMySQLPrepareFailed(): void
+    {
+        $container = $this->getContainer();
+        $adapter = MySQLAdapter::wrap($container->get(MySQLInterface::class));
+
+        $this->expectException(DatabaseException::class);
+        $adapter->prepare('insert 1');
+    }
+
+        /**
      * @test
      */
     public function getPgSQL(): void

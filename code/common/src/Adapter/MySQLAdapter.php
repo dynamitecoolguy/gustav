@@ -9,6 +9,7 @@ use Gustav\Common\Exception\ConfigException;
 use Gustav\Common\Exception\DatabaseException;
 use Gustav\Common\Network\NameResolver;
 use PDO;
+use PDOException;
 use PDOStatement;
 
 /**
@@ -32,6 +33,7 @@ class MySQLAdapter implements MySQLInterface, MySQLMasterInterface
      * @param bool $forMaster
      * @return static
      * @throws ConfigException
+     * @throws DatabaseException
      */
     public static function create(ApplicationConfigInterface $config, bool $forMaster): MySQLAdapter
     {
@@ -46,12 +48,20 @@ class MySQLAdapter implements MySQLInterface, MySQLMasterInterface
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false
         ];
-        $pdo = new PDO(
-            $dsn,
-            $config->getValue('mysql', 'user'),
-            $config->getValue('mysql', 'password'),
-            $options
-        );
+        try {
+            $pdo = new PDO(
+                $dsn,
+                $config->getValue('mysql', 'user'),
+                $config->getValue('mysql', 'password'),
+                $options
+            );
+        } catch (PDOException $e) {
+            throw new DatabaseException(
+                "Connection failed (dsn:${dsn})",
+                DatabaseException::CONNECTION_FAILED,
+                $e
+            );
+        }
 
         return new static($pdo, $forMaster);
     }
@@ -95,19 +105,37 @@ class MySQLAdapter implements MySQLInterface, MySQLMasterInterface
     }
 
     /**
-     *  buffered queryを有効にする (少量レコード取得用: デフォルト動作)
+     * buffered queryを有効にする (少量レコード取得用: デフォルト動作)
+     * @throws DatabaseException
      */
     public function setBufferedMode(): void
     {
-        $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+        try {
+            $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+        } catch (PDOException $e) {
+            throw new DatabaseException(
+                "Fail to enable buffer mode",
+                DatabaseException::BUFFERED_MODE_FAILED,
+                $e
+            );
+        }
     }
 
     /**
-     *  buffered queryを無効にする (大量レコード取得用)
+     * buffered queryを無効にする (大量レコード取得用)
+     * @throws DatabaseException
      */
     public function setUnbufferedMode(): void
     {
-        $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
+        try {
+            $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
+        } catch (PDOException $e) {
+            throw new DatabaseException(
+                "Fail to disable buffer mode",
+                DatabaseException::BUFFERED_MODE_FAILED,
+                $e
+            );
+        }
     }
 
     /**
@@ -117,11 +145,16 @@ class MySQLAdapter implements MySQLInterface, MySQLMasterInterface
      */
     public function prepare(string $statement): PDOStatement
     {
-        $statement = $this->pdo->prepare($statement);
-        if ($statement === false) {
-            throw new DatabaseException('prepare return false');
+        try {
+            $prepared = $this->pdo->prepare($statement);
+        } catch (PDOException $e) {
+            throw new DatabaseException(
+                "Statement(${statement}) can't be prepared",
+                DatabaseException::PREPARING_FAILED,
+                $e
+            );
         }
-        return $statement;
+        return $prepared;
     }
 
     /**
@@ -132,12 +165,31 @@ class MySQLAdapter implements MySQLInterface, MySQLMasterInterface
     public function execute($statement, ?array $params = null): void
     {
         if ($statement instanceof PDOStatement) {
-            $statement->execute($params);
+            try {
+                $statement->execute($params);
+            } catch (PDOException $e) {
+                throw new DatabaseException(
+                    "Execution failed",
+                    DatabaseException::EXECUTION_FAILED,
+                    $e
+                );
+            }
         } elseif (is_string($statement)) {
             $pdoStatement = $this->prepare($statement);
-            $pdoStatement->execute($params);
+            try {
+                $pdoStatement->execute($params);
+            } catch (PDOException $e) {
+                throw new DatabaseException(
+                    "Execution statement(${statement}) failed",
+                    DatabaseException::EXECUTION_FAILED,
+                    $e
+                );
+            }
         } else {
-            throw new DatabaseException('statement is unexpected type');
+            throw new DatabaseException(
+                "Execution statement is invalid",
+                DatabaseException::EXECUTION_FAILED
+            );
         }
     }
 
@@ -183,7 +235,14 @@ class MySQLAdapter implements MySQLInterface, MySQLMasterInterface
                 $failed($this, $option);
             }
 
-            throw new DatabaseException('exception occurred in transaction section', 0, $e);
+            if (!($e instanceof DatabaseException)) {
+                throw new DatabaseException(
+                    "Transaction failed",
+                    DatabaseException::TRANSACTION_FAILED,
+                    $e
+                );
+            }
+            throw $e; // rethrow DatabaseException
         }
     }
 }

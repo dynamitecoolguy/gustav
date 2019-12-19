@@ -86,11 +86,18 @@ class ConfigLoader
         $this->checkMap();
 
         // YAMLに無い値ならばデフォルト値、デフォルト値指定が無ければエラー
+        $result = $this->configMap[$category][$key] ?? $default;
+        if (!is_string($result)) {
+            throw new ConfigException(
+                "No such category(${category} or key{$key} in configuration file",
+                ConfigException::NO_SUCH_CATEGORY_OR_KEY_IN_CONFIG
+            );
+        }
+
         if (!isset($this->configMap[$category]) || !isset($this->configMap[$category][$key])) {
             if (is_string($default)) {
                 return $default;
             }
-            throw new ConfigException("No such category or key in YAML (Category:${category}, Key:${key})");
         }
 
         return $this->configMap[$category][$key];
