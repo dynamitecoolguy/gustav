@@ -25,6 +25,7 @@ class AppContainerBuilder extends BaseContainerBuilder
      * common側の設定に、app用の設定を追加
      * @param ApplicationConfigInterface $config
      * @return array
+     * @uses \Gustav\App\Logic\UserRegistration::register()
      */
     protected function getDefinitions(ApplicationConfigInterface $config): array
     {
