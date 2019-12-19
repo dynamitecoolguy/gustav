@@ -4,6 +4,7 @@
 namespace Gustav\Common\Operation;
 
 
+use Gustav\Common\Exception\UninitializedException;
 use PHPUnit\Framework\TestCase;
 
 class MaximumLengthSequenceTest extends TestCase
@@ -87,5 +88,17 @@ class MaximumLengthSequenceTest extends TestCase
             $seq->rotate();
         }
         $this->assertEquals($max, $index); // 2**18-1で一周
+    }
+
+    /**
+     * @test
+     * @throws UninitializedException
+     */
+    public function unset()
+    {
+        $this->expectException(UninitializedException::class);
+
+        MaximumLengthSequence::resetParameter();
+        new MaximumLengthSequence(0);
     }
 }

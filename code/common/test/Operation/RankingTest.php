@@ -263,6 +263,9 @@ __EOF__
         $this->assertEquals([2, 'c', 30], $result[1]);
         $this->assertEquals([2, 'd', 30], $result[2]);
 
+        $result = $ranking->rangeDesc(1000, 10000);
+        $this->assertEmpty($result);
+
         $result = $ranking->rangeAsc(11, 1000);
         $this->assertEmpty($result);
     }

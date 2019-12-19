@@ -71,6 +71,14 @@ class MaximumLengthSequence
     }
 
     /**
+     * パラメータの初期化。テスト用
+     */
+    public static function resetParameter(): void
+    {
+        self::$initValue = null;
+    }
+
+    /**
      * MaximumLengthSequence constructor.
      * @param int $index
      * @param int $presetIndex

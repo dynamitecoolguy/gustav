@@ -46,6 +46,7 @@ class FlatBuffersSerializer implements ModelSerializerInterface
      */
     public function serialize(Parcel $parcel): string
     {
+        /** @noinspection PhpParamsInspection */
         $builder = new FlatbufferBuilder(self::INITIAL_TOTAL_BUFFER_SIZE);
 
         // 各オブジェクトの識別コード (一度登録した識別コードは再利用する)
@@ -78,6 +79,7 @@ class FlatBuffersSerializer implements ModelSerializerInterface
         $parcel = FlatBuffersParcel::createFlatBuffersParcel($builder, $tokenPos, $packVector);
 
         // 作成終了
+        /** @noinspection PhpParamsInspection */
         $builder->finish($parcel);
 
         // 必要なところだけカットして返す
@@ -135,9 +137,12 @@ class FlatBuffersSerializer implements ModelSerializerInterface
      */
     protected static function serializeModel(FlatBuffersSerializable $object): array
     {
+        /** @noinspection PhpParamsInspection */
         $builder = new FlatbufferBuilder(self::INITIAL_MODEL_BUFFER_SIZE);
 
         $pos = $object->serializeFlatBuffers($builder);
+
+        /** @noinspection PhpParamsInspection */
         $builder->finish($pos);
 
         return array_values(unpack('C*', $builder->sizedByteArray()));

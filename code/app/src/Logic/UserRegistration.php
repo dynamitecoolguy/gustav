@@ -22,6 +22,13 @@ use Gustav\Common\Network\KeyOperatorInterface;
 class UserRegistration
 {
     /**
+     * 入力:
+     *   IdentificationModel(note)
+     * 出力:
+     *   IdentificationModel(userId, openId, note, privateKey, publicKey)
+     * アクセステーブル:
+     *   Identification, KeyPair
+     *
      * @param IdentificationModel      $request           入力モデル
      * @param MySQLMasterInterface     $mysql             DB
      * @param KeyOperatorInterface     $keyOperator       秘密鍵と公開鍵生成

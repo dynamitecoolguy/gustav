@@ -12,7 +12,7 @@ use Slim\Middleware\ContentLengthMiddleware;
 $autoloader = require __DIR__ . '/../../vendor/autoload.php';
 $autoloader->addPsr4('Gustav\\App\\', __DIR__ . '/../src');               // app/src
 $autoloader->addPsr4('Gustav\\Common\\', __DIR__ . '/../../common/src');  // common/src
-$autoloader->addPsr4('Gustav\\Dx\\', __DIR__ . '/../../flatbuffers/php');             // flatbuffers/php
+$autoloader->addPsr4('Gustav\\Dx\\', __DIR__ . '/../../flatbuffers/php'); // flatbuffers/php
 
 // Set currentTime
 Time::now();
@@ -35,6 +35,8 @@ $app->add(new ContentLengthMiddleware());
 
 // ルーティング (@see PHP-DI in Slim)
 if ($config->getValue('app', 'debugapi', 'false')) {
+    $app->get('/unsealed', [MainController::class, 'unsealed']);
+
     // デバグ/テスト用途
     $app->get('/hello/{who}', [Gustav\App\Controller\HelloController::class, 'hello']);
     $app->get('/mysql/{number}', [Gustav\App\Controller\HelloController::class, 'mysql']);

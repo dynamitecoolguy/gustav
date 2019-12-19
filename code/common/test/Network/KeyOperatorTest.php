@@ -113,4 +113,23 @@ class KeyOperatorTest extends TestCase
         $this->assertNull($null);
     }
 
+    /**
+     * @test
+     */
+    public function pem2der(): void
+    {
+        $op = new KeyOperator();
+        $keys = $op->createKeys();
+
+        $privateKeyPem = $keys[0];
+        $privateKeyDer = $op->pem2der($privateKeyPem);
+        $publicKeyPem = $keys[1];
+        $publicKeyDer = $op->pem2der($publicKeyPem);
+
+        $this->assertEquals($privateKeyPem, $op->der2pem('PRIVATE', $privateKeyDer));
+
+        $original = "123\u5555\n";
+        $this->assertEquals($original, $op->decryptPublic($op->encryptPrivate($original, $privateKeyDer), $publicKeyDer));
+        $this->assertEquals($original, $op->decryptPrivate($op->encryptPublic($original, $publicKeyDer), $privateKeyDer));
+    }
 }

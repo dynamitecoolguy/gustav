@@ -26,13 +26,19 @@ class KeyOperator implements KeyOperatorInterface
         openssl_pkey_export($resource, $privateKey);
         $details = openssl_pkey_get_details($resource);
 
-        $result = [$this->pem2der($privateKey), $this->pem2der($details['key'])];
+        //$result = [$this->pem2der($privateKey), $this->pem2der($details['key'])];
+        $result = [$privateKey, $details['key']];
 
         openssl_pkey_free($resource);
 
         return $result;
     }
 
+    /**
+     * @param string $data
+     * @param string $key
+     * @return string|null
+     */
     public function encryptPublic(string $data, string $key): ?string
     {
         if ($key[0] !== '-') {
@@ -44,6 +50,11 @@ class KeyOperator implements KeyOperatorInterface
         return $encrypted;
     }
 
+    /**
+     * @param string $data
+     * @param string $key
+     * @return string|null
+     */
     public function decryptPublic(string $data, string $key): ?string
     {
         if ($key[0] !== '-') {
@@ -55,6 +66,11 @@ class KeyOperator implements KeyOperatorInterface
         return $decrypted;
     }
 
+    /**
+     * @param string $data
+     * @param string $key
+     * @return string|null
+     */
     public function encryptPrivate(string $data, string $key): ?string
     {
         if ($key[0] !== '-') {
@@ -66,6 +82,11 @@ class KeyOperator implements KeyOperatorInterface
         return $encrypted;
     }
 
+    /**
+     * @param string $data
+     * @param string $key
+     * @return string|null
+     */
     public function decryptPrivate(string $data, string $key): ?string
     {
         if ($key[0] !== '-') {
@@ -82,7 +103,7 @@ class KeyOperator implements KeyOperatorInterface
      * @param string $pem
      * @return string
      */
-    private function pem2der(string $pem): string
+    public function pem2der(string $pem): string
     {
         return base64_decode(preg_replace('/-----[A-Z ]*-----/', '', $pem));
     }
@@ -93,7 +114,7 @@ class KeyOperator implements KeyOperatorInterface
      * @param string $der
      * @return string
      */
-    private function der2pem(string $type, string $der): string
+    public function der2pem(string $type, string $der): string
     {
         return "-----BEGIN ${type} KEY-----\n"
             . wordwrap(base64_encode($der), 64, "\n", true)

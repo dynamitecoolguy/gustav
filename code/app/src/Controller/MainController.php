@@ -4,6 +4,9 @@ namespace Gustav\App\Controller;
 
 use \Exception;
 use Gustav\Common\Network\Processor;
+use Invoker\Exception\InvocationException;
+use Invoker\Exception\NotCallableException;
+use Invoker\Exception\NotEnoughParametersException;
 use Invoker\Invoker;
 use Invoker\ParameterResolver\AssociativeArrayResolver;
 use Invoker\ParameterResolver\Container\TypeHintContainerResolver;
@@ -53,6 +56,42 @@ class MainController
             $response->withStatus(500);
             // TODO: ログ出力
         }
+        return $response;
+    }
+
+    /**
+     * デバグ用processing
+     * @param ServerRequestInterface $request
+     * @param ContainerInterface $container
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     * @throws InvocationException
+     * @throws NotCallableException
+     * @throws NotEnoughParametersException
+     * @uses \Gustav\Common\Processor::processUnsealed()
+     */
+    public function unsealed(
+        ServerRequestInterface $request,
+        ContainerInterface $container,
+        ResponseInterface $response): ResponseInterface
+    {
+        // リクエストのボディ部の取得
+        $content = $request->getBody()->getContents();
+
+        // Processing
+        $invoker = new Invoker(
+            new ResolverChain([
+                new AssociativeArrayResolver(),
+                new TypeHintContainerResolver($container)
+            ]),
+            $container);
+        $outputData = $invoker->call(
+            [Processor::class, 'processUnsealed'],
+            ['input' => $content]
+        );
+
+        // 処理結果を出力
+        $response->getBody()->write($outputData);
         return $response;
     }
 }

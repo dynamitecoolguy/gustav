@@ -8,6 +8,7 @@ use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\Pack;
 use Gustav\Common\Model\Parcel;
 use Gustav\Common\Model\ModelSerializerInterface;
+use Gustav\Common\Model\Primitive\JsonSerializer;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -47,7 +48,7 @@ class Processor
             // トークンが必要ならばトークンをチェックする
             if ($dispatcher->isTokenRequired($requestPack)) {
                 if (!$tokenChecked) {
-                    self::checkToken();
+                    self::checkToken($requestToken);
                     $tokenChecked = true;
                 }
             }
@@ -73,7 +74,7 @@ class Processor
         return $encryptor->encrypt($resultBinary);
     }
 
-    private static function checkToken(): void
+    private static function checkToken(string $token): void
     {
         // TODO: トークンのチェック
     }
@@ -82,5 +83,43 @@ class Processor
     {
         // TODO: 次のトークン
         return 'hogehoge';
+    }
+
+    /**
+     * まったく暗号化されていない通信 (主にデバグ用途)
+     * @param string $input
+     * @param ContainerInterface $container
+     * @param DispatcherInterface $dispatcher
+     * @return string
+     * @throws ModelException
+     */
+    public static function processUnsealed(
+        string $input,
+        ContainerInterface $container,
+        DispatcherInterface $dispatcher): string
+    {
+
+        // デシリアライズ
+        $serializer = new JsonSerializer();
+
+        $requestParcel = $serializer->deserialize($input);
+        $userId = $requestParcel->getToken();
+
+        // リクエストオブジェクト毎に処理
+        $resultList = [];
+        foreach ($requestParcel->getPackList() as $requestPack) {
+            $resultModel = $dispatcher->dispatch($container, $requestPack);
+            if (!is_null($resultModel)) {
+                $resultList[] = new Pack(
+                    $requestPack->getPackType(),
+                    $requestPack->getVersion(),
+                    $requestPack->getRequestId(),
+                    $resultModel
+                );
+            }
+        }
+
+        // 結果をシリアライズ
+        return $serializer->serialize(new Parcel($userId, $resultList));
     }
 }
