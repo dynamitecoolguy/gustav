@@ -3,7 +3,7 @@
 -- ユーザ識別
 create table identification (
     user_id int unsigned not null auto_increment,              -- ユーザID
-    open_id binary(10) not null,                               -- 公開ID(10桁)
+    open_id binary(10) null,                                   -- 公開ID(10桁)
     note varchar(256) not null,                                -- 登録時のnote
     created_at timestamp default current_timestamp not null,
     primary key(user_id),

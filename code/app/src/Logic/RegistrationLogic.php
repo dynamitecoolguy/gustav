@@ -9,17 +9,17 @@ use Gustav\App\Database\KeyPairTable;
 use Gustav\App\Model\IdentificationModel;
 use Gustav\App\Operation\OpenIdConverterInterface;
 use Gustav\Common\Adapter\MySQLAdapter;
-use Gustav\Common\Adapter\MySQLMasterInterface;
+use Gustav\Common\Adapter\MySQLInterface;
 use Gustav\Common\Adapter\RedisInterface;
 use Gustav\Common\Exception\GustavException;
 use Gustav\Common\Network\KeyOperatorInterface;
 
 /**
  * ユーザ登録処理
- * Class UserRegistration
+ * Class RegistrationLogic
  * @package Gustav\App\Logic
  */
-class UserRegistration
+class RegistrationLogic
 {
     /**
      * 入力:
@@ -30,7 +30,7 @@ class UserRegistration
      *   Identification, KeyPair
      *
      * @param IdentificationModel      $request           入力モデル
-     * @param MySQLMasterInterface     $mysql             DB
+     * @param MySQLInterface           $mysql             DB
      * @param KeyOperatorInterface     $keyOperator       秘密鍵と公開鍵生成
      * @param OpenIdConverterInterface $openIdConverter   公開ID生成
      * @param RedisInterface           $redis             OpenIdConverterに必要
@@ -40,7 +40,7 @@ class UserRegistration
      */
     public function register(
         IdentificationModel $request,
-        MySQLMasterInterface $mysql,
+        MySQLInterface $mysql,
         KeyOperatorInterface $keyOperator,
         OpenIdConverterInterface $openIdConverter,
         RedisInterface $redis): IdentificationModel

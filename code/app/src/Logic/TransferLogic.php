@@ -8,10 +8,10 @@ use Gustav\Common\Model\ModelInterface;
 use Psr\Container\ContainerInterface;
 
 /**
- * Class TransferOperation
+ * Class TransferLogic
  * @package Gustav\App\Logic
  */
-class TransferOperation
+class TransferLogic
 {
     public function __invoke(ContainerInterface $container, TransferCodeModel $request): ?ModelInterface
     {

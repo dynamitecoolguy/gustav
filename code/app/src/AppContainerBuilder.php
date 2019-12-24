@@ -3,8 +3,10 @@
 
 namespace Gustav\App;
 
-use Gustav\App\Logic\TransferOperation;
-use Gustav\App\Logic\UserRegistration;
+use Gustav\App\Logic\AuthenticationLogic;
+use Gustav\App\Logic\TransferLogic;
+use Gustav\App\Logic\RegistrationLogic;
+use Gustav\App\Model\AuthenticationModel;
 use Gustav\App\Model\IdentificationModel;
 use Gustav\App\Model\TransferCodeModel;
 use Gustav\App\Operation\OpenIdConverter;
@@ -25,7 +27,9 @@ class AppContainerBuilder extends BaseContainerBuilder
      * common側の設定に、app用の設定を追加
      * @param ApplicationConfigInterface $config
      * @return array
-     * @uses \Gustav\App\Logic\UserRegistration::register()
+     * @uses \Gustav\App\Logic\RegistrationLogic::register()
+     * @uses \Gustav\App\Logic\AuthenticationLogic::request()
+     * @uses \Gustav\App\Logic\AuthenticationLogic::publish()
      */
     protected function getDefinitions(ApplicationConfigInterface $config): array
     {
@@ -36,10 +40,15 @@ class AppContainerBuilder extends BaseContainerBuilder
                 DispatcherTableInterface::class => new class implements DispatcherTableInterface {
                     public function getDispatchTable(): array
                     {
+                        // [PackType, モデルクラス, 操作callable, トークンのチェックが必要か?(default:true)]
                         return [
-                            // ユーザー新規登録
-                            ['REG', IdentificationModel::class, [UserRegistration::class, 'register'], false],
-                            ['TRC', TransferCodeModel::class, TransferOperation::class]
+                            // ユーザ新規登録
+                            ['REG', IdentificationModel::class, [RegistrationLogic::class, 'register'], false],
+                            // ユーザ認証
+                            ['AUR', AuthenticationModel::class, [AuthenticationLogic::class, 'request'], false],
+                            ['AUP', AuthenticationModel::class, [AuthenticationLogic::class, 'publish'], false],
+
+                            ['TRC', TransferCodeModel::class, TransferLogic::class]
                         ];
                     }
                 }

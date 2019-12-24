@@ -15,9 +15,29 @@ use PDO;
 class PgSQLAdapter implements PgSQLInterface
 {
     /**
-     * @var PDO PDO Object
+     * @var string ホスト名 または ホスト名:ポート
      */
-    private $pdo;
+    private $host = '';
+
+    /**
+     * @var string database名
+     */
+    private $dbName = '';
+
+    /**
+     * @var string ユーザ名
+     */
+    private $user = '';
+
+    /**
+     * @var string パスワード
+     */
+    private $password = '';
+
+    /**
+     * @var ?PDO PDO Object
+     */
+    private $pdo = null;
 
     /**
      * @param ApplicationConfigInterface $config
@@ -26,24 +46,14 @@ class PgSQLAdapter implements PgSQLInterface
      */
     public static function create(ApplicationConfigInterface $config): PgSQLAdapter
     {
-        list($host, $port) = NameResolver::resolveHostAndPort($config->getValue('pgsql', 'host'));
-        $dsn = 'pgsql:host=' . $host . ';dbname=' . $config->getValue('pgsql', 'dbname');
-        if ($port > 0) {
-            $dsn .= ';port=' . $port;
-        }
-        $options = [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false
-        ];
-        $pdo = new PDO(
-            $dsn,
-            $config->getValue('pgsql', 'user'),
-            $config->getValue('pgsql', 'password'),
-            $options
-        );
+        $host = $config->getValue('pgsql', 'host');
+        $dbName = $config->getValue('pgsql', 'dbname');
+        $user = $config->getValue('pgsql', 'user');
+        $password = $config->getValue('pgsql', 'password');
 
-        return new static($pdo);
+        $self = new PgSQLAdapter();
+        $self->setConfig($host, $dbName, $user, $password);
+        return $self;
     }
 
     /**
@@ -53,14 +63,41 @@ class PgSQLAdapter implements PgSQLInterface
      */
     public static function wrap(PgSQLInterface $pgsql): PgSQLAdapter
     {
-        return ($pgsql instanceof PgSQLAdapter) ? $pgsql : new static($pgsql->getPDO());
+        if ($pgsql instanceof PgSQLAdapter) {
+            return $pgsql;
+        }
+        $self = new PgSQLAdapter();
+        $self->setPdo($pgsql->getPDO());
+        return $self;
     }
 
     /**
      * PgSQLAdapter constructor.
+     */
+    protected function __construct()
+    {
+        // do nothing
+    }
+
+    /**
+     * PgSQLAdapter constructor.
+     * @param string $host
+     * @param string $dbName
+     * @param string $user
+     * @param string $password
+     */
+    protected function setConfig(string $host, string $dbName, string $user, string $password): void
+    {
+        $this->host = $host;
+        $this->dbName = $dbName;
+        $this->user = $user;
+        $this->password = $password;
+    }
+
+    /**
      * @param PDO $pdo
      */
-    public function __construct(PDO $pdo)
+    protected function setPdo(PDO $pdo): void
     {
         $this->pdo = $pdo;
     }
@@ -70,6 +107,24 @@ class PgSQLAdapter implements PgSQLInterface
      */
     public function getPDO(): PDO
     {
+        if (is_null($this->pdo)) {
+            list($host, $port) = NameResolver::resolveHostAndPort($this->host);
+            $dsn = 'pgsql:host=' . $host . ';dbname=' . $this->dbName;
+            if ($port > 0) {
+                $dsn .= ';port=' . $port;
+            }
+            $options = [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false
+            ];
+            $this->pdo = new PDO(
+                $dsn,
+                $this->user,
+                $this->password,
+                $options
+            );
+        }
         return $this->pdo;
     }
 }

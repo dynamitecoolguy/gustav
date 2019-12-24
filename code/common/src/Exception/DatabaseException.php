@@ -15,4 +15,8 @@ class DatabaseException extends GustavException
     const BUFFERED_MODE_FAILED = 3;
     const EXECUTION_FAILED = 3;
     const TRANSACTION_FAILED = 4;
+    const STATEMENT_COULD_NOT_BE_PREPARED = 5;
+    const BIND_ERROR = 6;
+    const STATEMENT_IS_ILLEGAL = 7;
+    const DATABASE_IS_SLAVE = 8;
 }

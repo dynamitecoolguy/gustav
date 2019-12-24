@@ -6,7 +6,6 @@ use Gustav\Common\Adapter\DynamoDbAdapter;
 use Gustav\Common\Adapter\DynamoDbInterface;
 use Gustav\Common\Adapter\MySQLAdapter;
 use Gustav\Common\Adapter\MySQLInterface;
-use Gustav\Common\Adapter\MySQLMasterInterface;
 use Gustav\Common\Adapter\PgSQLAdapter;
 use Gustav\Common\Adapter\PgSQLInterface;
 use Gustav\Common\Adapter\RedisAdapter;
@@ -79,8 +78,7 @@ class BaseContainerBuilder extends ContainerBuilder
             DispatcherInterface::class => factory([Dispatcher::class, 'create']),
 
             // AWSサービス
-            MySQLInterface::class => factory([MySQLAdapter::class, 'create'])->parameter('forMaster', false),
-            MySQLMasterInterface::class => factory([MySQLAdapter::class, 'create'])->parameter('forMaster', true),
+            MySQLInterface::class => factory([MySQLAdapter::class, 'create']),
             PgSQLInterface::class => factory([PgSQLAdapter::class, 'create']),
             RedisInterface::class => factory([RedisAdapter::class, 'create']),
             DynamoDbInterface::class => factory([DynamoDbAdapter::class, 'create']),

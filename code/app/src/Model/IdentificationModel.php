@@ -12,13 +12,13 @@ use Gustav\Common\Model\Primitive\PrimitiveSerializable;
 use Gustav\Dx\Identification;
 
 /**
- * 登録
+ * 登録ユーザを表すモデル
  * Class IdentificationModel
  * @package Gustav\App\Model
  * @method int getUserId()
  * @method void setUserId(int $userId)
  * @method string getOpenId()
- * @method void setOpenid(string $openId)
+ * @method void setOpenId(string $openId)
  * @method string getNote()
  * @method void setNote(string $note)
  * @method string getPrivateKey()

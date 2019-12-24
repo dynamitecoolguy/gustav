@@ -121,9 +121,9 @@ __EOF__
         $mysqli = $container->get(MySQLInterface::class);
         $this->assertInstanceOf(MySQLAdapter::class, $mysqli);
         $pdo = $mysqli->getPDO();
-        $this->assertFalse($mysqli->forMaster());
+        $this->assertFalse($mysqli->isMaster());
 
-        $adapter = MySQLAdapter::wrap($mysqli);
+        $adapter = MySQLAdapter::wrap($mysqli, false);
         $this->assertInstanceOf(MySQLAdapter::class, $adapter);
 
         $adapter->setUnbufferedMode();
@@ -138,9 +138,10 @@ __EOF__
         $this->assertTrue($prepared->execute());
 
         // for master
-        $masterMysqli = $container->get(MySQLMasterInterface::class);
+        $masterMysqli = $container->get(MySQLInterface::class);
         $this->assertInstanceOf(MySQLAdapter::class, $masterMysqli);
-        $this->assertTrue($masterMysqli->forMaster());
+        $masterMysqli->setMaster();
+        $this->assertTrue($masterMysqli->isMaster());
     }
 
     /**
@@ -149,7 +150,7 @@ __EOF__
     public function getMySQLPrepareFailed(): void
     {
         $container = $this->getContainer();
-        $adapter = MySQLAdapter::wrap($container->get(MySQLInterface::class));
+        $adapter = MySQLAdapter::wrap($container->get(MySQLInterface::class), false);
 
         $this->expectException(DatabaseException::class);
         $adapter->prepare('insert 1');

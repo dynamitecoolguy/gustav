@@ -8,4 +8,3 @@ table TransferCode {
 }
 
 root_type TransferCode;
-

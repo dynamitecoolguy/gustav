@@ -1,0 +1,26 @@
+namespace Gustav.Dx;
+
+// ユーザ認証シーケンス
+//
+// Client                              <-> Server
+// Authentication (user_id)             ->
+//                                         ランダム文字列を生成 (random_bytes)
+//                                         秘密鍵で暗号化
+//                                     <-  Authentication (user_id, secret)
+// 公開鍵で復号化
+// 秘密鍵で暗号化
+// Authentication (user_id, secret)     ->
+//                                         公開鍵で復号化
+//                                         ランダム文字列と比較
+//                                         アクセス用トークン生成 (access_token)
+//                                     <-  Authentication (user_id, access_token)
+// 以後、access_tokenを使う
+
+/// ユーザ認証
+table Authentication {
+  user_id: int;           // (Input/Output) ユーザID
+  secret: string;         // (Input/Output) C-S間の合言葉
+  access_token: string;   // (Output) アクセス用トークン
+}
+
+root_type Authentication;

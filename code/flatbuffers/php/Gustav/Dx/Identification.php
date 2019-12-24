@@ -8,7 +8,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// ユーザ登録(Input/Output)
+/// ユーザ登録
 class Identification extends Table
 {
     /**

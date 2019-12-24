@@ -11,6 +11,7 @@ use Gustav\Common\Model\Primitive\PrimitiveSerializable;
 use Gustav\Dx\TransferCode;
 
 /**
+ * データ移管を表すモデル
  * Class TransferCodeModel
  * @package Gustav\App\Model
  * @method int getUserId()
