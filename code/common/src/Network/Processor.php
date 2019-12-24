@@ -3,7 +3,7 @@
 namespace Gustav\Common\Network;
 
 
-use Gustav\Common\Exception\FormatException;
+use Gustav\Common\Exception\NetworkException;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\Pack;
 use Gustav\Common\Model\Parcel;
@@ -24,7 +24,7 @@ class Processor
      * @param BinaryEncryptorInterface $encryptor
      * @param ModelSerializerInterface $serializer
      * @return string
-     * @throws FormatException
+     * @throws NetworkException
      * @throws ModelException
      */
     public static function process(

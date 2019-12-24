@@ -4,7 +4,7 @@
 namespace Gustav\Common\Operation;
 
 
-use Gustav\Common\Exception\UninitializedException;
+use Gustav\Common\Exception\OperationException;
 use PHPUnit\Framework\TestCase;
 
 class MaximumLengthSequenceTest extends TestCase
@@ -92,11 +92,11 @@ class MaximumLengthSequenceTest extends TestCase
 
     /**
      * @test
-     * @throws UninitializedException
+     * @throws OperationException
      */
     public function unset()
     {
-        $this->expectException(UninitializedException::class);
+        $this->expectException(OperationException::class);
 
         MaximumLengthSequence::resetParameter();
         new MaximumLengthSequence(0);

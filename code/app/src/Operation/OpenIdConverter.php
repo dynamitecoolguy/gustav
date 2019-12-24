@@ -7,7 +7,7 @@ namespace Gustav\App\Operation;
 use Gustav\App\AppRedisKeys;
 use Gustav\Common\Adapter\RedisAdapter;
 use Gustav\Common\Adapter\RedisInterface;
-use Gustav\Common\Exception\UninitializedException;
+use Gustav\Common\Exception\OperationException;
 use Gustav\Common\Operation\MaximumLengthSequence;
 
 /**
@@ -42,7 +42,7 @@ class OpenIdConverter implements OpenIdConverterInterface
      * @param RedisInterface $redis
      * @param int $userId
      * @return string
-     * @throws UninitializedException
+     * @throws OperationException
      */
     public function userIdToOpenId(RedisInterface $redis, int $userId): string
     {

@@ -8,7 +8,6 @@ use Gustav\Common\Adapter\SqsInterface;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\Exception\ConfigException;
 use Gustav\Common\Network\NameResolver;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 /**

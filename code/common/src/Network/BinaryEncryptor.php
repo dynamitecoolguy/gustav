@@ -4,7 +4,7 @@
 namespace Gustav\Common\Network;
 
 
-use Gustav\Common\Exception\FormatException;
+use Gustav\Common\Exception\NetworkException;
 
 /**
  * バイナリー列の暗号化/復号化処理
@@ -74,7 +74,7 @@ class BinaryEncryptor implements BinaryEncryptorInterface
 
         if (strcmp($hash, $computedHash) !== 0) {
             // データが改竄されている可能性がある
-            throw new FormatException('Hash is inconsistency');
+            throw new NetworkException('Hash is inconsistency', NetworkException::HASH_IS_INCONSISTENCY);
         }
 
         // 秘密キー
@@ -115,7 +115,7 @@ class BinaryEncryptor implements BinaryEncryptorInterface
      * pack()メソッドで結合された暗号化されたデータ、初期ベクタ、検証用ハッシュを分割する
      * @param string $packed
      * @return array
-     * @throws FormatException
+     * @throws NetworkException
      */
     protected function unpack(string $packed): array
     {
@@ -123,7 +123,7 @@ class BinaryEncryptor implements BinaryEncryptorInterface
         $len = strlen($packed);
         if ($len < 48) {
             // リクエスト短すぎる
-            throw new FormatException('Message is too short');
+            throw new NetworkException('Message is too short', NetworkException::MESSAGE_IS_TOO_SHORT);
         }
         $encrypted = substr($packed, 0, $len - 48);
         $initialVector = substr($packed, -48, 16);
@@ -131,5 +131,4 @@ class BinaryEncryptor implements BinaryEncryptorInterface
 
         return [$encrypted, $initialVector, $hash];
     }
-
 }

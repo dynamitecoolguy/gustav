@@ -5,6 +5,7 @@ namespace Gustav\Common\Network;
 
 use Exception;
 use Gustav\Common\Exception\GustavException;
+use Gustav\Common\Exception\NetworkException;
 use Invoker\Invoker;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\Pack;
@@ -32,6 +33,7 @@ class Dispatcher implements DispatcherInterface
      * @param ContainerInterface $container
      * @return Dispatcher
      * @throws ModelException
+     * @throws NetworkException
      */
     public static function create(ContainerInterface $container): Dispatcher
     {
@@ -41,6 +43,7 @@ class Dispatcher implements DispatcherInterface
     /**
      * Dispatcher constructor.
      * @param ContainerInterface $container
+     * @throws NetworkException
      * @throws ModelException
      */
     protected function __construct(ContainerInterface $container)
@@ -49,7 +52,11 @@ class Dispatcher implements DispatcherInterface
         try {
             $dispatcherTableClass = $container->get(DispatcherTableInterface::class);
         } catch (ContainerExceptionInterface $e) {
-            throw new ModelException('DispatcherTableInterface is not registered or illegal', 0, $e);
+            throw new NetworkException(
+                NetworkException::DISPATCHER_TABLE_INTERFACE_IS_NOT_REGISTERED,
+                0,
+                $e
+            );
         }
         $dispatcherList = $dispatcherTableClass->getDispatchTable();
 
@@ -62,7 +69,10 @@ class Dispatcher implements DispatcherInterface
             } elseif ($length > 3) {
                 list($packType, $modelClass, $executorCallable, $tokenRequired) = $record;
             } else {
-                throw new ModelException('Array size is too short');
+                throw new NetworkException(
+                    'Dispatch table has illegal record',
+                    NetworkException::DISPATCHER_TABLE_HAS_ILLEGAL_RECORD
+                );
             }
 
             ModelMapper::registerModel($packType, $modelClass);
@@ -84,7 +94,10 @@ class Dispatcher implements DispatcherInterface
         $requestClass = get_class($requestModel);
 
         if (!isset($this->dispatchTable[$packType])) {
-            throw new ModelException('Executor is not registered');
+            throw new NetworkException(
+                "Executor is not registered for packType(${packType})",
+                NetworkException::EXECUTOR_IS_NOT_REGISTERED
+            );
         }
 
         // Executorを探す
@@ -92,7 +105,10 @@ class Dispatcher implements DispatcherInterface
 
         // 要求クラスと登録されているクラスが異なる
         if ($requestClass instanceof $registeredClass) {
-            throw new ModelException('Request class is not match as registered class');
+            throw new NetworkException(
+                "Requested class(${requestClass}) is not same as registered class(${registeredClass})",
+                NetworkException::CLASSES_IS_NOT_SAME
+            );
         }
 
         // PHP-DI/Invokerで引数をtype-hintingで割り当てる
@@ -113,7 +129,11 @@ class Dispatcher implements DispatcherInterface
                     $requestClass            => $requestModel
                 ]);
         } catch (Exception $e) {
-            throw new ModelException("Executor is not callable or failed to call", 0, $e);
+            throw new NetworkException(
+                "Executor is not callable or failed to call",
+                NetworkException::EXECUTOR_HAS_EXCEPTION,
+                $e
+            );
         }
     }
 

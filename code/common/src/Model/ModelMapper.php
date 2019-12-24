@@ -33,7 +33,10 @@ class ModelMapper
             && self::$packTypeToModelClass[$packType] !== $modelClass)
         {
             $anotherObjectClass = self::$packTypeToModelClass[$packType];
-            throw new ModelException("${modelClass}'s packType is already used by ${anotherObjectClass}");
+            throw new ModelException(
+                "${modelClass}'s packType is already used by ${anotherObjectClass}",
+                ModelException::PACK_TYPE_IS_DUPLICATED
+            );
         }
 
         self::$packTypeToModelClass[$packType] = $modelClass;
@@ -49,7 +52,10 @@ class ModelMapper
     public static function findModelClass(string $packType): string
     {
         if (!isset(self::$packTypeToModelClass[$packType])) {
-            throw new ModelException("Not found for packType(${packType})");
+            throw new ModelException(
+                "Not found for packType(${packType})",
+                ModelException::PACK_TYPE_IS_UNREGISTERED
+            );
         }
         return self::$packTypeToModelClass[$packType];
     }
@@ -63,7 +69,10 @@ class ModelMapper
     public static function findPackType(string $modelClass): string
     {
         if (!isset(self::$modelClassToPackType[$modelClass])) {
-            throw new ModelException("Not found for model(${modelClass})");
+            throw new ModelException(
+                "Not found for model(${modelClass})",
+            ModelException::NO_SUCH_CLASS
+            );
         }
         return self::$modelClassToPackType[$modelClass];
     }

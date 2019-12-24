@@ -113,15 +113,25 @@ class FlatBuffersSerializer implements ModelSerializerInterface
             try {
                 $refClass = new ReflectionClass($className);
                 if (!$refClass->isSubclassOf(FlatBuffersSerializable::class)) {
-                    throw new ModelException("Class(${className} is not instance of FlatBuffersSerializable");
+                    throw new ModelException(
+                        "Class(${className} is not instance of FlatBuffersSerializable",
+                        ModelException::CLASS_HAS_NOT_ADAPTED_INTERFACE
+                    );
                 }
                 $method = $refClass->getMethod('deserializeFlatBuffers');
                 $object = $method->invoke(null, $version, ByteBuffer::wrap($content));
                 if (!($object instanceof FlatBuffersSerializable)) {
-                    throw new ModelException('Deserialize result is not instance of FlatBuffersSerializable');
+                    throw new ModelException(
+                        'Deserialize result is not instance of FlatBuffersSerializable',
+                        ModelException::CLASS_HAS_NOT_ADAPTED_INTERFACE
+                    );
                 }
             } catch (ReflectionException $e) {
-                throw new ModelException("Class(${className} could not create ReflectionClass");
+                throw new ModelException(
+                    "Class(${className} could not create ReflectionClass",
+                    ModelException::REFLECTION_EXCEPTION_OCCURRED,
+                    $e
+                );
             }
 
             $objectList[] = new Pack($packType, $version, $requestId, $object);

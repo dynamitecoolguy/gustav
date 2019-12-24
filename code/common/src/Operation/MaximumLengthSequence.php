@@ -4,7 +4,7 @@
 namespace Gustav\Common\Operation;
 
 use GMP;
-use Gustav\Common\Exception\UninitializedException;
+use Gustav\Common\Exception\OperationException;
 
 /**
  * M系列
@@ -83,12 +83,15 @@ class MaximumLengthSequence
      * @param int $index
      * @param int $presetIndex
      * @param mixed|null $presetValue
-     * @throws UninitializedException
+     * @throws OperationException
      */
     public function __construct(int $index, int $presetIndex = -1, $presetValue = null)
     {
         if (is_null(self::$initValue)) {
-            throw new UninitializedException('Must call setParameter before construction');
+            throw new OperationException(
+                'Must call setParameter before construction',
+                OperationException::NOT_INITIALIZED
+            );
         }
 
         if ($presetIndex === -1 || is_null($presetValue) || $presetIndex > $index) {

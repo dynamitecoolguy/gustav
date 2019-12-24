@@ -62,18 +62,27 @@ class AbstractModel implements ModelInterface
                 $m->setAccessible(true);
                 $m->invoke($this, $value);
             } catch (ReflectionException $e) {
-                throw new ModelException("Method (${methodName}) could not be accessed", 0, $e);
+                throw new ModelException(
+                    "Method (${methodName}) could not be accessed",
+                    ModelException::SETTER_IS_INACCESSIBLE,
+                    $e);
             }
         } elseif ($ref->hasProperty($key)) {
             try {
                 $p = $ref->getProperty($key);
             } catch (ReflectionException $e) {
-                throw new ModelException("Property (${key}) could not be accessed", 0, $e);
+                throw new ModelException(
+                    "Property (${key}) is inaccessible",
+                    ModelException::PROPERTY_IS_INACCESSIBLE,
+                    $e);
             }
             $p->setAccessible(true);
             $p->setValue($this, $value);
         } else {
-            throw new ModelException("Model has no such property(${key})");
+            throw new ModelException(
+                "Model has no such property(${key})",
+                ModelException::NO_SUCH_PROPERTY
+            );
         }
     }
 
@@ -99,7 +108,10 @@ class AbstractModel implements ModelInterface
             $property = lcfirst(substr($name, 2));
         } else {
             // setHoge/getHoge以外の形のメソッドはModelExceptionエラーになる
-            throw new ModelException("Method ${name} not exists");
+            throw new ModelException(
+                "Method ${name} not exists",
+                ModelException::NO_SUCH_METHOD
+            );
         }
         $ref = $this->getReflectionProperty($property);
         if ($isSetter) {
@@ -144,12 +156,18 @@ class AbstractModel implements ModelInterface
     {
         $ref = new ReflectionObject($this);
         if (!$ref->hasProperty($name)) {
-            throw new ModelException("Model has no such property(${name})");
+            throw new ModelException(
+                "Model has no such property(${name})",
+                ModelException::NO_SUCH_PROPERTY
+            );
         }
         try {
             $p = $ref->getProperty($name);
         } catch (ReflectionException $e) {
-            throw new ModelException("Property (${name}) could not be accessed", 0, $e);
+            throw new ModelException(
+                "Property (${name}) is inaccessible",
+                ModelException::PROPERTY_IS_INACCESSIBLE,
+                $e);
         }
         $p->setAccessible(true); // public以外書き込みに失敗するので強制書き込み可能にする
         return $p;

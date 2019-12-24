@@ -4,14 +4,14 @@
 namespace Gustav\Common\Network;
 
 
-use Gustav\Common\Exception\FormatException;
+use Gustav\Common\Exception\NetworkException;
 use PHPUnit\Framework\TestCase;
 
 class BinaryEncryptorTest extends TestCase
 {
     /**
      * @test
-     * @throws FormatException
+     * @throws NetworkException
      */
     public function emptyData(): void
     {
@@ -20,7 +20,7 @@ class BinaryEncryptorTest extends TestCase
 
     /**
      * @test
-     * @throws FormatException
+     * @throws NetworkException
      */
     public function shortData(): void
     {
@@ -29,7 +29,7 @@ class BinaryEncryptorTest extends TestCase
 
     /**
      * @test
-     * @throws FormatException
+     * @throws NetworkException
      */
     public function alphabetData(): void
     {
@@ -38,7 +38,7 @@ class BinaryEncryptorTest extends TestCase
 
     /**
      * @test
-     * @throws FormatException
+     * @throws NetworkException
      */
     public function binaryData(): void
     {
@@ -47,11 +47,11 @@ class BinaryEncryptorTest extends TestCase
 
     /**
      * @test
-     * @throws FormatException
+     * @throws NetworkException
      */
     public function illegalData(): void
     {
-        $this->expectException(FormatException::class);
+        $this->expectException(NetworkException::class);
 
         $encryptor = new BinaryEncryptor();
         $encryptor->decrypt('hogehoge');
@@ -70,7 +70,7 @@ class BinaryEncryptorTest extends TestCase
             try {
                 $encrypted[$i] = chr(ord($encrypted[$i]) + 1);
                 $encryptor->decrypt($encrypted);
-            } catch (FormatException $e) {
+            } catch (NetworkException $e) {
                 $exceptionCounter++;
             }
             $encrypted[$i] = $c;
@@ -80,7 +80,7 @@ class BinaryEncryptorTest extends TestCase
 
     /**
      * @param $original
-     * @throws FormatException
+     * @throws NetworkException
      */
     private function compare($original): void
     {

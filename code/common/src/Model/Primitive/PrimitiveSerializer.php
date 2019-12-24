@@ -59,15 +59,25 @@ abstract class PrimitiveSerializer implements ModelSerializerInterface
             try {
                 $refClass = new ReflectionClass($className);
                 if (!$refClass->isSubclassOf(PrimitiveSerializable::class)) {
-                    throw new ModelException("Class(${className} is not instance of PrimitiveSerializable");
+                    throw new ModelException(
+                        "Class(${className} is not instance of PrimitiveSerializable",
+                        ModelException::CLASS_HAS_NOT_ADAPTED_INTERFACE
+                    );
                 }
                 $method = $refClass->getMethod('deserializePrimitive');
                 $object = $method->invoke(null, $version, $primitives);
                 if (!($object instanceof PrimitiveSerializable)) {
-                    throw new ModelException('Deserialize result is not instanceof FlatBuffersSerializable');
+                    throw new ModelException(
+                        'Deserialize result is not instanceof FlatBuffersSerializable',
+                        ModelException::CLASS_HAS_NOT_ADAPTED_INTERFACE
+                    );
                 }
             } catch (ReflectionException $e) {
-                throw new ModelException("Class(${className} could not create ReflectionClass");
+                throw new ModelException(
+                    "Class(${className} could not create ReflectionClass",
+                    ModelException::REFLECTION_EXCEPTION_OCCURRED,
+                    $e
+                );
             }
 
             $packList[] = new Pack($packType, $version, $requestId, $object);
