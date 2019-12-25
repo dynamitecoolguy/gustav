@@ -100,7 +100,7 @@ class MySQLAdapter implements MySQLInterface
     }
 
     /**
-     * PgSQLAdapter constructor.
+     * MySQLAdapter constructor.
      * @param string $hostMaster
      * @param string $hostSlave
      * @param string $dbName
@@ -387,7 +387,8 @@ class MySQLAdapter implements MySQLInterface
         $pdoStatement = $this->wrapStatement($statement, $params);
         try {
             $pdoStatement->execute($params);
-            return $pdoStatement->fetch(PDO::FETCH_NUM);
+            $result = $pdoStatement->fetch(PDO::FETCH_NUM);
+            return ($result === false) ? null : $result;
         } catch (PDOException $e) {
             throw new DatabaseException(
                 "Execution statement(${statement}) failed",
@@ -429,15 +430,7 @@ class MySQLAdapter implements MySQLInterface
     {
         // Prepare
         if (is_string($statement)) {
-            try {
-                $pdoStatement = $this->prepare($statement);
-            } catch (PDOException $e) {
-                throw new DatabaseException(
-                    "Statement(${statement}) could not be prepared",
-                    DatabaseException::STATEMENT_COULD_NOT_BE_PREPARED,
-                    $e
-                );
-            }
+            $pdoStatement = $this->prepare($statement);
         } elseif ($statement instanceof PDOStatement) {
             $pdoStatement = $statement;
         } else {
@@ -449,10 +442,12 @@ class MySQLAdapter implements MySQLInterface
 
         // Bind
         try {
-            $this->bindArray($pdoStatement, $params);
+            if (!is_null($params)) {
+                $this->bindArray($pdoStatement, $params);
+            }
         } catch (PDOException $e) {
             throw new DatabaseException(
-                "Execution failed",
+                "Binding failed",
                 DatabaseException::BIND_ERROR,
                 $e
             );
@@ -462,9 +457,9 @@ class MySQLAdapter implements MySQLInterface
 
     /**
      * @param PDOStatement $statement
-     * @param array|null $params
+     * @param array $params
      */
-    private function bindArray(PDOStatement $statement, ?array $params): void
+    private function bindArray(PDOStatement $statement, array $params): void
     {
         foreach ($params as $key => $value) {
             if (is_int($value)) {
