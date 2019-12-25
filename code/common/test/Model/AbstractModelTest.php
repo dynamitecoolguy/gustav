@@ -157,6 +157,47 @@ class AbstractModelTest extends TestCase
         $this->assertEquals(4, $n->getQqq());
         $this->assertEquals(4, $n->directQqq());
     }
+
+    /**
+     * @test
+     */
+    public function constructorFailed1(): void
+    {
+        $this->expectException(ModelException::class);
+        new DummyAbstractModel3([
+            'y' => 0
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function constructorFailed2(): void
+    {
+        $this->expectException(ModelException::class);
+        new DummyAbstractModel3([
+            'x' => 0
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function isMethod(): void
+    {
+        $m = new DummyAbstractModel4([
+            'b1' => 1,
+            'b2' => true,
+            'b3' => null,
+            'b4' => 'YES'
+        ]);
+
+        $this->assertTrue($m->isB1());
+        $this->assertTrue($m->isB2());
+        $this->assertFalse($m->isB3());
+        $this->assertTrue($m->isB4());
+    }
+
 }
 
 class DummyAbstractModel1 extends AbstractModel
@@ -200,4 +241,17 @@ class DummyAbstractModel2 extends DummyAbstractModel1
     public function setDdd($a) { $this->ddd = $a; }
     public function directCcc() { return $this->ccc; }
     public function directDdd() { return $this->ddd; }
+}
+
+class DummyAbstractModel3 extends AbstractModel
+{
+    private function setX() { throw new \Exception(); }
+}
+
+class DummyAbstractModel4 extends AbstractModel
+{
+    private $b1;
+    private $b2;
+    private $b3;
+    private $b4;
 }

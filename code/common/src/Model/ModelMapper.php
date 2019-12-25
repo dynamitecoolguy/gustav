@@ -15,12 +15,6 @@ class ModelMapper
     private static $packTypeToModelClass = [];
 
     /**
-     * ModelInterfaceのクラス名 -> PackType
-     * @var string[]
-     */
-    private static $modelClassToPackType = [];
-
-    /**
      * モデルのクラスを登録する
      * @param string $packType
      * @param string $modelClass  ModelInterfaceを実装したクラスのクラス名
@@ -40,7 +34,6 @@ class ModelMapper
         }
 
         self::$packTypeToModelClass[$packType] = $modelClass;
-        self::$modelClassToPackType[$modelClass] = $packType;
     }
 
     /**
@@ -61,28 +54,10 @@ class ModelMapper
     }
 
     /**
-     * クラスに対応する識別コードを返す
-     * @param string $modelClass モデルのクラス名
-     * @return string 識別コード
-     * @throws ModelException
-     */
-    public static function findPackType(string $modelClass): string
-    {
-        if (!isset(self::$modelClassToPackType[$modelClass])) {
-            throw new ModelException(
-                "Not found for model(${modelClass})",
-            ModelException::NO_SUCH_CLASS
-            );
-        }
-        return self::$modelClassToPackType[$modelClass];
-    }
-
-    /**
      * マップのリセット
      */
     public static function resetMap(): void
     {
-        self::$modelClassToPackType = [];
         self::$packTypeToModelClass = [];
     }
 }

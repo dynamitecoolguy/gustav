@@ -14,7 +14,6 @@ use Gustav\Common\Model\ModelInterface;
 use Invoker\ParameterResolver\Container\TypeHintContainerResolver;
 use Invoker\ParameterResolver\ResolverChain;
 use Invoker\ParameterResolver\TypeHintResolver;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -49,15 +48,13 @@ class Dispatcher implements DispatcherInterface
     protected function __construct(ContainerInterface $container)
     {
         // Dispatcher用の定義ファイルの取得
-        try {
-            $dispatcherTableClass = $container->get(DispatcherTableInterface::class);
-        } catch (ContainerExceptionInterface $e) {
+        if (!$container->has(DispatcherTableInterface::class)) {
             throw new NetworkException(
-                NetworkException::DISPATCHER_TABLE_INTERFACE_IS_NOT_REGISTERED,
-                0,
-                $e
+                NetworkException::DISPATCHER_TABLE_INTERFACE_IS_NOT_REGISTERED
             );
         }
+
+        $dispatcherTableClass = $container->get(DispatcherTableInterface::class);
         $dispatcherList = $dispatcherTableClass->getDispatchTable();
 
         $this->dispatchTable = [];
@@ -104,7 +101,7 @@ class Dispatcher implements DispatcherInterface
         list($registeredClass, $executorCallable) = $this->dispatchTable[$packType];
 
         // 要求クラスと登録されているクラスが異なる
-        if ($requestClass instanceof $registeredClass) {
+        if (!($requestModel instanceof $registeredClass)) {
             throw new NetworkException(
                 "Requested class(${requestClass}) is not same as registered class(${registeredClass})",
                 NetworkException::CLASSES_IS_NOT_SAME

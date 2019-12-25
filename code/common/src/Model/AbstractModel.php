@@ -3,6 +3,7 @@
 
 namespace Gustav\Common\Model;
 
+use Exception;
 use Gustav\Common\Exception\ModelException;
 use ReflectionException;
 use ReflectionObject;
@@ -61,13 +62,13 @@ class AbstractModel implements ModelInterface
                 $m = $ref->getMethod($methodName);
                 $m->setAccessible(true);
                 $m->invoke($this, $value);
-            } catch (ReflectionException $e) {
+            } catch (Exception $e) {
                 throw new ModelException(
-                    "Method (${methodName}) could not be accessed",
+                    "Method (${methodName}) call but failed.",
                     ModelException::SETTER_IS_INACCESSIBLE,
                     $e);
             }
-        } elseif ($ref->hasProperty($key)) {
+        } else {
             try {
                 $p = $ref->getProperty($key);
             } catch (ReflectionException $e) {
@@ -78,11 +79,6 @@ class AbstractModel implements ModelInterface
             }
             $p->setAccessible(true);
             $p->setValue($this, $value);
-        } else {
-            throw new ModelException(
-                "Model has no such property(${key})",
-                ModelException::NO_SUCH_PROPERTY
-            );
         }
     }
 
@@ -98,13 +94,10 @@ class AbstractModel implements ModelInterface
     {
         $h = $name[0];
         if ($h === 's' && strpos($name, 'set') === 0) {
-            $isSetter = true;
             $property = lcfirst(substr($name, 3));
         } elseif ($h === 'g' && strpos($name, 'get') === 0) {
-            $isSetter = false;
             $property = lcfirst(substr($name, 3));
         } elseif ($h === 'i' && strpos($name, 'is') === 0) {
-            $isSetter = false;
             $property = lcfirst(substr($name, 2));
         } else {
             // setHoge/getHoge以外の形のメソッドはModelExceptionエラーになる
@@ -114,11 +107,13 @@ class AbstractModel implements ModelInterface
             );
         }
         $ref = $this->getReflectionProperty($property);
-        if ($isSetter) {
+        if ($h === 's') { // setter
             $ref->setValue($this, $arguments[0]);
             return null;
-        } else {
+        } elseif ($h === 'g') { // getter
             return $ref->getValue($this);
+        } else { // is
+            return boolval($ref->getValue($this));
         }
     }
 
@@ -155,12 +150,6 @@ class AbstractModel implements ModelInterface
     private function getReflectionProperty(string $name): ReflectionProperty
     {
         $ref = new ReflectionObject($this);
-        if (!$ref->hasProperty($name)) {
-            throw new ModelException(
-                "Model has no such property(${name})",
-                ModelException::NO_SUCH_PROPERTY
-            );
-        }
         try {
             $p = $ref->getProperty($name);
         } catch (ReflectionException $e) {
