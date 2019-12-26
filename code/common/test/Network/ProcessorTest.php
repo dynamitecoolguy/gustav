@@ -116,7 +116,7 @@ class ProcessorTest extends TestCase
 
 class DummyDispatcher implements DispatcherInterface
 {
-    public function dispatch(ContainerInterface $container, Pack $requestObject): ?ModelInterface
+    public function dispatch(?int $userId, ContainerInterface $container, Pack $requestObject): ?ModelInterface
     {
         $request = $requestObject->getModel();
         if ($request instanceof MonsterModel) {

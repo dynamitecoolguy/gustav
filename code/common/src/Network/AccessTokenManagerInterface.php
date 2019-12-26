@@ -11,14 +11,19 @@ interface AccessTokenManagerInterface
 {
     /**
      * @param int $userId
-     * @param int $expiredAt
      * @return string
      */
-    public function createToken(int $userId, int $expiredAt): string;
+    public function createToken(int $userId): string;
 
     /**
      * @param string $token
      * @return int[]           (ユーザID, 有効期限)
      */
     public function getInformation(string $token): array;
+
+    /**
+     * AccessTokenの有効期限
+     * @return int
+     */
+    public function getExpiredTime(): int;
 }

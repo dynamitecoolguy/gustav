@@ -5,6 +5,7 @@ namespace Gustav\App\Controller;
 use Composer\Autoload\ClassLoader;
 use Gustav\App\AppContainerBuilder;
 use Gustav\App\LocalConfigLoader;
+use Gustav\App\Logic\RegistrationLogic;
 use Gustav\App\Model\RegistrationModel;
 use Gustav\Common\Config\ApplicationConfig;
 use PHPUnit\Framework\TestCase;
@@ -56,7 +57,7 @@ class MainControllerTest extends TestCase
         $registration->setNote('hogehoge');
 
         $content = json_encode([
-            ['REG', 1, 'req', $registration->serializePrimitive()],
+            [RegistrationLogic::REGISTER_ACTION, 1, 'req', $registration->serializePrimitive()],
             '1234'
         ]);
 
@@ -70,7 +71,7 @@ class MainControllerTest extends TestCase
         $decoded = json_decode($result->getBody());
 
         $this->assertEquals('1234', $decoded[1]);
-        $this->assertEquals('REG', $decoded[0][0]);
+        $this->assertEquals(RegistrationLogic::REGISTER_ACTION, $decoded[0][0]);
         $this->assertEquals(1, $decoded[0][1]);
         $this->assertEquals('req', $decoded[0][2]);
 

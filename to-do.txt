@@ -1,8 +1,0 @@
-* compose/dynamodb
-
-初期データ投入方法
-
-
-* compose/fluentd
-
-アクションログ毎にS3などへ転送する方法の実装

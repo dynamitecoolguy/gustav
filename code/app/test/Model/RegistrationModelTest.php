@@ -4,6 +4,7 @@
 namespace Gustav\App\Model;
 
 use Composer\Autoload\ClassLoader;
+use Gustav\App\Logic\RegistrationLogic;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\FlatBuffers\FlatBuffersSerializer;
 use Gustav\Common\Model\Pack;
@@ -50,9 +51,9 @@ class RegistrationModelTest extends TestCase
             new Parcel(
                 "token",
                 [
-                    new Pack('REG', 3, 'req1', $register1),
-                    new Pack('REG', 4, 'req2', $register2),
-                    new Pack('REG', 5, 'req3', $register3),
+                    new Pack(RegistrationLogic::REGISTER_ACTION, 3, 'req1', $register1),
+                    new Pack(RegistrationLogic::REGISTER_ACTION, 4, 'req2', $register2),
+                    new Pack(RegistrationLogic::REGISTER_ACTION, 5, 'req3', $register3),
                 ]
             )
         );
@@ -68,7 +69,7 @@ class RegistrationModelTest extends TestCase
         $this->assertEquals('pub', $packList[2]->getModel()->getPublicKey());
         $this->assertEquals(3, $packList[0]->getVersion());
         $this->assertEquals(4, $packList[1]->getVersion());
-        $this->assertEquals('REG', $packList[0]->getPackType());
+        $this->assertEquals(RegistrationLogic::REGISTER_ACTION, $packList[0]->getPackType());
         $this->assertEquals('req2', $packList[1]->getRequestId());
     }
 

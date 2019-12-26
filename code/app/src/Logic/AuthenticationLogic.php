@@ -37,8 +37,10 @@ use Gustav\Common\Operation\Time;
  */
 class AuthenticationLogic
 {
+    const REQUEST_ACTION = 'AUTR';
+    const PUBLISH_ACTION = 'AUTP';
+
     const AUTHENTICATION_TIMEOUT = 300; // requestからpublishまでに許された時間
-    const ACCESS_TOKEN_LIFETIME = 3600; // AccessTokenの消費期限
 
     /**
      * PackType:
@@ -130,7 +132,7 @@ class AuthenticationLogic
         if ($randomBytes !== $registeredBytes) {
             $accessToken = ''; // authentication failure
         } else {
-            $accessToken = $tokenManager->createToken($userId, Time::now() + self::ACCESS_TOKEN_LIFETIME);
+            $accessToken = $tokenManager->createToken($userId);
         }
 
         // 戻り値

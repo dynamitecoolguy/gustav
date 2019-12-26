@@ -28,6 +28,8 @@ use Gustav\Common\Network\KeyOperatorInterface;
  */
 class RegistrationLogic
 {
+    const REGISTER_ACTION = 'REGR';
+
     /**
      * PackType:
      *   REG
@@ -52,7 +54,8 @@ class RegistrationLogic
         MySQLInterface $mysql,
         KeyOperatorInterface $keyOperator,
         OpenIdConverterInterface $openIdConverter,
-        RedisInterface $redis): RegistrationModel
+        RedisInterface $redis
+    ): RegistrationModel
     {
         // 登録時の備考 (登録するが未使用)
         $note = $request->getNote();

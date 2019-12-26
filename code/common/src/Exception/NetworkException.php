@@ -17,4 +17,5 @@ class NetworkException extends GustavException
     const EXECUTOR_IS_NOT_REGISTERED = 5;
     const CLASSES_IS_NOT_SAME = 6;
     const EXECUTOR_HAS_EXCEPTION = 7;
+    const INVALID_TOKEN = 8;
 }

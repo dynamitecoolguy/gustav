@@ -15,12 +15,13 @@ use Psr\Container\ContainerInterface;
 interface DispatcherInterface
 {
     /**
+     * @param int|null                $userId;       // 対象ユーザ
      * @param ContainerInterface      $container     // Container
      * @param Pack                    $request       // リクエストオブジェクト
      * @return ModelInterface|null                   // リザルト。必要ない場合はnull
      * @throws ModelException
      */
-    public function dispatch(ContainerInterface $container, Pack $request): ?ModelInterface;
+    public function dispatch(?int $userId, ContainerInterface $container, Pack $request): ?ModelInterface;
 
     /**
      * トークンが必要かどうか

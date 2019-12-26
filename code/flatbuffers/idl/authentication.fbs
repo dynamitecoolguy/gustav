@@ -3,14 +3,18 @@ namespace Gustav.Dx;
 // ユーザ認証シーケンス
 //
 // Client                              <-> Server
+//
+// [ユーザ認証要求](AUTR)
 // Authentication (user_id)             ->
 //                                         ランダム文字列を生成 (random_bytes)
 //                                         秘密鍵で暗号化
-//                                         BASE64_ENCODE
+//                                         暗号化されたランダム文字列をBASE64_ENCODE
 //                                     <-  Authentication (user_id, secret)
 // BASE64_DECODE
-// 公開鍵で復号化
-// BASE64_ENCODE
+// ランダム文字列を公開鍵で復号化
+//
+// [ユーザ認証実行](AUTP)
+// ランダム文字列をBASE64_ENCODE
 // Authentication (user_id, secret)     ->
 //                                         BASE64_DECODE
 //                                         ランダム文字列と比較

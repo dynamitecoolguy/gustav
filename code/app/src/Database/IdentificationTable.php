@@ -9,7 +9,7 @@ use Gustav\Common\Adapter\MySQLAdapter;
 use Gustav\Common\Exception\DatabaseException;
 
 /**
- * MySQL Identificationテーブルの制御
+ * MySQL identificationテーブルの制御
  * create table identification (
  *   user_id int unsigned not null auto_increment,              -- ユーザID
  *   open_id binary(10) not null,                               -- 公開ID(10桁)

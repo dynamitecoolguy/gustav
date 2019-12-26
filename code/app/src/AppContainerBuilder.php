@@ -43,12 +43,31 @@ class AppContainerBuilder extends BaseContainerBuilder
                         // [PackType, モデルクラス, 操作callable, トークンのチェックが必要か?(default:true)]
                         return [
                             // ユーザ新規登録
-                            ['REG', RegistrationModel::class, [RegistrationLogic::class, 'register'], false],
+                            [
+                                RegistrationLogic::REGISTER_ACTION,
+                                RegistrationModel::class,
+                                [RegistrationLogic::class, 'register'],
+                                false
+                            ],
                             // ユーザ認証
-                            ['AUR', AuthenticationModel::class, [AuthenticationLogic::class, 'request'], false],
-                            ['AUP', AuthenticationModel::class, [AuthenticationLogic::class, 'publish'], false],
-
-                            ['TRC', TransferCodeModel::class, TransferLogic::class]
+                            [
+                                AuthenticationLogic::REQUEST_ACTION,
+                                AuthenticationModel::class,
+                                [AuthenticationLogic::class, 'request'],
+                                false
+                            ],
+                            [
+                                AuthenticationLogic::PUBLISH_ACTION,
+                                AuthenticationModel::class,
+                                [AuthenticationLogic::class, 'publish'],
+                                false
+                            ],
+                            // ユーザ移管
+                            [
+                                TransferLogic::GET_ACTION,
+                                TransferCodeModel::class,
+                                [TransferLogic::class, 'get']
+                            ]
                         ];
                     }
                 }

@@ -23,6 +23,7 @@ class Processor
      * @param DispatcherInterface $dispatcher
      * @param BinaryEncryptorInterface $encryptor
      * @param ModelSerializerInterface $serializer
+     * @param AccessTokenManagerInterface $accessTokenManager
      * @return string
      * @throws NetworkException
      * @throws ModelException
@@ -32,7 +33,9 @@ class Processor
         ContainerInterface $container,
         DispatcherInterface $dispatcher,
         BinaryEncryptorInterface $encryptor,
-        ModelSerializerInterface $serializer): string
+        ModelSerializerInterface $serializer,
+        AccessTokenManagerInterface $accessTokenManager
+    ): string
     {
         // 復号化
         $decrypted = $encryptor->decrypt($input);
@@ -41,6 +44,8 @@ class Processor
         $requestParcel = $serializer->deserialize($decrypted);
         $requestToken = $requestParcel->getToken();
 
+        $userId = null;
+
         // リクエストオブジェクト毎に処理
         $resultList = [];
         $tokenChecked = false;
@@ -48,12 +53,12 @@ class Processor
             // トークンが必要ならばトークンをチェックする
             if ($dispatcher->isTokenRequired($requestPack)) {
                 if (!$tokenChecked) {
-                    self::checkToken($requestToken);
+                    $userId = self::checkToken($accessTokenManager, $requestToken);
                     $tokenChecked = true;
                 }
             }
 
-            $resultModel = $dispatcher->dispatch($container, $requestPack);
+            $resultModel = $dispatcher->dispatch($userId, $container, $requestPack);
             if (!is_null($resultModel)) {
                 $resultList[] = new Pack(
                     $requestPack->getPackType(),
@@ -65,7 +70,7 @@ class Processor
         }
 
         // トークンを使ったら、次のトークンを用意
-        $resultToken = $tokenChecked ? self::nextToken() : '';
+        $resultToken = $tokenChecked ? self::nextToken($accessTokenManager, $userId) : '';
 
         // 結果をシリアライズ
         $resultBinary = $serializer->serialize(new Parcel($resultToken, $resultList));
@@ -74,15 +79,33 @@ class Processor
         return $encryptor->encrypt($resultBinary);
     }
 
-    private static function checkToken(string $token): void
+    /**
+     * @param AccessTokenManagerInterface $accessTokenManager
+     * @param string $token
+     * @return string
+     * @throws NetworkException
+     */
+    private static function checkToken(AccessTokenManagerInterface $accessTokenManager, string $token): string
     {
-        // TODO: トークンのチェック
+        // トークン内のuserIdを取得
+        /** @noinspection PhpUnusedLocalVariableInspection */
+        list($userId, $expiredAt) = $accessTokenManager->getInformation($token);
+
+        if (is_null($userId)) { // トークンが不正
+            throw new NetworkException('Token is illegal format', NetworkException::INVALID_TOKEN);
+        }
+
+        return $userId;
     }
 
-    private static function nextToken(): string
+    /**
+     * @param AccessTokenManagerInterface $accessTokenManager
+     * @param int $userId
+     * @return string
+     */
+    private static function nextToken(AccessTokenManagerInterface $accessTokenManager, int $userId): string
     {
-        // TODO: 次のトークン
-        return 'hogehoge';
+        return $accessTokenManager->createToken($userId);
     }
 
     /**
@@ -103,11 +126,14 @@ class Processor
 
         $requestParcel = $serializer->deserialize($input);
         $userId = $requestParcel->getToken();
+        if ($userId === '') {
+            $userId = null;
+        }
 
         // リクエストオブジェクト毎に処理
         $resultList = [];
         foreach ($requestParcel->getPackList() as $requestPack) {
-            $resultModel = $dispatcher->dispatch($container, $requestPack);
+            $resultModel = $dispatcher->dispatch($userId, $container, $requestPack);
             if (!is_null($resultModel)) {
                 $resultList[] = new Pack(
                     $requestPack->getPackType(),

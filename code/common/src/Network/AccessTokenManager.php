@@ -3,6 +3,8 @@
 
 namespace Gustav\Common\Network;
 
+use Gustav\Common\Operation\Time;
+
 /**
  * Class AccessTokenManager
  * @package Gustav\Common\Network
@@ -11,6 +13,7 @@ class AccessTokenManager implements AccessTokenManagerInterface
 {
     const CRYPT_KEY       = '6518dc1174e3ddb1e02560db141c5d57';
     const OPENSSL_CRYPT_ALGORITHM = 'AES-128-CBC';
+    const ACCESS_TOKEN_LIFETIME = 3600; // AccessTokenの消費期限
 
     /** @var string|null */
     private static $cryptKey = null;
@@ -29,11 +32,11 @@ class AccessTokenManager implements AccessTokenManagerInterface
     /**
      * @inheritDoc
      */
-    public function createToken(int $userId, int $expiredAt): string
+    public function createToken(int $userId): string
     {
         // トークンの元データ
         $vector = openssl_random_pseudo_bytes(16);
-        $serialized = igbinary_serialize([$userId, $expiredAt, $vector]);
+        $serialized = igbinary_serialize([$userId, $this->getExpiredTime(), $vector]);
 
         // トークンはサーバ側で一致するかどうかの判定をするので、改竄チェック用のハッシュは入れていない(必要なさげ)
 
@@ -48,9 +51,17 @@ class AccessTokenManager implements AccessTokenManagerInterface
         $serialized = $this->decrypt(base64_decode($token));
 
         /** @noinspection PhpUnusedLocalVariableInspection */
-        list($userId, $expiredAt, $vector) = igbinary_unserialize($serialized);
+        list($userId, $expiredAt, $_) = igbinary_unserialize($serialized);
 
         return [$userId, $expiredAt];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getExpiredTime(): int
+    {
+        return (int)(Time::now() + self::ACCESS_TOKEN_LIFETIME);
     }
 
     /**

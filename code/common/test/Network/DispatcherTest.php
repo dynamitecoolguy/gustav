@@ -33,7 +33,7 @@ class BaseDispatcherTest extends TestCase
         $dispatcher = Dispatcher::create($container);
         $dummyModel = new DummyBaseDispatcherModel();
         $requestModel = new Pack('DUMMY', 1, 'req', $dummyModel);
-        $resultModel = $dispatcher->dispatch($container, $requestModel);
+        $resultModel = $dispatcher->dispatch(1, $container, $requestModel);
 
         $this->assertEquals($resultModel, $dummyModel);
         $dispatchTable = $dispatcher->getDispatchTable();
@@ -97,7 +97,7 @@ class BaseDispatcherTest extends TestCase
         $dispatcher = Dispatcher::create($container);
         $dummyModel = new DummyBaseDispatcherModel();
         $requestModel = new Pack('HOGE', 1, 'req', $dummyModel);
-        $dispatcher->dispatch($container, $requestModel);
+        $dispatcher->dispatch(null, $container, $requestModel);
     }
 
     /**
@@ -122,7 +122,7 @@ class BaseDispatcherTest extends TestCase
         $requestModel = new Pack('DUMMY', 1, 'req',
             new class implements ModelInterface {}
         );
-        $dispatcher->dispatch($container, $requestModel);
+        $dispatcher->dispatch(null, $container, $requestModel);
     }
 
     /**
@@ -146,7 +146,7 @@ class BaseDispatcherTest extends TestCase
         $dispatcher = Dispatcher::create($container);
         $dummyModel = new DummyBaseDispatcherModel();
         $requestModel = new Pack('DUMMY', 1, 'req', $dummyModel);
-        $dispatcher->dispatch($container, $requestModel);
+        $dispatcher->dispatch(null, $container, $requestModel);
     }
 
     /**
@@ -201,7 +201,7 @@ class DummyBaseDispatcherModel implements ModelInterface
 
 class DummyBaseDispatcherExecutor
 {
-    public function __invoke(DummyBaseDispatcherModel $model): ?ModelInterface
+    public function __invoke(DummyBaseDispatcherModel $model, ?int $userId): ?ModelInterface
     {
         return $model;
     }

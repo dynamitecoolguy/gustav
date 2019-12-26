@@ -7,6 +7,7 @@ use \Exception;
 use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\Exception\ConfigException;
 use Gustav\Common\Exception\DatabaseException;
+use Gustav\Common\Exception\DuplicateEntryException;
 use Gustav\Common\Network\NameResolver;
 use PDO;
 use PDOException;
@@ -267,6 +268,13 @@ class MySQLAdapter implements MySQLInterface
         try {
             $pdoStatement->execute($params);
         } catch (PDOException $e) {
+            if (isset($e->errorInfo[1]) && 1062 == $e->errorInfo[1]) {
+                throw new DuplicateEntryException(
+                    "Duplicated entry",
+                    DatabaseException::DUPLICATE_ENTRY,
+                    $e
+                );
+            }
             throw new DatabaseException(
                 "Execution statement failed",
                 DatabaseException::EXECUTION_FAILED,

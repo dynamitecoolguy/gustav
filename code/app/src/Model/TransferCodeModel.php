@@ -14,19 +14,15 @@ use Gustav\Dx\TransferCode;
  * データ移管を表すモデル
  * Class TransferCodeModel
  * @package Gustav\App\Model
- * @method int getUserId()
- * @method void setUserId(int $userId)
  * @method string getTransferCode()
  * @method void setTransferCode(string $transferCode)
  * @method string getPassword()
  * @method void setPassword(string $password)
+ * @method int getResult()
+ * @method void setResult(int $result)
  */
 class TransferCodeModel extends AbstractModel implements FlatBuffersSerializable, PrimitiveSerializable
 {
-    /** @var int 内部用ユーザID */
-    private $userId = 0;
-    const USER_ID = 'userId';
-
     /** @var string 移管コード */
     private $transferCode = '';
     const TRANSFER_CODE = 'transferCode';
@@ -34,6 +30,10 @@ class TransferCodeModel extends AbstractModel implements FlatBuffersSerializable
     /** @var string パスワード */
     private $password = '';
     const PASSWORD = 'password';
+
+    /** @var int アクション結果 */
+    private $result = 0;
+    const RESULT = 'result';
 
     /**
      * @inheritDoc
@@ -43,9 +43,9 @@ class TransferCodeModel extends AbstractModel implements FlatBuffersSerializable
         $transferCode = TransferCode::getRootAsTransferCode($buffer);
 
         return new static([
-            self::USER_ID => $transferCode->getUserId(),
+            self::PASSWORD => $transferCode->getPassword(),
             self::TRANSFER_CODE => $transferCode->getTransferCode(),
-            self::PASSWORD => $transferCode->getPassword()
+            self::RESULT => $transferCode->getResult()
         ]);
     }
 
@@ -55,9 +55,9 @@ class TransferCodeModel extends AbstractModel implements FlatBuffersSerializable
     public static function deserializePrimitive(int $version, array $primitives): PrimitiveSerializable
     {
         return new static([
-            self::USER_ID => $primitives[0],
+            self::PASSWORD => $primitives[0],
             self::TRANSFER_CODE => $primitives[1],
-            self::PASSWORD => $primitives[2]
+            self::RESULT => $primitives[2]
         ]);
     }
 
@@ -69,9 +69,9 @@ class TransferCodeModel extends AbstractModel implements FlatBuffersSerializable
         $transferCode = $builder->createString($this->transferCode);
         $password = $builder->createString($this->password);
         TransferCode::startTransferCode($builder);
-        TransferCode::addUserId($builder, $this->userId);
-        TransferCode::addTransferCode($builder, $transferCode);
         TransferCode::addPassword($builder, $password);
+        TransferCode::addTransferCode($builder, $transferCode);
+        TransferCode::addResult($builder, $this->result);
         return TransferCode::endTransferCode($builder);
     }
 
@@ -80,6 +80,6 @@ class TransferCodeModel extends AbstractModel implements FlatBuffersSerializable
      */
     public function serializePrimitive(): array
     {
-        return [$this->userId, $this->transferCode, $this->password];
+        return [$this->password, $this->transferCode, $this->result];
     }
 }

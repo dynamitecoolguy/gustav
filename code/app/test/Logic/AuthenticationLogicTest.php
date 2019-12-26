@@ -27,7 +27,11 @@ class AuthenticationLogicTest extends LogicBase
             RegistrationModel::NOTE => 'hogehoge'
         ]);
         /** @var RegistrationModel $result */
-        $result = self::getDispatcher()->dispatch(self::$container, new Pack('REG', 1, 'req', $request));
+        $result = self::getDispatcher()->dispatch(
+            null,
+            self::$container,
+            new Pack(RegistrationLogic::REGISTER_ACTION, 1, 'req', $request)
+        );
 
         self::$userId = $result->getUserId();
         self::$publicKey = $result->getPublicKey();
@@ -45,7 +49,11 @@ class AuthenticationLogicTest extends LogicBase
         ]);
 
         /** @var AuthenticationModel $result */
-        $result = self::getDispatcher()->dispatch(self::$container, new Pack('AUR', 1, 'req', $request));
+        $result = self::getDispatcher()->dispatch(
+            null,
+            self::$container,
+            new Pack(AuthenticationLogic::REQUEST_ACTION, 1, 'req', $request)
+        );
 
         $this->assertInstanceOf(AuthenticationModel::class, $result);
 
@@ -75,7 +83,11 @@ class AuthenticationLogicTest extends LogicBase
         ]);
 
         /** @var AuthenticationModel $result */
-        $result = self::getDispatcher()->dispatch(self::$container, new Pack('AUP', 1, 'req', $request));
+        $result = self::getDispatcher()->dispatch(
+            null,
+            self::$container,
+            new Pack(AuthenticationLogic::PUBLISH_ACTION, 1, 'req', $request)
+        );
 
         $this->assertInstanceOf(AuthenticationModel::class, $result);
 

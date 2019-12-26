@@ -3,6 +3,7 @@
 
 namespace Gustav\Common\Network;
 
+use Gustav\Common\Operation\Time;
 use PHPUnit\Framework\TestCase;
 
 class AccessTokenManagerTest extends TestCase
@@ -16,12 +17,11 @@ class AccessTokenManagerTest extends TestCase
 
         $tokens = [];
         $compared = [];
-        $t = time();
         for ($i = 0; $i < 100; $i++) {
             $userId = 10000 + $i;
-            $expiredAt = $t + 600 + $i;
+            $expiredAt = (int)(Time::now() + AccessTokenManager::ACCESS_TOKEN_LIFETIME);
 
-            $tokens[] = $atm->createToken($userId, $expiredAt);
+            $tokens[] = $atm->createToken($userId);
             $compared[] = [$userId, $expiredAt];
         }
         $comparing = [];

@@ -1,9 +1,10 @@
 namespace Gustav.Dx;
 
-// ユーザ認証シーケンス
+// ユーザ登録シーケンス
 //
 // Client                         <-> Server
 //
+// [ユーザ登録](REGR)
 // Registration(note)              ->
 //                                    ユーザID, 公開用ID, 秘密鍵, 公開鍵を生成
 //                                <-  Registration(user_id, open_id, note, public_key)

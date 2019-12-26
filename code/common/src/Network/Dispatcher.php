@@ -11,6 +11,7 @@ use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Model\Pack;
 use Gustav\Common\Model\ModelMapper;
 use Gustav\Common\Model\ModelInterface;
+use Invoker\ParameterResolver\AssociativeArrayResolver;
 use Invoker\ParameterResolver\Container\TypeHintContainerResolver;
 use Invoker\ParameterResolver\ResolverChain;
 use Invoker\ParameterResolver\TypeHintResolver;
@@ -79,12 +80,13 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
+     * @param int|null             $userId
      * @param ContainerInterface   $container
      * @param Pack                 $requestPack
      * @return ModelInterface|null
      * @throws GustavException
      */
-    public function dispatch(ContainerInterface $container, Pack $requestPack): ?ModelInterface
+    public function dispatch(?int $userId, ContainerInterface $container, Pack $requestPack): ?ModelInterface
     {
         $packType = $requestPack->getPackType();
         $requestModel = $requestPack->getModel();
@@ -109,22 +111,26 @@ class Dispatcher implements DispatcherInterface
         }
 
         // PHP-DI/Invokerで引数をtype-hintingで割り当てる
-        $invoker = new Invoker(
-            new ResolverChain([
-                new TypeHintResolver(),
-                new TypeHintContainerResolver($container)
-            ]),
-            $container);
+        $parameters = [
+            // TypeHintResolverで処理されるもの
+            Pack::class              => $requestPack,
+            ModelInterface::class    => $requestModel,
+            $requestClass            => $requestModel
+        ];
+        $resolvers = [
+            new TypeHintResolver(),
+            new TypeHintContainerResolver($container),
+        ];
+        if (!is_null($userId)) {
+            $parameters['userId'] = $userId;
+            $resolvers[] = new AssociativeArrayResolver();
+        }
+        // これ以外はcontainerに問い合わされる
 
         // Executorを実行する
+        $invoker = new Invoker(new ResolverChain($resolvers), $container);
         try {
-            return $invoker->call($executorCallable,
-                [
-                    // TypeHintResolverで処理されるもの。これ以外はcontainerに問い合わされる
-                    Pack::class              => $requestPack,
-                    ModelInterface::class    => $requestModel,
-                    $requestClass            => $requestModel
-                ]);
+            return $invoker->call($executorCallable, $parameters);
         } catch (Exception $e) {
             throw new NetworkException(
                 "Executor is not callable or failed to call",

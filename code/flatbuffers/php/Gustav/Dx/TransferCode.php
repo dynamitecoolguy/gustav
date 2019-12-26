@@ -33,13 +33,10 @@ class TransferCode extends Table
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getUserId()
+    public function getPassword()
     {
         $o = $this->__offset(4);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     public function getTransferCode()
@@ -48,10 +45,13 @@ class TransferCode extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getPassword()
+    /**
+     * @return int
+     */
+    public function getResult()
     {
         $o = $this->__offset(8);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
     /**
@@ -67,24 +67,24 @@ class TransferCode extends Table
      * @param FlatBufferBuilder $builder
      * @return TransferCode
      */
-    public static function createTransferCode(FlatBufferBuilder $builder, $user_id, $transfer_code, $password)
+    public static function createTransferCode(FlatBufferBuilder $builder, $password, $transfer_code, $result)
     {
         $builder->startObject(3);
-        self::addUserId($builder, $user_id);
-        self::addTransferCode($builder, $transfer_code);
         self::addPassword($builder, $password);
+        self::addTransferCode($builder, $transfer_code);
+        self::addResult($builder, $result);
         $o = $builder->endObject();
         return $o;
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param StringOffset
      * @return void
      */
-    public static function addUserId(FlatBufferBuilder $builder, $userId)
+    public static function addPassword(FlatBufferBuilder $builder, $password)
     {
-        $builder->addIntX(0, $userId, 0);
+        $builder->addOffsetX(0, $password, 0);
     }
 
     /**
@@ -99,12 +99,12 @@ class TransferCode extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param int
      * @return void
      */
-    public static function addPassword(FlatBufferBuilder $builder, $password)
+    public static function addResult(FlatBufferBuilder $builder, $result)
     {
-        $builder->addOffsetX(2, $password, 0);
+        $builder->addIntX(2, $result, 0);
     }
 
     /**

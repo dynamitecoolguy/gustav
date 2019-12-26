@@ -9,7 +9,7 @@ use Gustav\Common\Adapter\MySQLAdapter;
 use Gustav\Common\Exception\DatabaseException;
 
 /**
- * MySQL KeyPairテーブルの操作
+ * MySQL key_pairテーブルの操作
  * create table key_pair (
  *   user_id int unsigned not null,                             -- ユーザID
  *   private_key varbinary(2048) not null,                      -- RSA秘密鍵

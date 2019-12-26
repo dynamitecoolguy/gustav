@@ -23,7 +23,11 @@ class RegistrationLogicTest extends LogicBase
             RegistrationModel::NOTE => 'hogehoge'
         ]);
         /** @var RegistrationModel $result */
-        $result = self::getDispatcher()->dispatch(self::$container, new Pack('REG', 1, 'req', $request));
+        $result = self::getDispatcher()->dispatch(
+            null,
+            self::$container,
+            new Pack(RegistrationLogic::REGISTER_ACTION, 1, 'req', $request)
+        );
 
         $this->assertInstanceOf(RegistrationModel::class, $result);
 
