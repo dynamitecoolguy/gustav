@@ -15,6 +15,7 @@
       <w>messagepack</w>
       <w>msgpack</w>
       <w>pgsql</w>
+      <w>setex</w>
       <w>shasum</w>
       <w>simplexml</w>
       <w>tetratridecimal</w>

@@ -4,6 +4,8 @@
 namespace Gustav\Common\Model\Primitive;
 
 use Composer\Autoload\ClassLoader;
+use Gustav\Common\Exception\ModelException;
+use Gustav\Common\Model\AbstractModel;
 use Gustav\Common\Model\Pack;
 use Gustav\Common\Model\Parcel;
 use Gustav\Common\Model\ModelMapper;
@@ -55,4 +57,28 @@ class JsonModelTest extends TestCase
         $this->assertEquals('single', $resultMonster->name);
         $this->assertEquals(123, $resultMonster->hp);
     }
+
+    /**
+     * @test
+     */
+    public function modelError()
+    {
+        ModelMapper::resetMap();
+        ModelMapper::registerModel('MON', MonsterModel::class);
+        ModelMapper::registerModel('ERR', JsonModelTestModel::class);
+
+        $monster = new MonsterModel();
+        $monster->name = 'single';
+        $monster->hp = 123;
+
+        $serializer = new JsonSerializer();
+        $stream = $serializer->serialize(new Parcel('tt', [new Pack('ERR', 1, 'req', $monster)]));
+
+        $this->expectException(ModelException::class);
+        $serializer->deserialize($stream);
+    }
+}
+
+class JsonModelTestModel extends AbstractModel
+{
 }

@@ -18,6 +18,8 @@ use PDOStatement;
  */
 class MySQLAdapter implements MySQLInterface
 {
+    const CACHE_TIMEOUT = 600;
+
     /**
      * @var string ホスト名 または ホスト名:ポート
      */
@@ -54,6 +56,22 @@ class MySQLAdapter implements MySQLInterface
     private $pdo = null;
 
     /**
+     * @var bool Transactionの中かどうか
+     */
+    private $inTransaction = false;
+
+    /**
+     * @var bool executeWithTransactionがrollbackされるかどうか
+     */
+    private $transactionCancelled = false;
+
+    /** @var RedisAdapter|null キャッシュに使うRedis*/
+    private $redisAdapter = null;
+
+    /** @var string[] 無効にするキャッシュキー */
+    private $invalidatedKeys = [];
+
+    /**
      * @param ApplicationConfigInterface $config
      * @return static
      * @throws ConfigException
@@ -65,9 +83,15 @@ class MySQLAdapter implements MySQLInterface
         $dbName = $config->getValue('mysql', 'dbname');
         $user = $config->getValue('mysql', 'user');
         $password = $config->getValue('mysql', 'password');
+        $useCache = $config->getValue('mysql', 'usecache', 'false');
 
-        $self = new MySQLAdapter();
+        $self = new static();
         $self->setConfig($hostMaster, $hostSlave, $dbName, $user, $password);
+
+        // Redisによるキャッシュを行う場合は、Redisへの接続準備をしておく
+        if ($useCache && $useCache != 'false') {
+            $self->redisAdapter = RedisAdapter::create($config);
+        }
         return $self;
     }
 
@@ -86,7 +110,7 @@ class MySQLAdapter implements MySQLInterface
             return $mysql;
         }
 
-        $self = new MySQLAdapter();
+        $self = new static();
         $self->setPdo($mysql->getPDO(), $isMaster);
         return $self;
     }
@@ -127,6 +151,7 @@ class MySQLAdapter implements MySQLInterface
     }
 
     /**
+     * MasterDB用操作を許可する
      */
     public function setMaster(): void
     {
@@ -277,15 +302,22 @@ class MySQLAdapter implements MySQLInterface
             );
         }
 
+        $this->transactionCancelled = false;
         $this->beginTransaction();
 
         try {
             $result = $callable($this, $option);
 
-            $this->commit();
-
-            if (!is_null($succeeded)) {
-                $succeeded($this, $result, $option);
+            if (!$this->transactionCancelled) {
+                $this->commit();
+                if (!is_null($succeeded)) {
+                    $succeeded($this, $result, $option);
+                }
+            } else {
+                $this->rollBack();
+                if (!is_null($failed)) {
+                    $failed($this, $option);
+                }
             }
 
             return $result;
@@ -319,6 +351,13 @@ class MySQLAdapter implements MySQLInterface
             );
         }
 
+        if ($this->inTransaction) {
+            throw new DatabaseException(
+                "Transaction could not be nested",
+                DatabaseException::TRANSACTION_NESTED
+            );
+        }
+
         try {
             $this->getPdo()->beginTransaction();
         } catch (PDOException $e) {
@@ -328,6 +367,7 @@ class MySQLAdapter implements MySQLInterface
                 $e
             );
         }
+        $this->inTransaction = true;
     }
 
     /**
@@ -342,7 +382,14 @@ class MySQLAdapter implements MySQLInterface
             );
         }
 
+        // transaction中に無効にされたキャッシュがあれば、それを反映する
+        if (!is_null($this->redisAdapter) && !empty($this->invalidatedKeys)) {
+            $this->redisAdapter->del(array_keys($this->invalidatedKeys));
+            $this->invalidatedKeys = [];
+        }
+
         try {
+            $this->inTransaction = false;
             $this->getPdo()->commit();
         } catch (PDOException $e) {
             throw new DatabaseException(
@@ -365,7 +412,13 @@ class MySQLAdapter implements MySQLInterface
             );
         }
 
+        // transaction中に無効にされたキャッシュがあれば、それを無効にすることを無効にする
+        if (!is_null($this->redisAdapter)) {
+            $this->invalidatedKeys = [];
+        }
+
         try {
+            $this->inTransaction = false;
             $this->getPdo()->rollBack();
         } catch (PDOException $e) {
             throw new DatabaseException(
@@ -377,18 +430,38 @@ class MySQLAdapter implements MySQLInterface
     }
 
     /**
+     * Transaction内かどうか
+     * @return bool
+     */
+    public function isInTransaction(): bool
+    {
+        return $this->inTransaction;
+    }
+
+    /**
+     * Transactionをrollbackさせる
+     */
+    public function cancelTransaction(): void
+    {
+        if ($this->inTransaction) {
+            $this->transactionCancelled = true;
+        }
+    }
+
+    /**
      * @param $statement
      * @param array|null $params
+     * @param array|int|null $timestampField
      * @return array|null
      * @throws DatabaseException
      */
-    public function fetch($statement, ?array $params = null): ?array
+    public function fetch($statement, ?array $params = null, $timestampField = null): ?array
     {
         $pdoStatement = $this->wrapStatement($statement, $params);
         try {
             $pdoStatement->execute($params);
             $result = $pdoStatement->fetch(PDO::FETCH_NUM);
-            return ($result === false) ? null : $result;
+            return ($result === false) ? null : $this->parseTimestamp($result, $timestampField);
         } catch (PDOException $e) {
             throw new DatabaseException(
                 "Execution statement(${statement}) failed",
@@ -396,6 +469,37 @@ class MySQLAdapter implements MySQLInterface
                 $e
             );
         }
+    }
+
+    /**
+     * @param string $key
+     * @param $statement
+     * @param array|null $params
+     * @param array|int|null $timestampField
+     * @return array|null
+     * @throws DatabaseException
+     */
+    public function cachedFetch($key, $statement, ?array $params = null, $timestampField = null): ?array
+    {
+        // Transactionの中、あるいは、Redisがなければ普通のfetchと同じ
+        if (is_null($this->redisAdapter) || $this->inTransaction) {
+            return $this->fetch($statement, $params, $timestampField);
+        }
+
+        // キャッシュにあるのでそこから取ってくる
+        if ($this->redisAdapter->exists($key)) {
+            return $this->redisAdapter->get($key);
+        }
+
+        // DBから取得
+        $result = $this->fetch($statement, $params, $timestampField);
+
+        // キャッシュに保存
+        if (!is_null($result)) {
+            $this->redisAdapter->setex($key, self::CACHE_TIMEOUT, $result);
+        }
+
+        return $result;
     }
 
     /**
@@ -475,4 +579,54 @@ class MySQLAdapter implements MySQLInterface
         }
     }
 
+    /**
+     * キャッシュのキーを無効にする
+     * @param string $key
+     */
+    public function invalidateKey(string $key)
+    {
+        if (!is_null($this->redisAdapter)) {
+            if ($this->isInTransaction()) {
+                $this->invalidatedKeys[$key] = 1;
+            } else {
+                $this->redisAdapter->del($key);
+            }
+        }
+    }
+
+    /**
+     * MySQLから取得したレコード内のtimestampをunix timestampに変更する
+     * @param array $record
+     * @param array|int $timestampField
+     * @return array
+     */
+    public function parseTimestamp(array $record, $timestampField)
+    {
+        if (is_int($timestampField)) {
+            $timestampArray = [$timestampField];
+        } elseif (is_array($timestampField)){
+            $timestampArray = $timestampField;
+        } else {
+            return $record;
+        }
+
+        if (is_array($record[0])) {
+            $result = [];
+            foreach ($record as $recordItem) {
+                $result[] = $this->parseTimestamp($recordItem, $timestampArray);
+            }
+        } else {
+            foreach ($timestampArray as $timestampIndex) {
+                if (isset($record[$timestampIndex])) {
+                    $t = strtotime($record[$timestampIndex]);
+                    if ($t === false || $t < 0) {
+                        $t = 0;
+                    }
+                    $record[$timestampIndex] = $t;
+                }
+            }
+            $result = $record;
+        }
+        return $result;
+    }
 }

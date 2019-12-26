@@ -15,9 +15,14 @@ use Redis;
 class RedisAdapter implements RedisInterface
 {
     /**
-     * @var Redis redisObject
+     * @var string Redisホスト
      */
-    private $redis;
+    private $host = '';
+
+    /**
+     * @var ?Redis redisObject
+     */
+    private $redis = null;
 
     /**
      * @param ApplicationConfigInterface $config
@@ -26,16 +31,11 @@ class RedisAdapter implements RedisInterface
      */
     public static function create(ApplicationConfigInterface $config): RedisAdapter
     {
-        list($host, $port) = NameResolver::resolveHostAndPort($config->getValue('redis', 'host'));
-        $redis = new Redis();
-        if ($port > 0) {
-            $redis->connect($host, $port);
-        } else {
-            $redis->connect($host);
-        }
-        $redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_IGBINARY);
+        $host = $config->getValue('redis', 'host');
 
-        return new static($redis);
+        $self = new static();
+        $self->setConfig($host);
+        return $self;
     }
 
     /**
@@ -45,14 +45,35 @@ class RedisAdapter implements RedisInterface
      */
     public static function wrap(RedisInterface $redis): RedisAdapter
     {
-        return ($redis instanceof RedisAdapter) ? $redis : new static($redis->getRedis());
+        if ($redis instanceof RedisAdapter) {
+            return $redis;
+        }
+
+        $self = new static();
+        $self->setRedis($redis->getRedis());
+        return $self;
     }
 
     /**
      * RedisAdapter constructor.
+     */
+    public function __construct()
+    {
+        // do nothing
+    }
+
+    /**
+     * @param string $host
+     */
+    protected function setConfig(string $host): void
+    {
+        $this->host = $host;
+    }
+
+    /**
      * @param Redis $redis
      */
-    public function __construct(Redis $redis)
+    protected function setRedis(Redis $redis): void
     {
         $this->redis = $redis;
     }
@@ -62,6 +83,18 @@ class RedisAdapter implements RedisInterface
      */
     public function getRedis(): Redis
     {
+        if (is_null($this->redis)) {
+            list($host, $port) = NameResolver::resolveHostAndPort($this->host);
+            $redis = new Redis();
+            if ($port > 0) {
+                $redis->connect($host, $port);
+            } else {
+                $redis->connect($host);
+            }
+            $redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_IGBINARY);
+
+            $this->redis = $redis;
+        }
         return $this->redis;
     }
 
@@ -71,15 +104,15 @@ class RedisAdapter implements RedisInterface
      */
     public function get(string $key)
     {
-        return $this->redis->get($key);
+        return $this->getRedis()->get($key);
     }
 
     /**
-     * @param string $key
+     * @param string|array $key
      */
-    public function del(string $key): void
+    public function del($key): void
     {
-        $this->redis->del($key);
+        $this->getRedis()->del($key);
     }
 
     /**
@@ -88,6 +121,25 @@ class RedisAdapter implements RedisInterface
      */
     public function set(string $key, $value): void
     {
-        $this->redis->set($key, $value);
+        $this->getRedis()->set($key, $value);
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function exists(string $key): bool
+    {
+        $this->getRedis()->exists($key);
+    }
+
+    /**
+     * @param string $key
+     * @param int $ttl
+     * @param $value
+     */
+    public function setex(string $key, int $ttl, $value): void
+    {
+        $this->getRedis()->set($key, $value, ['ex' => $ttl]);
     }
 }

@@ -4,6 +4,7 @@
 namespace Gustav\App\Database;
 
 
+use Gustav\App\AppRedisKeys;
 use Gustav\Common\Adapter\MySQLAdapter;
 use Gustav\Common\Exception\DatabaseException;
 
@@ -44,11 +45,21 @@ class KeyPairTable
      * @return array|null
      * @throws DatabaseException
      */
-    public static function query(MySQLAdapter $adapter, int $userId): ?array
+    public static function select(MySQLAdapter $adapter, int $userId): ?array
     {
-        return $adapter->fetch(
+        return $adapter->cachedFetch(
+            self::key($userId),
             'select private_key, public_key from key_pair where user_id=:uid',
             ['uid' => $userId]
         );
+    }
+
+    /**
+     * @param int $userId
+     * @return string
+     */
+    protected static function key(int $userId): string
+    {
+        return AppRedisKeys::idKey(AppRedisKeys::PREFIX_KEY_PAIR, $userId);
     }
 }

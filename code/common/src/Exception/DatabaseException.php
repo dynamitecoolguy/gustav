@@ -19,4 +19,5 @@ class DatabaseException extends GustavException
     const BIND_ERROR = 6;
     const STATEMENT_IS_ILLEGAL = 7;
     const DATABASE_IS_SLAVE = 8;
+    const TRANSACTION_NESTED = 9;
 }

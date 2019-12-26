@@ -12,6 +12,7 @@ use ReflectionClass;
 use ReflectionException;
 
 /**
+ * 単純配列とバイナリの相互変換を行います
  * Class PrimitiveSerializer
  * @package Gustav\Common\Model\Primitive
  */
@@ -36,6 +37,8 @@ abstract class PrimitiveSerializer implements ModelSerializerInterface
                 $object->getModel()->serializePrimitive()
             ];
         }
+
+        // 最後にアクセストークンを追加する
         $result[] = $parcel->getToken();
 
         return $this->encode($result);
@@ -50,13 +53,18 @@ abstract class PrimitiveSerializer implements ModelSerializerInterface
         $packList = [];
 
         $decoded = $this->decode($stream);
+
+        // 最後の要素(アクセストークン)を取り除きます
         $token = array_pop($decoded);
 
+        // 残りの要素をPackに変換します
         foreach ($decoded as $pack) {
             list ($packType, $version, $requestId, $primitives) = $pack;
 
+            // packTypeに対応するmodelのクラス名を取得
             $className = ModelMapper::findModelClass($packType);
             try {
+                // クラスのdeserializePrimitiveクラスメソッドを呼び出します
                 $refClass = new ReflectionClass($className);
                 if (!$refClass->isSubclassOf(PrimitiveSerializable::class)) {
                     throw new ModelException(
@@ -66,12 +74,6 @@ abstract class PrimitiveSerializer implements ModelSerializerInterface
                 }
                 $method = $refClass->getMethod('deserializePrimitive');
                 $object = $method->invoke(null, $version, $primitives);
-                if (!($object instanceof PrimitiveSerializable)) {
-                    throw new ModelException(
-                        'Deserialize result is not instanceof FlatBuffersSerializable',
-                        ModelException::CLASS_HAS_NOT_ADAPTED_INTERFACE
-                    );
-                }
             } catch (ReflectionException $e) {
                 throw new ModelException(
                     "Class(${className} could not create ReflectionClass",

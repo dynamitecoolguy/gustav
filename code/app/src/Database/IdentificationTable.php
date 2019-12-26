@@ -4,6 +4,7 @@
 namespace Gustav\App\Database;
 
 
+use Gustav\App\AppRedisKeys;
 use Gustav\Common\Adapter\MySQLAdapter;
 use Gustav\Common\Exception\DatabaseException;
 
@@ -51,5 +52,32 @@ class IdentificationTable
             'update identification set open_id=:oid where user_id=:uid',
             ['oid' => $openId, 'uid' => $userId]
         );
+        $adapter->invalidateKey(self::key($userId));
+    }
+
+    /**
+     * 指定されたユーザの公開ID, note, 作成日(unix time)を返す
+     * @param MySQLAdapter $adapter
+     * @param int $userId
+     * @return array
+     * @throws DatabaseException
+     */
+    public static function select(MySQLAdapter $adapter, int $userId): array
+    {
+        return $adapter->cachedFetch(
+            self::key($userId),
+            'select open_id, note, created_at from identification where user_id=:uid',
+            ['uid' => $userId],
+            2 // parseTimestamp('created_at')
+        );
+    }
+
+    /**
+     * @param int $userId
+     * @return string
+     */
+    protected static function key(int $userId): string
+    {
+        return AppRedisKeys::idKey(AppRedisKeys::PREFIX_IDENTIFICATION, $userId);
     }
 }

@@ -56,6 +56,7 @@ __DUMMY_TABLE__);
                         case 'dbname': return 'userdb';
                         case 'user': return 'scott';
                         case 'password': return 'tiger';
+                        case 'usecache': return 'false';
                     }
                 }
                 return $default;
@@ -278,6 +279,7 @@ __DUMMY_TABLE__);
         $this->expectException(DatabaseException::class);
         $adapter->commit();
     }
+
     /**
      * @test
      */
@@ -291,15 +293,29 @@ __DUMMY_TABLE__);
     /**
      * @test
      */
+    public function transactionNested(): void
+    {
+        $adapter = MySQLAdapter::wrap(MySQLAdapter::create(static::createConfig()), true);
+        $adapter->beginTransaction();
+        $this->expectException(DatabaseException::class);
+        $adapter->beginTransaction();
+    }
+
+    /**
+     * @test
+     */
     public function transactionSuccess(): void
     {
         $adapter = MySQLAdapter::wrap(MySQLAdapter::create(static::createConfig()), true);
 
+        $this->assertFalse($adapter->isInTransaction());
         $adapter->beginTransaction();
+        $this->assertTrue($adapter->isInTransaction());
         $statement = $adapter->prepare('insert __formysqladaptertest(user_id,ival,sval) values(:uid,:ival,:sval);');
         $adapter->execute($statement, ['uid'=>6,'ival'=>6,'sval'=>'6']);
         $result1 = $adapter->fetch('select user_id,ival,sval,bval from __formysqladaptertest where user_id = 6');
         $adapter->commit();
+        $this->assertFalse($adapter->isInTransaction());
         $result2 = $adapter->fetch('select user_id,ival,sval,bval from __formysqladaptertest where user_id = 6');
 
         $this->assertEquals([6,6,'6',0], $result1);
@@ -313,15 +329,204 @@ __DUMMY_TABLE__);
     {
         $adapter = MySQLAdapter::wrap(MySQLAdapter::create(static::createConfig()), true);
 
+        $this->assertFalse($adapter->isInTransaction());
         $adapter->beginTransaction();
+        $this->assertTrue($adapter->isInTransaction());
         $statement = $adapter->prepare('insert __formysqladaptertest(user_id,ival,sval) values(:uid,:ival,:sval);');
         $adapter->execute($statement, ['uid'=>7,'ival'=>7,'sval'=>'7']);
         $result1 = $adapter->fetch('select user_id,ival,sval,bval from __formysqladaptertest where user_id = 7');
         $adapter->rollBack();
+        $this->assertFalse($adapter->isInTransaction());
         $result2 = $adapter->fetch('select user_id,ival,sval,bval from __formysqladaptertest where user_id = 7');
 
         $this->assertEquals([7,7,'7',0], $result1);
         $this->assertNull($result2);
+    }
+
+    private $executeWithTransactionFlag1 = false;
+    private $executeWithTransactionFlag2 = false;
+
+    /**
+     * @test
+     */
+    public function executeWithTransaction(): void
+    {
+        $adapter = MySQLAdapter::wrap(MySQLAdapter::create(static::createConfig()), true);
+
+        $this->executeWithTransactionFlag1 = false;
+        $this->executeWithTransactionFlag2 = false;
+
+        $result = $adapter->executeWithTransaction(
+            [$this, 'session1'],
+            $this,
+            [$this, 'succeeded'],
+            [$this, 'failed']
+        );
+
+        $this->assertEquals('OK', $result);
+
+        $result = $adapter->fetch('select user_id,ival,sval,bval from __formysqladaptertest where user_id = 8');
+        $this->assertEquals([8,8,'8',0], $result);
+
+        $this->assertTrue($this->executeWithTransactionFlag1);
+        $this->assertFalse($this->executeWithTransactionFlag2);
+    }
+
+    /**
+     * @test
+     */
+    public function executeWithTransactionFailed(): void
+    {
+        $adapter = MySQLAdapter::wrap(MySQLAdapter::create(static::createConfig()), true);
+
+        $this->executeWithTransactionFlag1 = false;
+        $this->executeWithTransactionFlag2 = false;
+
+        try {
+            $result = $adapter->executeWithTransaction(
+                [$this, 'session2'],
+                $this,
+                [$this, 'succeeded'],
+                [$this, 'failed']
+            );
+        } catch (DatabaseException $e) {
+            $this->assertEquals(DatabaseException::TRANSACTION_FAILED, $e->getCode());
+            $result = 'FAILED';
+        }
+
+        $this->assertEquals('FAILED', $result);
+
+        $result = $adapter->fetch('select user_id,ival,sval,bval from __formysqladaptertest where user_id = 9');
+        $this->assertNull($result);
+
+        $this->assertFalse($this->executeWithTransactionFlag1);
+        $this->assertTrue($this->executeWithTransactionFlag2);
+    }
+
+    /**
+     * @test
+     */
+    public function executeWithTransactionCancel(): void
+    {
+        $adapter = MySQLAdapter::wrap(MySQLAdapter::create(static::createConfig()), true);
+
+        $this->executeWithTransactionFlag1 = false;
+        $this->executeWithTransactionFlag2 = false;
+
+        $result = $adapter->executeWithTransaction(
+            [$this, 'session3'],
+            $this,
+            [$this, 'succeeded'],
+            [$this, 'failed']
+        );
+
+        $this->assertEquals('CANCELLED', $result);
+
+        $result = $adapter->fetch('select user_id,ival,sval,bval from __formysqladaptertest where user_id = 10');
+        $this->assertNull($result);
+
+        $this->assertFalse($this->executeWithTransactionFlag1);
+        $this->assertTrue($this->executeWithTransactionFlag2);
+    }
+
+    /**
+     * @test
+     */
+    public function executeWithTransactionSlave(): void
+    {
+        $adapter = MySQLAdapter::create(static::createConfig());
+
+        $this->expectException(DatabaseException::class);
+        $adapter->executeWithTransaction(
+            [$this, 'session1'],
+            $this,
+            [$this, 'succeeded'],
+            [$this, 'failed']
+        );
+    }
+
+    public function session1($adapter, $self): string
+    {
+        /** @var MySQLAdapter $adapter */
+        $this->assertEquals($self, $this);
+        $this->assertInstanceOf(MySQLAdapter::class, $adapter);
+
+        $statement = $adapter->prepare('insert __formysqladaptertest(user_id,ival,sval) values(:uid,:ival,:sval);');
+        $adapter->execute($statement, ['uid'=>8,'ival'=>8,'sval'=>'8']);
+
+        return 'OK';
+    }
+
+    public function session2($adapter, $self): string
+    {
+        /** @var MySQLAdapter $adapter */
+        $this->assertEquals($self, $this);
+        $this->assertInstanceOf(MySQLAdapter::class, $adapter);
+
+        $statement = $adapter->prepare('insert __formysqladaptertest(user_id,ival,sval) values(:uid,:ival,:sval);');
+        $adapter->execute($statement, ['uid'=>9,'ival'=>9,'sval'=>'9']);
+
+        throw new \Exception();
+    }
+
+    public function session3($adapter, $self): string
+    {
+        /** @var MySQLAdapter $adapter */
+        $this->assertEquals($self, $this);
+        $this->assertInstanceOf(MySQLAdapter::class, $adapter);
+
+        $statement = $adapter->prepare('insert __formysqladaptertest(user_id,ival,sval) values(:uid,:ival,:sval);');
+        $adapter->execute($statement, ['uid'=>10,'ival'=>10,'sval'=>'10']);
+
+        $adapter->cancelTransaction();
+
+        return 'CANCELLED';
+    }
+
+    public function succeeded($adapter, $result, $self): void
+    {
+        $this->assertEquals($self, $this);
+        $this->assertInstanceOf(MySQLAdapter::class, $adapter);
+
+        $this->executeWithTransactionFlag1 = true;
+    }
+
+    public function failed($adapter, $self): void
+    {
+        $this->assertEquals($self, $this);
+        $this->assertInstanceOf(MySQLAdapter::class, $adapter);
+
+        $this->executeWithTransactionFlag2 = true;
+    }
+
+    /**
+     * @test
+     */
+    public function timestamp(): void
+    {
+        $adapter = MySQLAdapter::create(static::createConfig());
+
+        $data1 = [1, 'aa', '2019-12-24 00:00:00'];
+        $converted1 = $adapter->parseTimestamp($data1, 2);
+        $this->assertEquals([1, 'aa', 1577145600], $converted1);
+        $converted2 = $adapter->parseTimestamp($data1, [2]);
+        $this->assertEquals([1, 'aa', 1577145600], $converted2);
+
+        $data2 = [1, 'aa', '1999-12-24 00:00:00', '2019-12-24 00:00:00'];
+        $converted3 = $adapter->parseTimestamp($data2, 3);
+        $this->assertEquals([1, 'aa', '1999-12-24 00:00:00', 1577145600], $converted3);
+        $converted4 = $adapter->parseTimestamp($data2, [2, 3]);
+        $this->assertEquals([1, 'aa', 945993600, 1577145600], $converted4);
+
+        $data3 = [
+            [1, 'aa', '1999-12-24 00:00:00', '2019-12-24 00:00:00'],
+            [2, 'bb', '1999-12-24 00:01:00', '2019-12-24 00:02:00']
+        ];
+        $converted5 = $adapter->parseTimestamp($data3, [2, 3]);
+        $this->assertEquals([
+            [1, 'aa', 945993600, 1577145600],
+            [2, 'bb', 945993660, 1577145720]
+        ], $converted5);
     }
 }
 
