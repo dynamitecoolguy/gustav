@@ -6,11 +6,13 @@ namespace Gustav.Dx;
 // Authentication (user_id)             ->
 //                                         ランダム文字列を生成 (random_bytes)
 //                                         秘密鍵で暗号化
+//                                         BASE64_ENCODE
 //                                     <-  Authentication (user_id, secret)
+// BASE64_DECODE
 // 公開鍵で復号化
-// 秘密鍵で暗号化
+// BASE64_ENCODE
 // Authentication (user_id, secret)     ->
-//                                         公開鍵で復号化
+//                                         BASE64_DECODE
 //                                         ランダム文字列と比較
 //                                         アクセス用トークン生成 (access_token)
 //                                     <-  Authentication (user_id, access_token)

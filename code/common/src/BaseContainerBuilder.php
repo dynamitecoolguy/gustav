@@ -19,6 +19,8 @@ use Gustav\Common\Log\DataLoggerFactory;
 use Gustav\Common\Log\DataLoggerInterface;
 use Gustav\Common\Model\ModelSerializerFactory;
 use Gustav\Common\Model\ModelSerializerInterface;
+use Gustav\Common\Network\AccessTokenManager;
+use Gustav\Common\Network\AccessTokenManagerInterface;
 use Gustav\Common\Network\BinaryEncryptor;
 use Gustav\Common\Network\BinaryEncryptorInterface;
 use DI\Container;
@@ -87,6 +89,7 @@ class BaseContainerBuilder extends ContainerBuilder
 
             // 鍵処理
             KeyOperatorInterface::class => create(KeyOperator::class),
+            AccessTokenManagerInterface::class => create(AccessTokenManager::class),
 
             // データログ処理
             DataLoggerInterface::class => factory([DataLoggerFactory::class, 'create'])

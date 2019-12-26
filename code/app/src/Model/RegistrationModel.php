@@ -9,11 +9,11 @@ use Google\FlatBuffers\FlatbufferBuilder;
 use Gustav\Common\Model\AbstractModel;
 use Gustav\Common\Model\FlatBuffers\FlatBuffersSerializable;
 use Gustav\Common\Model\Primitive\PrimitiveSerializable;
-use Gustav\Dx\Identification;
+use Gustav\Dx\Registration;
 
 /**
  * 登録ユーザを表すモデル
- * Class IdentificationModel
+ * Class RegistrationModel
  * @package Gustav\App\Model
  * @method int getUserId()
  * @method void setUserId(int $userId)
@@ -21,12 +21,10 @@ use Gustav\Dx\Identification;
  * @method void setOpenId(string $openId)
  * @method string getNote()
  * @method void setNote(string $note)
- * @method string getPrivateKey()
- * @method void setPrivateKey(string $privateKey)
  * @method string getPublicKey()
  * @method void setPublicKey(string $publicKey)
  */
-class IdentificationModel extends AbstractModel implements FlatBuffersSerializable, PrimitiveSerializable
+class RegistrationModel extends AbstractModel implements FlatBuffersSerializable, PrimitiveSerializable
 {
     /** @var int 内部用ユーザID */
     private $userId = 0;
@@ -40,10 +38,6 @@ class IdentificationModel extends AbstractModel implements FlatBuffersSerializab
     private $note = '';
     const NOTE = 'note';
 
-    /** @var string 秘密鍵 */
-    private $privateKey = '';
-    const PRIVATE_KEY = 'privateKey';
-
     /** @var string 公開鍵 */
     private $publicKey = '';
     const PUBLIC_KEY = 'publicKey';
@@ -53,14 +47,13 @@ class IdentificationModel extends AbstractModel implements FlatBuffersSerializab
      */
     public static function deserializeFlatBuffers(int $version, ByteBuffer $buffer): FlatBuffersSerializable
     {
-        $identification = Identification::getRootAsIdentification($buffer);
+        $registration = Registration::getRootAsRegistration($buffer);
 
         return new static([
-            self::USER_ID => $identification->getUserId(),
-            self::OPEN_ID => $identification->getOpenId(),
-            self::NOTE => $identification->getNote(),
-            self::PRIVATE_KEY => $identification->getPrivateKey(),
-            self::PUBLIC_KEY => $identification->getPublicKey()
+            self::USER_ID => $registration->getUserId(),
+            self::OPEN_ID => $registration->getOpenId(),
+            self::NOTE => $registration->getNote(),
+            self::PUBLIC_KEY => $registration->getPublicKey()
         ]);
     }
 
@@ -73,8 +66,7 @@ class IdentificationModel extends AbstractModel implements FlatBuffersSerializab
             self::USER_ID => $primitives[0],
             self::OPEN_ID => $primitives[1],
             self::NOTE => $primitives[2],
-            self::PRIVATE_KEY => $primitives[3],
-            self::PUBLIC_KEY => $primitives[4]
+            self::PUBLIC_KEY => $primitives[3]
         ]);
     }
 
@@ -85,15 +77,13 @@ class IdentificationModel extends AbstractModel implements FlatBuffersSerializab
     {
         $openId = $builder->createString($this->openId);
         $note = $builder->createString($this->note);
-        $privateKey = $builder->createString($this->privateKey);
         $publicKey = $builder->createString($this->publicKey);
-        Identification::startIdentification($builder);
-        Identification::addUserId($builder, $this->userId);
-        Identification::addOpenId($builder, $openId);
-        Identification::addNote($builder, $note);
-        Identification::addPrivateKey($builder, $privateKey);
-        Identification::addPublicKey($builder, $publicKey);
-        return Identification::endIdentification($builder);
+        Registration::startRegistration($builder);
+        Registration::addUserId($builder, $this->userId);
+        Registration::addOpenId($builder, $openId);
+        Registration::addNote($builder, $note);
+        Registration::addPublicKey($builder, $publicKey);
+        return Registration::endRegistration($builder);
     }
 
     /**
@@ -101,6 +91,6 @@ class IdentificationModel extends AbstractModel implements FlatBuffersSerializab
      */
     public function serializePrimitive(): array
     {
-        return [$this->userId, $this->openId, $this->note, $this->privateKey, $this->publicKey];
+        return [$this->userId, $this->openId, $this->note, $this->publicKey];
     }
 }

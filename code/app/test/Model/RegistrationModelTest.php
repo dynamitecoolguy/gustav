@@ -13,7 +13,7 @@ use Gustav\Common\Model\Primitive\JsonSerializer;
 use Gustav\Common\Model\Primitive\MessagePackSerializer;
 use PHPUnit\Framework\TestCase;
 
-class IdentificationModelTest extends TestCase
+class RegistrationModelTest extends TestCase
 {
     /**
      * @beforeClass
@@ -31,20 +31,19 @@ class IdentificationModelTest extends TestCase
      */
     private function encodeAndDecodeBody(ModelSerializerInterface $serializer)
     {
-        $register1 = new IdentificationModel([
-            IdentificationModel::USER_ID => 1,
-            IdentificationModel::OPEN_ID => '101'
+        $register1 = new RegistrationModel([
+            RegistrationModel::USER_ID => 1,
+            RegistrationModel::OPEN_ID => '101'
         ]);
-        $register2 = new IdentificationModel([
-            IdentificationModel::USER_ID => 2,
-            IdentificationModel::OPEN_ID => '102',
-            IdentificationModel::NOTE => 'hoge'
+        $register2 = new RegistrationModel([
+            RegistrationModel::USER_ID => 2,
+            RegistrationModel::OPEN_ID => '102',
+            RegistrationModel::NOTE => 'hoge'
         ]);
-        $register3 = new IdentificationModel([
-            IdentificationModel::USER_ID => 3,
-            IdentificationModel::OPEN_ID => '103',
-            IdentificationModel::PRIVATE_KEY => 'pri',
-            IdentificationModel::PUBLIC_KEY => 'pub'
+        $register3 = new RegistrationModel([
+            RegistrationModel::USER_ID => 3,
+            RegistrationModel::OPEN_ID => '103',
+            RegistrationModel::PUBLIC_KEY => 'pub'
         ]);
 
         $stream = $serializer->serialize(
@@ -66,7 +65,6 @@ class IdentificationModelTest extends TestCase
         $this->assertEquals('102', $packList[1]->getModel()->getOpenId());
         $this->assertEquals('', $packList[0]->getModel()->getNote());
         $this->assertEquals('hoge', $packList[1]->getModel()->getNote());
-        $this->assertEquals('pri', $packList[2]->getModel()->getPrivateKey());
         $this->assertEquals('pub', $packList[2]->getModel()->getPublicKey());
         $this->assertEquals(3, $packList[0]->getVersion());
         $this->assertEquals(4, $packList[1]->getVersion());
@@ -107,24 +105,21 @@ class IdentificationModelTest extends TestCase
      */
     public function getterAndSetter()
     {
-        $r = new IdentificationModel([
-            IdentificationModel::USER_ID => 3,
-            IdentificationModel::OPEN_ID => '103',
-            IdentificationModel::NOTE => 'hoge',
-            IdentificationModel::PRIVATE_KEY => 'pri',
-            IdentificationModel::PUBLIC_KEY => 'pub'
+        $r = new RegistrationModel([
+            RegistrationModel::USER_ID => 3,
+            RegistrationModel::OPEN_ID => '103',
+            RegistrationModel::NOTE => 'hoge',
+            RegistrationModel::PUBLIC_KEY => 'pub'
         ]);
 
         $r->setUserId(4);
-        $r->set(IdentificationModel::OPEN_ID, '104');
+        $r->set(RegistrationModel::OPEN_ID, '104');
         $r->setNote('444');
-        $r->setPrivateKey('pripri');
-        $r->set(IdentificationModel::PUBLIC_KEY, 'pubpub');
+        $r->set(RegistrationModel::PUBLIC_KEY, 'pubpub');
 
         $this->assertEquals(4, $r->getUserId());
         $this->assertEquals('104', $r->getOpenId());
         $this->assertEquals('444', $r->getNote());
-        $this->assertEquals('pripri', $r->get(IdentificationModel::PRIVATE_KEY));
-        $this->assertEquals('pubpub', $r->getPublicKey());
+        $this->assertEquals('pubpub', $r->get(RegistrationModel::PUBLIC_KEY));
     }
 }

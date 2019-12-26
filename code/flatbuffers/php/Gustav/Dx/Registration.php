@@ -9,22 +9,22 @@ use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
 /// ユーザ登録
-class Identification extends Table
+class Registration extends Table
 {
     /**
      * @param ByteBuffer $bb
-     * @return Identification
+     * @return Registration
      */
-    public static function getRootAsIdentification(ByteBuffer $bb)
+    public static function getRootAsRegistration(ByteBuffer $bb)
     {
-        $obj = new Identification();
+        $obj = new Registration();
         return ($obj->init($bb->getInt($bb->getPosition()) + $bb->getPosition(), $bb));
     }
 
     /**
      * @param int $_i offset
      * @param ByteBuffer $_bb
-     * @return Identification
+     * @return Registration
      **/
     public function init($_i, ByteBuffer $_bb)
     {
@@ -54,15 +54,9 @@ class Identification extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getPrivateKey()
-    {
-        $o = $this->__offset(10);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
     public function getPublicKey()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -70,22 +64,21 @@ class Identification extends Table
      * @param FlatBufferBuilder $builder
      * @return void
      */
-    public static function startIdentification(FlatBufferBuilder $builder)
+    public static function startRegistration(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(5);
+        $builder->StartObject(4);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @return Identification
+     * @return Registration
      */
-    public static function createIdentification(FlatBufferBuilder $builder, $user_id, $open_id, $note, $private_key, $public_key)
+    public static function createRegistration(FlatBufferBuilder $builder, $user_id, $open_id, $note, $public_key)
     {
-        $builder->startObject(5);
+        $builder->startObject(4);
         self::addUserId($builder, $user_id);
         self::addOpenId($builder, $open_id);
         self::addNote($builder, $note);
-        self::addPrivateKey($builder, $private_key);
         self::addPublicKey($builder, $public_key);
         $o = $builder->endObject();
         return $o;
@@ -126,32 +119,22 @@ class Identification extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addPrivateKey(FlatBufferBuilder $builder, $privateKey)
-    {
-        $builder->addOffsetX(3, $privateKey, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
     public static function addPublicKey(FlatBufferBuilder $builder, $publicKey)
     {
-        $builder->addOffsetX(4, $publicKey, 0);
+        $builder->addOffsetX(3, $publicKey, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return int table offset
      */
-    public static function endIdentification(FlatBufferBuilder $builder)
+    public static function endRegistration(FlatBufferBuilder $builder)
     {
         $o = $builder->endObject();
         return $o;
     }
 
-    public static function finishIdentificationBuffer(FlatBufferBuilder $builder, $offset)
+    public static function finishRegistrationBuffer(FlatBufferBuilder $builder, $offset)
     {
         $builder->finish($offset);
     }

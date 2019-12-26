@@ -7,7 +7,7 @@ use Gustav\App\Logic\AuthenticationLogic;
 use Gustav\App\Logic\TransferLogic;
 use Gustav\App\Logic\RegistrationLogic;
 use Gustav\App\Model\AuthenticationModel;
-use Gustav\App\Model\IdentificationModel;
+use Gustav\App\Model\RegistrationModel;
 use Gustav\App\Model\TransferCodeModel;
 use Gustav\App\Operation\OpenIdConverter;
 use Gustav\App\Operation\OpenIdConverterInterface;
@@ -43,7 +43,7 @@ class AppContainerBuilder extends BaseContainerBuilder
                         // [PackType, モデルクラス, 操作callable, トークンのチェックが必要か?(default:true)]
                         return [
                             // ユーザ新規登録
-                            ['REG', IdentificationModel::class, [RegistrationLogic::class, 'register'], false],
+                            ['REG', RegistrationModel::class, [RegistrationLogic::class, 'register'], false],
                             // ユーザ認証
                             ['AUR', AuthenticationModel::class, [AuthenticationLogic::class, 'request'], false],
                             ['AUP', AuthenticationModel::class, [AuthenticationLogic::class, 'publish'], false],

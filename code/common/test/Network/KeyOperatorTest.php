@@ -132,23 +132,4 @@ class KeyOperatorTest extends TestCase
         $this->assertEquals($original, $op->decryptPublic($op->encryptPrivate($original, $privateKeyDer), $publicKeyDer));
         $this->assertEquals($original, $op->decryptPrivate($op->encryptPublic($original, $publicKeyDer), $privateKeyDer));
     }
-
-    /**
-     * @test
-     */
-    public function exchange(): void
-    {
-        $op = new KeyOperator();
-        $keys = $op->createKeys();
-
-        $original = 'hogehogehoge';
-
-        $encrypted1 = base64_encode($op->encryptPrivate($original, $keys[0]));
-        $encrypted2 = base64_encode($op->encryptPrivate($encrypted1, $keys[0]));
-        $decrypted1 = $op->decryptPublic(base64_decode($encrypted2), $keys[1]);
-        $decrypted2 = $op->decryptPublic(base64_decode($decrypted1), $keys[1]);
-
-        $this->assertEquals($original, $decrypted2);
-    }
-
 }

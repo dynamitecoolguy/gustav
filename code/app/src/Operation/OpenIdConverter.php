@@ -22,22 +22,6 @@ class OpenIdConverter implements OpenIdConverterInterface
     const INIT_VALUE = '1835215621';
 
     /**
-     * @var bool M系列パラメータを初期化したかどうか
-     */
-    private static $parameterInited = false;
-
-    /**
-     * M系列のパラメータセット
-     */
-    private static function checkParameter()
-    {
-        if (!self::$parameterInited) {
-            MaximumLengthSequence::setParameter(self::P, self::Q, self::INIT_VALUE);
-            self::$parameterInited = true;
-        }
-    }
-
-    /**
      * ユーザーIDをM系列で数値に変換する
      * @param RedisInterface $redis
      * @param int $userId
@@ -46,14 +30,12 @@ class OpenIdConverter implements OpenIdConverterInterface
      */
     public function userIdToOpenId(RedisInterface $redis, int $userId): string
     {
-        // M系列のパラメータセット確認
-        self::checkParameter();
-
         // RedisInterfaceをRedisAdapterにする
         $redisAdapter = RedisAdapter::wrap($redis);
 
         $cached = $redisAdapter->get(AppRedisKeys::KEY_OPEN_ID);
 
+        MaximumLengthSequence::setParameter(self::P, self::Q, self::INIT_VALUE);
         if ($cached === false) {
             $sequencer = new MaximumLengthSequence($userId);
         } else {

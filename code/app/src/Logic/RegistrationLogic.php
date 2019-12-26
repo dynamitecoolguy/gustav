@@ -6,7 +6,7 @@ namespace Gustav\App\Logic;
 use Gustav\App\AppContainerBuilder;
 use Gustav\App\Database\IdentificationTable;
 use Gustav\App\Database\KeyPairTable;
-use Gustav\App\Model\IdentificationModel;
+use Gustav\App\Model\RegistrationModel;
 use Gustav\App\Operation\OpenIdConverterInterface;
 use Gustav\Common\Adapter\MySQLAdapter;
 use Gustav\Common\Adapter\MySQLInterface;
@@ -16,34 +16,43 @@ use Gustav\Common\Network\KeyOperatorInterface;
 
 /**
  * ユーザ登録処理
+ *
+ *  Client                         <-> Server
+ *
+ *  Registration(note)              ->
+ *                                     ユーザID, 公開用ID, 秘密鍵, 公開鍵を生成
+ *                                 <-  Registration(user_id, open_id, note, public_key)
+ *
  * Class RegistrationLogic
  * @package Gustav\App\Logic
  */
 class RegistrationLogic
 {
     /**
+     * PackType:
+     *   REG
      * 入力:
-     *   IdentificationModel(note)
+     *   RegistrationModel(note)
      * 出力:
-     *   IdentificationModel(userId, openId, note, privateKey, publicKey)
+     *   RegistrationModel(userId, openId, note, privateKey, publicKey)
      * アクセステーブル:
-     *   Identification, KeyPair
+     *   Identification(W), KeyPair(W)
      *
-     * @param IdentificationModel      $request           入力モデル
+     * @param RegistrationModel      $request           入力モデル
      * @param MySQLInterface           $mysql             DB
      * @param KeyOperatorInterface     $keyOperator       秘密鍵と公開鍵生成
      * @param OpenIdConverterInterface $openIdConverter   公開ID生成
      * @param RedisInterface           $redis             OpenIdConverterに必要
-     * @return IdentificationModel                        出力モデル
+     * @return RegistrationModel                        出力モデル
      * @throws GustavException
      * @used-by AppContainerBuilder::getDefinitions()
      */
     public function register(
-        IdentificationModel $request,
+        RegistrationModel $request,
         MySQLInterface $mysql,
         KeyOperatorInterface $keyOperator,
         OpenIdConverterInterface $openIdConverter,
-        RedisInterface $redis): IdentificationModel
+        RedisInterface $redis): RegistrationModel
     {
         // 登録時の備考 (登録するが未使用)
         $note = $request->getNote();
@@ -72,12 +81,11 @@ class RegistrationLogic
         );
 
         // 登録結果
-        return new IdentificationModel([
-            IdentificationModel::USER_ID => $userId,
-            IdentificationModel::OPEN_ID => $openId,
-            IdentificationModel::NOTE => $note,
-            IdentificationModel::PRIVATE_KEY => $privateKey,
-            IdentificationModel::PUBLIC_KEY => $publicKey
+        return new RegistrationModel([
+            RegistrationModel::USER_ID => $userId,
+            RegistrationModel::OPEN_ID => $openId,
+            RegistrationModel::NOTE => $note,
+            RegistrationModel::PUBLIC_KEY => $publicKey
         ]);
     }
 }

@@ -459,7 +459,7 @@ class MySQLAdapter implements MySQLInterface
     {
         $pdoStatement = $this->wrapStatement($statement, $params);
         try {
-            $pdoStatement->execute($params);
+            $pdoStatement->execute();
             $result = $pdoStatement->fetch(PDO::FETCH_NUM);
             return ($result === false) ? null : $this->parseTimestamp($result, $timestampField);
         } catch (PDOException $e) {
@@ -512,7 +512,7 @@ class MySQLAdapter implements MySQLInterface
     {
         $pdoStatement = $this->wrapStatement($statement, $params);
         try {
-            $pdoStatement->execute($params);
+            $pdoStatement->execute();
             return $pdoStatement->fetchAll(PDO::FETCH_NUM);
         } catch (PDOException $e) {
             throw new DatabaseException(

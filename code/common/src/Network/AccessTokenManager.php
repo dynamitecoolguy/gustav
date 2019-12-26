@@ -37,7 +37,7 @@ class AccessTokenManager implements AccessTokenManagerInterface
 
         // トークンはサーバ側で一致するかどうかの判定をするので、改竄チェック用のハッシュは入れていない(必要なさげ)
 
-        return $this->encrypt($serialized, $vector);
+        return base64_encode($this->encrypt($serialized, $vector));
     }
 
     /**
@@ -45,7 +45,7 @@ class AccessTokenManager implements AccessTokenManagerInterface
      */
     public function getInformation(string $token): array
     {
-        $serialized = $this->decrypt($token);
+        $serialized = $this->decrypt(base64_decode($token));
 
         /** @noinspection PhpUnusedLocalVariableInspection */
         list($userId, $expiredAt, $vector) = igbinary_unserialize($serialized);

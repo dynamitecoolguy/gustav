@@ -117,7 +117,7 @@ class RedisAdapter implements RedisInterface
 
     /**
      * @param string $key
-     * @param $value
+     * @param mixed $value
      */
     public function set(string $key, $value): void
     {
@@ -130,7 +130,7 @@ class RedisAdapter implements RedisInterface
      */
     public function exists(string $key): bool
     {
-        $this->getRedis()->exists($key);
+        return $this->getRedis()->exists($key);
     }
 
     /**

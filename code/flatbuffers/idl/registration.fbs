@@ -2,20 +2,19 @@ namespace Gustav.Dx;
 
 // ユーザ認証シーケンス
 //
-// Client               <-> Server
+// Client                         <-> Server
 //
-// Identification(note)  ->
-//                           ユーザID, 公開用ID, 秘密鍵, 公開鍵を生成
-//                      <-   Identification(user_id, open_id, note, private_key, public_key)
+// Registration(note)              ->
+//                                    ユーザID, 公開用ID, 秘密鍵, 公開鍵を生成
+//                                <-  Registration(user_id, open_id, note, public_key)
 
 
 /// ユーザ登録
-table Identification {
+table Registration {
   user_id: int;           // (Input/Output) ユーザID
   open_id: string;        // (Output)       公開用ID
   note: string;           // (Input/Output) キャンペーンコードなどの登録時のデータ
-  private_key: string;    // (Output)       秘密鍵
   public_key: string;     // (Output)       公開鍵
 }
 
-root_type Identification;
+root_type Registration;

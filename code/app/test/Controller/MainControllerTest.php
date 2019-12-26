@@ -5,7 +5,7 @@ namespace Gustav\App\Controller;
 use Composer\Autoload\ClassLoader;
 use Gustav\App\AppContainerBuilder;
 use Gustav\App\LocalConfigLoader;
-use Gustav\App\Model\IdentificationModel;
+use Gustav\App\Model\RegistrationModel;
 use Gustav\Common\Config\ApplicationConfig;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -52,11 +52,11 @@ class MainControllerTest extends TestCase
      */
     public function requestUnsealed(): void
     {
-        $identification = new IdentificationModel();
-        $identification->setNote('hogehoge');
+        $registration = new RegistrationModel();
+        $registration->setNote('hogehoge');
 
         $content = json_encode([
-            ['REG', 1, 'req', $identification->serializePrimitive()],
+            ['REG', 1, 'req', $registration->serializePrimitive()],
             '1234'
         ]);
 
@@ -74,12 +74,11 @@ class MainControllerTest extends TestCase
         $this->assertEquals(1, $decoded[0][1]);
         $this->assertEquals('req', $decoded[0][2]);
 
-        $resultModel = IdentificationModel::deserializePrimitive(1, $decoded[0][3]);
+        $resultModel = RegistrationModel::deserializePrimitive(1, $decoded[0][3]);
 
         $this->assertGreaterThan(0, $resultModel->getUserId());
         $this->assertNotEmpty($resultModel->getOpenId());
         $this->assertEquals('hogehoge', $resultModel->getNote());
-        $this->assertStringStartsWith('-----BEGIN PRIVATE', $resultModel->getPrivateKey());
         $this->assertStringStartsWith('-----BEGIN PUBLIC', $resultModel->getPublicKey());
     }
 
