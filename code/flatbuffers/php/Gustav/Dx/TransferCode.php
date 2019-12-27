@@ -46,33 +46,23 @@ class TransferCode extends Table
     }
 
     /**
-     * @return int
-     */
-    public function getResult()
-    {
-        $o = $this->__offset(8);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
-    /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startTransferCode(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(2);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return TransferCode
      */
-    public static function createTransferCode(FlatBufferBuilder $builder, $password, $transfer_code, $result)
+    public static function createTransferCode(FlatBufferBuilder $builder, $password, $transfer_code)
     {
-        $builder->startObject(3);
+        $builder->startObject(2);
         self::addPassword($builder, $password);
         self::addTransferCode($builder, $transfer_code);
-        self::addResult($builder, $result);
         $o = $builder->endObject();
         return $o;
     }
@@ -95,16 +85,6 @@ class TransferCode extends Table
     public static function addTransferCode(FlatBufferBuilder $builder, $transferCode)
     {
         $builder->addOffsetX(1, $transferCode, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addResult(FlatBufferBuilder $builder, $result)
-    {
-        $builder->addIntX(2, $result, 0);
     }
 
     /**

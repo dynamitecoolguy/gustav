@@ -27,6 +27,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use Gustav\Common\Network\Dispatcher;
 use Gustav\Common\Network\DispatcherInterface;
+use Gustav\Common\Network\DispatcherTableInterface;
 use Gustav\Common\Network\KeyOperator;
 use Gustav\Common\Network\KeyOperatorInterface;
 use function DI\create;
@@ -51,6 +52,13 @@ class BaseContainerBuilder extends ContainerBuilder
         $definitions = $this->getDefinitions($config);
         if (is_array($definitions) && !empty($definitions)) {
             $this->addDefinitions($definitions);
+        }
+
+        $dispatcherTable = $this->getDispatcherTable();
+        if (!is_null($dispatcherTable)) {
+            $this->addDefinitions([
+                DispatcherTableInterface::class => $dispatcherTable
+            ]);
         }
     }
 
@@ -94,5 +102,13 @@ class BaseContainerBuilder extends ContainerBuilder
             // データログ処理
             DataLoggerInterface::class => factory([DataLoggerFactory::class, 'create'])
         ];
+    }
+
+    /**
+     * @return DispatcherTableInterface|null
+     */
+    protected function getDispatcherTable(): ?DispatcherTableInterface
+    {
+        return null;
     }
 }

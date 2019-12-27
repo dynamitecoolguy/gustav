@@ -4,19 +4,9 @@ namespace Gustav.Dx;
 //
 // Client                              <-> Server
 //
-// [引き継ぎコード取得](TRCG)
-// TransferCode                            ->
-//                                            引き継ぎコード取得
-//                                        <-  TransferCode (transferCode)
-//
 // [引き継ぎパスワード設定](TRCP)
 // TransferCode (password)                ->
 //                                           パスワードハッシュを登録
-//                                       <-  TransferCode (transferCode, result)
-//
-// [引き継ぎコード再発行](TRCR)
-// TransferCode                           ->
-//                                           引き継ごコード再発行し、パスワードを無効化
 //                                       <-  TransferCode (transferCode)
 //
 // [引き継ぎ実施](TRCE)
@@ -30,7 +20,6 @@ namespace Gustav.Dx;
 table TransferCode {
   password: string;       // (Input)         パスワード
   transfer_code: string;  // (Output)        移管コード
-  result: int;            // (Output)        アクションの結果
 }
 
 root_type TransferCode;

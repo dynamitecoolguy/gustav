@@ -49,17 +49,12 @@ class MySQLAdapter implements MySQLInterface
     /**
      * @var bool Masterかどうか
      */
-    private $isMaster = false;
+    private $masterMode = false;
 
     /**
      * @var ?PDO PDO Object
      */
     private $pdo = null;
-
-    /**
-     * @var bool Transactionの中かどうか
-     */
-    private $inTransaction = false;
 
     /**
      * @var bool executeWithTransactionがrollbackされるかどうか
@@ -99,20 +94,20 @@ class MySQLAdapter implements MySQLInterface
     /**
      * MySQLInterfaceをMySQLAdapterにwrapする
      * @param MySQLInterface $mysql
-     * @param bool $isMaster
+     * @param bool $isMasterMode
      * @return MySQLAdapter
      */
-    public static function wrap(MySQLInterface $mysql, bool $isMaster): MySQLAdapter
+    public static function wrap(MySQLInterface $mysql, bool $isMasterMode): MySQLAdapter
     {
         if ($mysql instanceof MySQLAdapter) {
-            if ($isMaster) {
-                $mysql->setMaster();
+            if ($isMasterMode) {
+                $mysql->setMasterMode();
             }
             return $mysql;
         }
 
         $self = new static();
-        $self->setPdo($mysql->getPDO(), $isMaster);
+        $self->setPdo($mysql->getPDO(), $isMasterMode);
         return $self;
     }
 
@@ -143,20 +138,38 @@ class MySQLAdapter implements MySQLInterface
 
     /**
      * @param PDO $pdo
-     * @param bool $isMaster
+     * @param bool $isMasterMode
      */
-    protected function setPdo(PDO $pdo, bool $isMaster): void
+    protected function setPdo(PDO $pdo, bool $isMasterMode): void
     {
         $this->pdo = $pdo;
-        $this->isMaster = $isMaster;
+        $this->masterMode = $isMasterMode;
     }
 
     /**
-     * MasterDB用操作を許可する
+     * MasterDB用操作を許可する.
+     * なお、接続中のセッションがslaveのときには、セッションは切断される
      */
-    public function setMaster(): void
+    public function setMasterMode(): void
     {
-        $this->isMaster = true;
+        if (!$this->masterMode) {
+            if (!is_null($this->pdo)) {
+                $this->pdo = null;
+            }
+            $this->masterMode = true;
+        }
+    }
+
+    /**
+     * MasterDB用操作を禁止する
+     * なお、接続中のセッションがmasterのときには、セッションは切断される
+     */
+    public function setSlaveMode(): void
+    {
+        if ($this->masterMode) {
+            $this->pdo = null;
+            $this->masterMode = false;
+        }
     }
 
     /**
@@ -166,7 +179,7 @@ class MySQLAdapter implements MySQLInterface
     public function getPDO(): PDO
     {
         if (is_null($this->pdo)) {
-            $host = $this->isMaster ? $this->hostMaster : $this->hostSlave;
+            $host = $this->masterMode ? $this->hostMaster : $this->hostSlave;
             list($host, $port) = NameResolver::resolveHostAndPort($host);
             $dsn = 'mysql:host=' . $host . ';dbname=' . $this->dbName;
             if ($port > 0) {
@@ -199,9 +212,9 @@ class MySQLAdapter implements MySQLInterface
     /**
      * @return bool
      */
-    public function isMaster(): bool
+    public function isMasterMode(): bool
     {
-        return $this->isMaster;
+        return $this->masterMode;
     }
 
     /**
@@ -303,14 +316,13 @@ class MySQLAdapter implements MySQLInterface
      */
     public function executeWithTransaction(callable $callable, $option = null, ?callable $succeeded = null, ?callable $failed = null)
     {
-        if (!$this->isMaster) {
+        if (!$this->masterMode) {
             throw new DatabaseException(
                 'executeWithTransaction is for master only',
                 DatabaseException::DATABASE_IS_SLAVE
             );
         }
 
-        $this->transactionCancelled = false;
         $this->beginTransaction();
 
         try {
@@ -352,20 +364,14 @@ class MySQLAdapter implements MySQLInterface
      */
     public function beginTransaction(): void
     {
-        if (!$this->isMaster) {
+        if (!$this->masterMode) {
             throw new DatabaseException(
                 'beginTransaction is for master only',
                 DatabaseException::DATABASE_IS_SLAVE
             );
         }
 
-        if ($this->inTransaction) {
-            throw new DatabaseException(
-                "Transaction could not be nested",
-                DatabaseException::TRANSACTION_NESTED
-            );
-        }
-
+        $this->transactionCancelled = false;
         try {
             $this->getPdo()->beginTransaction();
         } catch (PDOException $e) {
@@ -375,7 +381,6 @@ class MySQLAdapter implements MySQLInterface
                 $e
             );
         }
-        $this->inTransaction = true;
     }
 
     /**
@@ -383,7 +388,7 @@ class MySQLAdapter implements MySQLInterface
      */
     public function commit(): void
     {
-        if (!$this->isMaster) {
+        if (!$this->masterMode) {
             throw new DatabaseException(
                 'commit is for master only',
                 DatabaseException::DATABASE_IS_SLAVE
@@ -397,7 +402,6 @@ class MySQLAdapter implements MySQLInterface
         }
 
         try {
-            $this->inTransaction = false;
             $this->getPdo()->commit();
         } catch (PDOException $e) {
             throw new DatabaseException(
@@ -413,7 +417,7 @@ class MySQLAdapter implements MySQLInterface
      */
     public function rollBack(): void
     {
-        if (!$this->isMaster) {
+        if (!$this->masterMode) {
             throw new DatabaseException(
                 'rollBack is for master only',
                 DatabaseException::DATABASE_IS_SLAVE
@@ -426,7 +430,6 @@ class MySQLAdapter implements MySQLInterface
         }
 
         try {
-            $this->inTransaction = false;
             $this->getPdo()->rollBack();
         } catch (PDOException $e) {
             throw new DatabaseException(
@@ -440,10 +443,14 @@ class MySQLAdapter implements MySQLInterface
     /**
      * Transaction内かどうか
      * @return bool
+     * @throws DatabaseException
      */
-    public function isInTransaction(): bool
+    public function inTransaction(): bool
     {
-        return $this->inTransaction;
+        if (is_null($this->pdo)) {
+            return false;
+        }
+        return $this->getPDO()->inTransaction();
     }
 
     /**
@@ -451,9 +458,7 @@ class MySQLAdapter implements MySQLInterface
      */
     public function cancelTransaction(): void
     {
-        if ($this->inTransaction) {
-            $this->transactionCancelled = true;
-        }
+        $this->transactionCancelled = true;
     }
 
     /**
@@ -490,7 +495,7 @@ class MySQLAdapter implements MySQLInterface
     public function cachedFetch($key, $statement, ?array $params = null, $timestampField = null): ?array
     {
         // Transactionの中、あるいは、Redisがなければ普通のfetchと同じ
-        if (is_null($this->redisAdapter) || $this->inTransaction) {
+        if (is_null($this->redisAdapter) || !$this->inTransaction()) {
             return $this->fetch($statement, $params, $timestampField);
         }
 
@@ -590,11 +595,12 @@ class MySQLAdapter implements MySQLInterface
     /**
      * キャッシュのキーを無効にする
      * @param string $key
+     * @throws DatabaseException
      */
     public function invalidateKey(string $key)
     {
         if (!is_null($this->redisAdapter)) {
-            if ($this->isInTransaction()) {
+            if ($this->inTransaction()) {
                 $this->invalidatedKeys[$key] = 1;
             } else {
                 $this->redisAdapter->del($key);

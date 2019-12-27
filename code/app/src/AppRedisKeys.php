@@ -12,8 +12,11 @@ use Gustav\Common\CommonRedisKeys;
  */
 class AppRedisKeys extends CommonRedisKeys
 {
-    // 処理中のユーザーID→公開ID変換の値 (@see OpenIdConverter)
+    // 処理中のユーザーID→公開ID変換の値 (@see UserIdConverter)
     const KEY_OPEN_ID = 'openid';
+
+    // 処理中のユーザーID→引き継ぎコード変換の値 (@see UserIdConverter)
+    const KEY_TRANSFER_CODE = 'transfercode';
 
     // Identification Table
     const PREFIX_IDENTIFICATION = 'id_';
@@ -23,4 +26,7 @@ class AppRedisKeys extends CommonRedisKeys
 
     // Authenticationの秘密トークン
     const PREFIX_SECRET_TOKEN = 'st_';
+
+    // TransferCode Table
+    const PREFIX_TRANSFER_CODE = 'tc_';
 }

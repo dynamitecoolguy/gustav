@@ -3,6 +3,7 @@
 
 namespace Gustav\App\Database;
 
+use Gustav\App\AppRedisKeys;
 use Gustav\Common\Adapter\MySQLAdapter;
 use Gustav\Common\Exception\DatabaseException;
 
@@ -11,7 +12,6 @@ use Gustav\Common\Exception\DatabaseException;
  *
  * create table transfer_code (
  *   user_id int unsigned not null,                             -- ユーザID
- *   transfer_code binary(8) not null,                          -- 移管コード
  *   password_hash varbinary(256) not null,                     -- パスワードのハッシュ
  *   created_at timestamp default current_timestamp not null,
  *   primary key(user_id),
@@ -25,18 +25,42 @@ use Gustav\Common\Exception\DatabaseException;
 class TransferCodeTable
 {
     /**
-     * 鍵の登録
+     * コードの登録
      * @param MySQLAdapter $adapter
      * @param int $userId
-     * @param string $transferCode
+     * @param string $passwordHash
      * @throws DatabaseException
      */
-    public static function insert(MySQLAdapter $adapter, int $userId, string $transferCode): void
+    public static function insert(MySQLAdapter $adapter, int $userId, string $passwordHash): void
     {
         $adapter->execute(
-            'insert into transfer_code(user_id, transfer_code, password_hash) values(:uid, :code, "")',
-            ['uid' => $userId, 'code' => $transferCode]
+            'insert into transfer_code(user_id, password_hash) values(:uid, :ph)',
+            ['uid' => $userId, 'ph' => $passwordHash]
         );
     }
 
+    /**
+     * コードの取得
+     * @param MySQLAdapter $adapter
+     * @param int $userId
+     * @return array|null
+     * @throws DatabaseException
+     */
+    public static function select(MySQLAdapter $adapter, int $userId): ?array
+    {
+        return $adapter->cachedFetch(
+            static::key($userId),
+            'select user_id, password_hash from transfer_code where user_id=:uid',
+            ['uid' => $userId]
+        );
+    }
+
+    /**
+     * @param int $userId
+     * @return string
+     */
+    protected static function key(int $userId): string
+    {
+        return AppRedisKeys::idKey(AppRedisKeys::PREFIX_TRANSFER_CODE, $userId);
+    }
 }

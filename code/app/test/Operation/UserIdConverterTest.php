@@ -12,7 +12,7 @@ use Gustav\Common\Config\ApplicationConfig;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
-class OpenIdConverterTest extends TestCase
+class UserIdConverterTest extends TestCase
 {
     /** @var ContainerInterface */
     private static $container;
@@ -46,22 +46,43 @@ class OpenIdConverterTest extends TestCase
     /**
      * @test
      */
-    public function mseq()
+    public function openId()
     {
-        $converter = new OpenIdConverter();
         $redis = self::$container->get(RedisInterface::class);
 
-        $initialValue = substr('000000000' . strval(OpenIdConverter::INIT_VALUE), -10, 10);
+        $initialValue = substr('000000000' . strval(UserIdConverter::OPEN_ID_INIT_VALUE), -10, 10);
 
-        $this->assertEquals($initialValue, $converter->userIdToOpenId($redis, 0));
+        $this->assertEquals($initialValue, UserIdConverter::userIdToOpenId($redis, 0));
 
         $redisManager = self::$container->get(RedisInterface::class);
 
         // キャッシュ無しからの計算
         $redisManager->del(AppRedisKeys::KEY_OPEN_ID);
-        $openId = $converter->userIdToOpenId($redis, 10);
+        $openId = UserIdConverter::userIdToOpenId($redis, 10);
 
         // キャッシュからの計算
-        $this->assertEquals($openId, $converter->userIdToOpenId($redis, 10));
+        $this->assertEquals($openId, UserIdConverter::userIdToOpenId($redis, 10));
+    }
+
+    /**
+     * @test
+     */
+    public function transferCode()
+    {
+        $redis = self::$container->get(RedisInterface::class);
+
+        $ok = 0;
+        $map = [];
+        for ($i = 100; $i < 200; $i++) {
+            $code = UserIdConverter::userIdToTransferCode($redis, $i);
+            if (!isset($map[$code]) && strlen($code) === 8) {
+                $ok++;
+            }
+
+            $map[$code] = 1;
+        }
+
+        // キャッシュからの計算
+        $this->assertEquals(100, $ok);
     }
 }

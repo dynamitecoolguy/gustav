@@ -40,13 +40,14 @@ class TransferLogicTest extends LogicBase
     public function get(): void
     {
         $request = new TransferCodeModel([
+            TransferCodeModel::PASSWORD => 'hogehoge'
         ]);
 
         /** @var TransferCodeModel $result */
         $result = self::getDispatcher()->dispatch(
             self::$userId,
             self::$container,
-            new Pack(TransferLogic::GET_ACTION, 1, 'req', $request)
+            new Pack(TransferLogic::SET_PASSWORD_ACTION, 1, 'req', $request)
         );
 
         $this->assertInstanceOf(TransferCodeModel::class, $result);

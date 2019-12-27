@@ -34,16 +34,19 @@ class RegistrationModelTest extends TestCase
     {
         $register1 = new RegistrationModel([
             RegistrationModel::USER_ID => 1,
-            RegistrationModel::OPEN_ID => '101'
+            RegistrationModel::OPEN_ID => '101',
+            RegistrationModel::TRANSFER_CODE => 'tc1'
         ]);
         $register2 = new RegistrationModel([
             RegistrationModel::USER_ID => 2,
             RegistrationModel::OPEN_ID => '102',
+            RegistrationModel::TRANSFER_CODE => 'tc2',
             RegistrationModel::NOTE => 'hoge'
         ]);
         $register3 = new RegistrationModel([
             RegistrationModel::USER_ID => 3,
             RegistrationModel::OPEN_ID => '103',
+            RegistrationModel::TRANSFER_CODE => 'tc3',
             RegistrationModel::PUBLIC_KEY => 'pub'
         ]);
 
@@ -71,6 +74,9 @@ class RegistrationModelTest extends TestCase
         $this->assertEquals(4, $packList[1]->getVersion());
         $this->assertEquals(RegistrationLogic::REGISTER_ACTION, $packList[0]->getPackType());
         $this->assertEquals('req2', $packList[1]->getRequestId());
+        $this->assertEquals('tc1', $packList[0]->getModel()->getTransferCode());
+        $this->assertEquals('tc2', $packList[1]->getModel()->getTransferCode());
+        $this->assertEquals('tc3', $packList[2]->getModel()->getTransferCode());
     }
 
     /**
@@ -109,6 +115,7 @@ class RegistrationModelTest extends TestCase
         $r = new RegistrationModel([
             RegistrationModel::USER_ID => 3,
             RegistrationModel::OPEN_ID => '103',
+            RegistrationModel::TRANSFER_CODE => 'tc3',
             RegistrationModel::NOTE => 'hoge',
             RegistrationModel::PUBLIC_KEY => 'pub'
         ]);

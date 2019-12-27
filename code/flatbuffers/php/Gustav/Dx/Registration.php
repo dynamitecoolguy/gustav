@@ -48,15 +48,21 @@ class Registration extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getNote()
+    public function getTransferCode()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getPublicKey()
+    public function getNote()
     {
         $o = $this->__offset(10);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getPublicKey()
+    {
+        $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -66,18 +72,19 @@ class Registration extends Table
      */
     public static function startRegistration(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(4);
+        $builder->StartObject(5);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return Registration
      */
-    public static function createRegistration(FlatBufferBuilder $builder, $user_id, $open_id, $note, $public_key)
+    public static function createRegistration(FlatBufferBuilder $builder, $user_id, $open_id, $transfer_code, $note, $public_key)
     {
-        $builder->startObject(4);
+        $builder->startObject(5);
         self::addUserId($builder, $user_id);
         self::addOpenId($builder, $open_id);
+        self::addTransferCode($builder, $transfer_code);
         self::addNote($builder, $note);
         self::addPublicKey($builder, $public_key);
         $o = $builder->endObject();
@@ -109,9 +116,19 @@ class Registration extends Table
      * @param StringOffset
      * @return void
      */
+    public static function addTransferCode(FlatBufferBuilder $builder, $transferCode)
+    {
+        $builder->addOffsetX(2, $transferCode, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
     public static function addNote(FlatBufferBuilder $builder, $note)
     {
-        $builder->addOffsetX(2, $note, 0);
+        $builder->addOffsetX(3, $note, 0);
     }
 
     /**
@@ -121,7 +138,7 @@ class Registration extends Table
      */
     public static function addPublicKey(FlatBufferBuilder $builder, $publicKey)
     {
-        $builder->addOffsetX(3, $publicKey, 0);
+        $builder->addOffsetX(4, $publicKey, 0);
     }
 
     /**

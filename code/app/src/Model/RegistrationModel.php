@@ -19,6 +19,8 @@ use Gustav\Dx\Registration;
  * @method void setUserId(int $userId)
  * @method string getOpenId()
  * @method void setOpenId(string $openId)
+ * @method string getTransferCode()
+ * @method void setTransferCode(string $transferCode)
  * @method string getNote()
  * @method void setNote(string $note)
  * @method string getPublicKey()
@@ -33,6 +35,10 @@ class RegistrationModel extends AbstractModel implements FlatBuffersSerializable
     /** @var string 公開用ID */
     private $openId = '';
     const OPEN_ID = 'openId';
+
+    /** @var string 移管用コード1 */
+    private $transferCode = '';
+    const TRANSFER_CODE = 'transferCode';
 
     /** @var string ノート */
     private $note = '';
@@ -52,6 +58,7 @@ class RegistrationModel extends AbstractModel implements FlatBuffersSerializable
         return new static([
             self::USER_ID => $registration->getUserId(),
             self::OPEN_ID => $registration->getOpenId(),
+            self::TRANSFER_CODE => $registration->getTransferCode(),
             self::NOTE => $registration->getNote(),
             self::PUBLIC_KEY => $registration->getPublicKey()
         ]);
@@ -65,8 +72,9 @@ class RegistrationModel extends AbstractModel implements FlatBuffersSerializable
         return new static([
             self::USER_ID => $primitives[0],
             self::OPEN_ID => $primitives[1],
-            self::NOTE => $primitives[2],
-            self::PUBLIC_KEY => $primitives[3]
+            self::TRANSFER_CODE => $primitives[2],
+            self::NOTE => $primitives[3],
+            self::PUBLIC_KEY => $primitives[4]
         ]);
     }
 
@@ -76,11 +84,13 @@ class RegistrationModel extends AbstractModel implements FlatBuffersSerializable
     public function serializeFlatBuffers(FlatbufferBuilder &$builder): int
     {
         $openId = $builder->createString($this->openId);
+        $transferCode = $builder->createString($this->transferCode);
         $note = $builder->createString($this->note);
         $publicKey = $builder->createString($this->publicKey);
         Registration::startRegistration($builder);
         Registration::addUserId($builder, $this->userId);
         Registration::addOpenId($builder, $openId);
+        Registration::addTransferCode($builder, $transferCode);
         Registration::addNote($builder, $note);
         Registration::addPublicKey($builder, $publicKey);
         return Registration::endRegistration($builder);
@@ -91,6 +101,6 @@ class RegistrationModel extends AbstractModel implements FlatBuffersSerializable
      */
     public function serializePrimitive(): array
     {
-        return [$this->userId, $this->openId, $this->note, $this->publicKey];
+        return [$this->userId, $this->openId, $this->transferCode, $this->note, $this->publicKey];
     }
 }

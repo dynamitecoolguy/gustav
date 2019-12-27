@@ -121,7 +121,7 @@ __EOF__
         $mysqli = $container->get(MySQLInterface::class);
         $this->assertInstanceOf(MySQLAdapter::class, $mysqli);
         $pdo = $mysqli->getPDO();
-        $this->assertFalse($mysqli->isMaster());
+        $this->assertFalse($mysqli->isMasterMode());
 
         $adapter = MySQLAdapter::wrap($mysqli, false);
         $this->assertInstanceOf(MySQLAdapter::class, $adapter);
@@ -140,8 +140,8 @@ __EOF__
         // for master
         $masterMysqli = $container->get(MySQLInterface::class);
         $this->assertInstanceOf(MySQLAdapter::class, $masterMysqli);
-        $masterMysqli->setMaster();
-        $this->assertTrue($masterMysqli->isMaster());
+        $masterMysqli->setMasterMode();
+        $this->assertTrue($masterMysqli->isMasterMode());
     }
 
     /**

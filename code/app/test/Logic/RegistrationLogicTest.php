@@ -4,7 +4,7 @@
 namespace Gustav\App\Logic;
 
 use Gustav\App\Model\RegistrationModel;
-use Gustav\App\Operation\OpenIdConverter;
+use Gustav\App\Operation\UserIdConverter;
 use Gustav\Common\Exception\ModelException;
 use Gustav\Common\Exception\OperationException;
 use Gustav\Common\Model\Pack;
@@ -39,7 +39,7 @@ class RegistrationLogicTest extends LogicBase
         $this->assertEquals('hogehoge', $note);
         $this->assertGreaterThan(0, $userId);
 
-        MaximumLengthSequence::setParameter(OpenIdConverter::P, OpenIdConverter::Q, OpenIdConverter::INIT_VALUE);
+        MaximumLengthSequence::setParameter(UserIdConverter::OPEN_ID_P, UserIdConverter::OPEN_ID_Q, UserIdConverter::OPEN_ID_INIT_VALUE);
         $openIdValue = (new MaximumLengthSequence($userId))->getValue();
         $this->assertEquals(substr('000000000' . $openIdValue, -10, 10), $openId);
         MaximumLengthSequence::resetParameter();

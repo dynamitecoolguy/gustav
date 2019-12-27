@@ -308,14 +308,14 @@ __DUMMY_TABLE__);
     {
         $adapter = MySQLAdapter::wrap(MySQLAdapter::create(static::createConfig()), true);
 
-        $this->assertFalse($adapter->isInTransaction());
+        $this->assertFalse($adapter->inTransaction());
         $adapter->beginTransaction();
-        $this->assertTrue($adapter->isInTransaction());
+        $this->assertTrue($adapter->inTransaction());
         $statement = $adapter->prepare('insert __formysqladaptertest(user_id,ival,sval) values(:uid,:ival,:sval);');
         $adapter->execute($statement, ['uid'=>6,'ival'=>6,'sval'=>'6']);
         $result1 = $adapter->fetch('select user_id,ival,sval,bval from __formysqladaptertest where user_id = 6');
         $adapter->commit();
-        $this->assertFalse($adapter->isInTransaction());
+        $this->assertFalse($adapter->inTransaction());
         $result2 = $adapter->fetch('select user_id,ival,sval,bval from __formysqladaptertest where user_id = 6');
 
         $this->assertEquals([6,6,'6',0], $result1);
@@ -329,14 +329,14 @@ __DUMMY_TABLE__);
     {
         $adapter = MySQLAdapter::wrap(MySQLAdapter::create(static::createConfig()), true);
 
-        $this->assertFalse($adapter->isInTransaction());
+        $this->assertFalse($adapter->inTransaction());
         $adapter->beginTransaction();
-        $this->assertTrue($adapter->isInTransaction());
+        $this->assertTrue($adapter->inTransaction());
         $statement = $adapter->prepare('insert __formysqladaptertest(user_id,ival,sval) values(:uid,:ival,:sval);');
         $adapter->execute($statement, ['uid'=>7,'ival'=>7,'sval'=>'7']);
         $result1 = $adapter->fetch('select user_id,ival,sval,bval from __formysqladaptertest where user_id = 7');
         $adapter->rollBack();
-        $this->assertFalse($adapter->isInTransaction());
+        $this->assertFalse($adapter->inTransaction());
         $result2 = $adapter->fetch('select user_id,ival,sval,bval from __formysqladaptertest where user_id = 7');
 
         $this->assertEquals([7,7,'7',0], $result1);

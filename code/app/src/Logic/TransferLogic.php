@@ -3,30 +3,24 @@
 
 namespace Gustav\App\Logic;
 
+use Gustav\App\Database\TransferCodeTable;
+use Gustav\App\Model\RegistrationModel;
 use Gustav\App\Model\TransferCodeModel;
+use Gustav\Common\Adapter\MySQLAdapter;
 use Gustav\Common\Adapter\MySQLInterface;
-use Gustav\Common\Model\ModelInterface;
-use Psr\Container\ContainerInterface;
+use Gustav\Common\Exception\DuplicateEntryException;
+use Gustav\Common\Exception\GustavException;
+use Gustav\Common\Exception\ModelException;
 
 /**
  * データ移管シーケンス
  *
  * Client                              <-> Server
  *
- * [引き継ぎコード取得](TRCG)
- * TransferCode                            ->
- *                                            引き継ぎコード取得
- *                                        <-  TransferCode (transferCode)
- *
  * [引き継ぎパスワード設定](TRCP)
  * TransferCode (password)                ->
  *                                           パスワードハッシュを登録
  *                                       <-  TransferCode (transferCode, result)
- *
- * [引き継ぎコード再発行](TRCR)
- * TransferCode                           ->
- *                                           引き継ごコード再発行し、パスワードを無効化
- *                                       <-  TransferCode (transferCode)
  *
  * [引き継ぎ実施](TRCE)
  * TransferCode (password, transferCode)  ->
@@ -39,31 +33,35 @@ use Psr\Container\ContainerInterface;
  */
 class TransferLogic
 {
-    const GET_ACTION          = 'TRCG';
     const SET_PASSWORD_ACTION = 'TRCP';
-    const RESET_ACTION        = 'TRCR';
     const EXECUTE_ACTION      = 'TRCE';
 
-    private static $chars = '0123456789abcdefghjklmnpqrstuvwxyz'; // length:34
-
-    public function get(
+    /**
+     * @param int $userId
+     * @param MySQLInterface $mysql
+     * @return TransferCodeModel
+     * @throws GustavException
+     */
+    public function setPassword(
         int               $userId,
         MySQLInterface    $mysql
     ): TransferCodeModel
     {
+        // MySQLのslave dbへの接続adapter
+        $adapter = MySQLAdapter::wrap($mysql, false);
+
+        // TODO:
+
         return new TransferCodeModel();
     }
 
     /**
-     * 8桁34進数文字列の生成
-     * @return string
+     * @return RegistrationModel
+     * @throws GustavException
      */
-    private static function createTransferCode(): string
+    public function execute(
+    ): RegistrationModel
     {
-        $c = '';
-        for ($i = 0; $i < 8; $i++) {
-            $c .= self::$chars[mt_rand(0, 33)];
-        }
-        return $c;
+        return new RegistrationModel();
     }
 }

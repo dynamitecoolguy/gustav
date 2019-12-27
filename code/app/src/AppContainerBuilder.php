@@ -9,12 +9,8 @@ use Gustav\App\Logic\RegistrationLogic;
 use Gustav\App\Model\AuthenticationModel;
 use Gustav\App\Model\RegistrationModel;
 use Gustav\App\Model\TransferCodeModel;
-use Gustav\App\Operation\OpenIdConverter;
-use Gustav\App\Operation\OpenIdConverterInterface;
 use Gustav\Common\BaseContainerBuilder;
-use Gustav\Common\Config\ApplicationConfigInterface;
 use Gustav\Common\Network\DispatcherTableInterface;
-use function DI\create;
 
 /**
  * BaseContainerBuilderのDIコンテナの定義を変更する場合は、このクラスのようにdefinitionsメソッドを変更する方法がある
@@ -24,54 +20,49 @@ use function DI\create;
 class AppContainerBuilder extends BaseContainerBuilder
 {
     /**
-     * common側の設定に、app用の設定を追加
-     * @param ApplicationConfigInterface $config
-     * @return array
-     * @uses \Gustav\App\Logic\RegistrationLogic::register()
-     * @uses \Gustav\App\Logic\AuthenticationLogic::request()
-     * @uses \Gustav\App\Logic\AuthenticationLogic::publish()
+     * @return DispatcherTableInterface|null
      */
-    protected function getDefinitions(ApplicationConfigInterface $config): array
+    protected function getDispatcherTable(): ?DispatcherTableInterface
     {
-        return array_merge(
-            parent::getDefinitions($config),
-            [
-                OpenIdConverterInterface::class => create(OpenIdConverter::class),
-                DispatcherTableInterface::class => new class implements DispatcherTableInterface {
-                    public function getDispatchTable(): array
-                    {
-                        // [PackType, モデルクラス, 操作callable, トークンのチェックが必要か?(default:true)]
-                        return [
-                            // ユーザ新規登録
-                            [
-                                RegistrationLogic::REGISTER_ACTION,
-                                RegistrationModel::class,
-                                [RegistrationLogic::class, 'register'],
-                                false
-                            ],
-                            // ユーザ認証
-                            [
-                                AuthenticationLogic::REQUEST_ACTION,
-                                AuthenticationModel::class,
-                                [AuthenticationLogic::class, 'request'],
-                                false
-                            ],
-                            [
-                                AuthenticationLogic::PUBLISH_ACTION,
-                                AuthenticationModel::class,
-                                [AuthenticationLogic::class, 'publish'],
-                                false
-                            ],
-                            // ユーザ移管
-                            [
-                                TransferLogic::GET_ACTION,
-                                TransferCodeModel::class,
-                                [TransferLogic::class, 'get']
-                            ]
-                        ];
-                    }
-                }
-            ]
-        );
+        return new class implements DispatcherTableInterface {
+            public function getDispatchTable(): array
+            {
+                // [PackType, モデルクラス, 操作callable, トークンのチェックが必要か?(default:true)]
+                return [
+                    // ユーザ新規登録
+                    [
+                        RegistrationLogic::REGISTER_ACTION,
+                        RegistrationModel::class,
+                        [RegistrationLogic::class, 'register'],
+                        false
+                    ],
+                    // ユーザ認証
+                    [
+                        AuthenticationLogic::REQUEST_ACTION,
+                        AuthenticationModel::class,
+                        [AuthenticationLogic::class, 'request'],
+                        false
+                    ],
+                    [
+                        AuthenticationLogic::PUBLISH_ACTION,
+                        AuthenticationModel::class,
+                        [AuthenticationLogic::class, 'publish'],
+                        false
+                    ],
+                    // ユーザ移管
+                    [
+                        TransferLogic::SET_PASSWORD_ACTION,
+                        TransferCodeModel::class,
+                        [TransferLogic::class, 'setPassword']
+                    ],
+                    [
+                        TransferLogic::EXECUTE_ACTION,
+                        TransferCodeModel::class,
+                        [TransferLogic::class, 'execute'],
+                        false
+                    ],
+                ];
+            }
+        };
     }
 }

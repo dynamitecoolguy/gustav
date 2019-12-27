@@ -48,7 +48,7 @@ class KeyPairTable
     public static function select(MySQLAdapter $adapter, int $userId): ?array
     {
         return $adapter->cachedFetch(
-            self::key($userId),
+            static::key($userId),
             'select private_key, public_key from key_pair where user_id=:uid',
             ['uid' => $userId]
         );

@@ -14,6 +14,7 @@ namespace Gustav.Dx;
 table Registration {
   user_id: int;           // (Input/Output) ユーザID
   open_id: string;        // (Output)       公開用ID
+  transfer_code: string;  // (Output)       移管用コード
   note: string;           // (Input/Output) キャンペーンコードなどの登録時のデータ
   public_key: string;     // (Output)       公開鍵
 }
