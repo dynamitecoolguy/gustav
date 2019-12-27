@@ -40,9 +40,25 @@ class KeyPairTable
     }
 
     /**
+     * 鍵の更新
      * @param MySQLAdapter $adapter
      * @param int $userId
-     * @return array|null
+     * @param string $privateKey
+     * @param string $publicKey
+     * @throws DatabaseException
+     */
+    public static function update(MySQLAdapter $adapter, int $userId, string $privateKey, string $publicKey): void
+    {
+        $adapter->execute(
+            'update key_pair set private_key=:pri, public_key=:pub where user_id=:uid',
+            ['uid' => $userId, 'pri' => $privateKey, 'pub' => $publicKey]
+        );
+    }
+
+    /**
+     * @param MySQLAdapter $adapter
+     * @param int $userId
+     * @return array|null  (秘密鍵, 公開鍵)
      * @throws DatabaseException
      */
     public static function select(MySQLAdapter $adapter, int $userId): ?array

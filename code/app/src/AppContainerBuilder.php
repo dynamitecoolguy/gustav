@@ -20,6 +20,11 @@ use Gustav\Common\Network\DispatcherTableInterface;
 class AppContainerBuilder extends BaseContainerBuilder
 {
     /**
+     * @uses \Gustav\App\Logic\RegistrationLogic::register()
+     * @uses \Gustav\App\Logic\AuthenticationLogic::request()
+     * @uses \Gustav\App\Logic\AuthenticationLogic::publish()
+     * @uses \Gustav\App\Logic\TransferLogic::setPassword()
+     * @uses \Gustav\App\Logic\TransferLogic::execute()
      * @return DispatcherTableInterface|null
      */
     protected function getDispatcherTable(): ?DispatcherTableInterface
