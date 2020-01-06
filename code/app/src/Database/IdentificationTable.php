@@ -62,15 +62,31 @@ class IdentificationTable
      * 指定されたユーザの公開ID, 移管コード, note, 作成日(unix time)を返す
      * @param MySQLAdapter $adapter
      * @param int $userId
-     * @return array
+     * @return array|null
      * @throws DatabaseException
      */
-    public static function select(MySQLAdapter $adapter, int $userId): array
+    public static function select(MySQLAdapter $adapter, int $userId): ?array
     {
         return $adapter->cachedFetch(
             static::key($userId),
             'select open_id, transfer_code, note, created_at from identification where user_id=:uid',
             ['uid' => $userId],
+            3 // parseTimestamp('created_at')
+        );
+    }
+
+    /**
+     * 引き継ぎコードから、ユーザID, 公開ID, note, 作成日(unix time)を取得
+     * @param MySQLAdapter $adapter
+     * @param string $code
+     * @return array|null      (ユーザID, パスワードハッシュ)
+     * @throws DatabaseException
+     */
+    public static function selectFromCode(MySQLAdapter $adapter, string $code): ?array
+    {
+        return $adapter->fetch(
+            'select user_id, open_id, note, created_at from identification where transfer_code=:code',
+            ['code' => $code],
             3 // parseTimestamp('created_at')
         );
     }

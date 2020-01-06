@@ -50,23 +50,8 @@ class TransferCodeTable
     {
         return $adapter->cachedFetch(
             static::key($userId),
-            'select password_hash, transfer_code from transfer_code where user_id=:uid',
+            'select password_hash from transfer_code where user_id=:uid',
             ['uid' => $userId]
-        );
-    }
-
-    /**
-     * 引き継ぎコードから、ユーザIDとパスワードハッシュを取得
-     * @param MySQLAdapter $adapter
-     * @param string $code
-     * @return array|null      (ユーザID, パスワードハッシュ)
-     * @throws DatabaseException
-     */
-    public static function selectFromCode(MySQLAdapter $adapter, string $code): ?array
-    {
-        return $adapter->fetch(
-            'select user_id, password_hash from transfer_code where transfer_code=:code',
-            ['code' => $code]
         );
     }
 

@@ -1,0 +1,7 @@
+namespace Gustav.Dx;
+
+table Result {
+  result: int; // (Output)
+}
+
+root_type Result;

@@ -8,6 +8,7 @@ use Gustav\App\Database\IdentificationTable;
 use Gustav\App\Database\KeyPairTable;
 use Gustav\App\Database\TransferCodeTable;
 use Gustav\App\Model\RegistrationModel;
+use Gustav\App\Model\ResultModel;
 use Gustav\App\Model\TransferCodeModel;
 use Gustav\Common\Adapter\MySQLAdapter;
 use Gustav\Common\Adapter\MySQLInterface;
@@ -22,13 +23,13 @@ use Gustav\Common\Network\KeyOperatorInterface;
  * [引き継ぎパスワード設定](TRCP)
  * TransferCode (password)                ->
  *                                           パスワードハッシュを登録
- *                                       <-  TransferCode (transferCode, result)
+ *                                       <-  Result (result)
  *
  * [引き継ぎ実施](TRCE)
  * TransferCode (password, transferCode)  ->
  *                                           ユーザID, 公開用IDを取得
  *                                           秘密鍵, 公開鍵を再発行
- *                                       <-  Registration(user_id, open_id, note, public_key)
+ *                                       <-  Registration(user_id, open_id, transfer_code, note, public_key)
  *
  * Class TransferLogic
  * @package Gustav\App\Logic
@@ -43,7 +44,7 @@ class TransferLogic
      * @param TransferCodeModel $request
      * @param int $userId
      * @param MySQLInterface $mysql
-     * @return TransferCodeModel
+     * @return ResultModel
      * @throws GustavException
      * @used-by AppContainerBuilder::getDispatcherTable()
      */
@@ -51,7 +52,7 @@ class TransferLogic
         TransferCodeModel $request,
         int               $userId,
         MySQLInterface    $mysql
-    ): TransferCodeModel
+    ): ResultModel
     {
         $password = $request->getPassword();
         $passwordHash = hash('sha256', $password);
@@ -67,8 +68,8 @@ class TransferLogic
             }
         );
 
-        return new TransferCodeModel([
-            TransferCodeModel::PASSWORD => $passwordHash
+        return new ResultModel([
+            ResultModel::RESULT => 0
         ]);
     }
 
@@ -91,12 +92,19 @@ class TransferLogic
 
         $transferCode = $request->getTransferCode();
         $password = $request->getPassword();
-        $passwordHash = hash('sha256', $password);
+        $inputPasswordHash = hash('sha256', $password);
 
-        list($userId, $storedHash) = TransferCodeTable::selectFromCode($adapter, $transferCode);
+        list($userId, $openId, $note) = IdentificationTable::selectFromCode($adapter, $transferCode);
+        if (is_null($userId)) {
+            // 引き継ぎコードが見つからない
+            return new RegistrationModel([
+                RegistrationModel::TRANSFER_CODE => $transferCode,
+            ]);
+        }
 
-        if (is_null($userId) || $passwordHash != $storedHash) {
-            // パスワードが違う
+        list($registeredPasswordHash) = TransferCodeTable::select($adapter, $userId);
+        if ($inputPasswordHash !== $registeredPasswordHash) {
+            // パスワードが一致しない
             return new RegistrationModel([
                 RegistrationModel::TRANSFER_CODE => $transferCode,
             ]);
@@ -104,17 +112,6 @@ class TransferLogic
 
         // 秘密鍵と公開鍵の生成
         list($privateKey, $publicKey) = $keyOperator->createKeys();
-
-        // 公開IDの取得
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        list($openId, $_, $note) = IdentificationTable::select($adapter, $userId);
-        if (is_null($openId)) {
-            // ありえないはず
-            // TODO: Logging
-            return new RegistrationModel([
-                RegistrationModel::TRANSFER_CODE => $transferCode,
-            ]);
-        }
 
         // MasterDBに切り替え
         $adapter->setMasterMode();

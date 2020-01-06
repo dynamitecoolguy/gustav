@@ -7,13 +7,13 @@ namespace Gustav.Dx;
 // [引き継ぎパスワード設定](TRCP)
 // TransferCode (password)                ->
 //                                           パスワードハッシュを登録
-//                                       <-  TransferCode (transferCode)
+//                                       <-  Result (result)
 //
 // [引き継ぎ実施](TRCE)
 // TransferCode (password, transferCode)  ->
 //                                           ユーザID, 公開用IDを取得
 //                                           秘密鍵, 公開鍵を再発行
-//                                       <-  Registration(user_id, open_id, note, public_key)
+//                                       <-  Registration(user_id, open_id, transfer_code, note, public_key)
 //
 
 /// データ移管
